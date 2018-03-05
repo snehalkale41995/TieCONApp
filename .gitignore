@@ -55,3 +55,5 @@ android/app/kittenTricks.jks
 *.orig
 
 .expo
+/metro-bundler-cache-6742910150653c230bdf2dd050f1debaa34cece1
+haste-map-metro-bundler-1-38563bd7100e0ca1719992669597010f

@@ -14,6 +14,7 @@ import {FontAwesome} from '../../assets/icons';
 import {GradientButton} from '../../components/gradientButton';
 import {RkTheme} from 'react-native-ui-kitten';
 import {scale, scaleModerate, scaleVertical} from '../../utils/scale';
+import { onSignIn } from "../../auth";
 
 export class LoginV2 extends React.Component {
   static navigationOptions = {
@@ -46,7 +47,7 @@ export class LoginV2 extends React.Component {
             <RkTextInput rkType='rounded' placeholder='Username'/>
             <RkTextInput rkType='rounded' placeholder='Password' secureTextEntry={true}/>
             <GradientButton style={styles.save} rkType='large' text='LOGIN' onPress={() => {
-              this.props.navigation.goBack()
+              onSignIn().then(() => this.props.navigation.navigate("SignedIn"));
             }}/>
           </View>
           <View style={styles.buttons}>

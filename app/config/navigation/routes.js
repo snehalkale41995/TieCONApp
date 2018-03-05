@@ -1,6 +1,7 @@
 import {FontIcons} from '../../assets/icons';
 import * as Screens from '../../screens/index';
 import _ from 'lodash';
+import { TabNavigator, TabView } from 'react-navigation'
 
 export const MainRoutes = [
   {
@@ -36,6 +37,15 @@ export const MainRoutes = [
     ]
   },
   {
+    id: 'QRScanner',
+    title: 'QR Scanner',
+    icon: FontIcons.login,
+    screen: Screens.QRScanner,
+    // screen: ({ navigation }) => <TabNav screenProps={{ rootNavigation: navigation }} />,
+    children: [
+    ]
+  },
+  /*{
     id: 'SocialMenu',
     title: 'Social',
     icon: FontIcons.profile,
@@ -255,14 +265,45 @@ export const MainRoutes = [
     icon: FontIcons.theme,
     screen: Screens.Themes,
     children: []
-  },
+  }, */
 ];
+
+const TabNav = TabNavigator({
+  Chat: {
+      // screen: ({ navigation }) => <Screens.Chat screenProps={{ rootNavigation: navigation }} /> },
+      screen: Screens.Chat,
+      navigationOptions: {
+          tabBarLabel:"Chat",
+          tabBarIcon: ({ tintColor }) => <Icon name={"ios-add"} size={30} color={tintColor} />
+      }
+  },
+  ChatList: {
+    screen: Screens.ChatList,
+    navigationOptions: {
+        tabBarLabel:"ChatList",
+        tabBarIcon: ({ tintColor }) => <Icon name={"ios-add"} size={30} color={tintColor} />
+    }
+  },
+  Comments: {
+    screen: Screens.Comments,
+    navigationOptions: {
+        tabBarLabel:"Comments",
+        tabBarIcon: ({ tintColor }) => <Icon name={"ios-add"} size={30} color={tintColor} />
+    }
+  }
+}, {
+      tabBarOptions: {
+          activeTintColor: '#222',
+      }
+});
+
 
 let menuRoutes = _.cloneDeep(MainRoutes);
 menuRoutes.unshift({
   id: 'GridV2',
   title: 'Start',
-  screen: Screens.GridV2,
+  screen: Screens.HomePage,
+  // screen: ({ navigation }) => <TabNav screenProps={{ rootNavigation: navigation }} />,
   children: []
 },);
 

@@ -482,6 +482,20 @@ export let bootstrap = () => {
     windowBorderColor: theme => theme.colors.border.highlight,
   });
 
+  
+  /* RKTabView */
+
+  RkTheme.setType('RkTabView', 'dark', {
+    backgroundColor:'#778f9b',
+    color:'white',
+    borderColor:'#4a636d'
+  });
+  
+    RkTheme.setType('RkTabView', 'darkSelected', {
+    backgroundColor:'#4a636d',
+    borderColor:'#4a636d'
+  });
+
   /*
    Register components
    */

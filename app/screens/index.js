@@ -9,3 +9,5 @@ export * from './login';
 export * from './walkthroughs';
 export * from './eCommerce';
 export * from './theme';
+export * from './home';
+export * from './scanner';

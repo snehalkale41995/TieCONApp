@@ -12,6 +12,10 @@ import {data} from './data'
 import {AppLoading, Font} from 'expo';
 import {View} from "react-native";
 
+import { createRootNavigator } from "./initialRouter";
+import { isSignedIn } from "./auth";
+
+
 bootstrap();
 data.populateData();
 
@@ -48,11 +52,16 @@ const KittenApp = StackNavigator({
 
 export default class App extends React.Component {
   state = {
-    loaded: false
+    loaded: false,
+    signedIn: false,
+    checkedSignIn: false
   };
 
   componentWillMount() {
     this._loadAssets();
+    isSignedIn()
+      .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
+      .catch(err => alert("An error occurred"));
   }
 
   _loadAssets = async() => {
@@ -64,6 +73,9 @@ export default class App extends React.Component {
       'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
       'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
       'Roboto-Light': require('./assets/fonts/Roboto-Light.ttf'),
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+      'Ionicons': require("@expo/vector-icons/fonts/Ionicons.ttf")
     });
     this.setState({loaded: true});
   };
@@ -73,20 +85,25 @@ export default class App extends React.Component {
       return <AppLoading />;
     }
 
-    return (
-      <View style={{flex: 1}}>
-        <KittenApp
-          onNavigationStateChange={(prevState, currentState) => {
-            const currentScreen = getCurrentRouteName(currentState);
-            const prevScreen = getCurrentRouteName(prevState);
+    const { checkedSignIn, signedIn } = this.state;
 
-            if (prevScreen !== currentScreen) {
-              track(currentScreen);
-            }
-          }}
-        />
-      </View>
-    );
+    const Layout = createRootNavigator(signedIn);
+    return <Layout />;
+
+    // return (
+    //   <View style={{flex: 1}}>
+    //     <KittenApp
+    //       onNavigationStateChange={(prevState, currentState) => {
+    //         const currentScreen = getCurrentRouteName(currentState);
+    //         const prevScreen = getCurrentRouteName(prevState);
+
+    //         if (prevScreen !== currentScreen) {
+    //           track(currentScreen);
+    //         }
+    //       }}
+    //     />
+    //   </View>
+    // );
   }
 }
 
