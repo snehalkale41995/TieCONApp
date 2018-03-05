@@ -20,6 +20,13 @@ export const MainRoutes = [
     children: [
     ]
   },
+  {
+    id: 'Themes',
+    title: 'Themes',
+    icon: FontIcons.theme,
+    screen: Screens.Themes,
+    children: []
+  },
 ];
 
 const TabNav = TabNavigator({

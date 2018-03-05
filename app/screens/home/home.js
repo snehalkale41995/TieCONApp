@@ -19,32 +19,50 @@ export default function renderIf(condition, content) {
 }
 
 const TabNav = TabNavigator({
-  Chat: {
+  Home: {
       // screen: ({ navigation }) => <Screens.Chat screenProps={{ rootNavigation: navigation }} /> },
       screen: Screens.Chat,
       navigationOptions: {
-          tabBarLabel:"Chat",
-          tabBarIcon: ({ tintColor }) => <Icon name={"ios-add"} size={30} color={tintColor} />
+          tabBarLabel:"Home",
+          tabBarIcon: ({ tintColor }) => <Icon name={"home"} size={30} color={tintColor} />
       }
   },
-  ChatList: {
-    screen: Screens.ChatList,
+  Program: {
+    screen: Screens.Chat,
     navigationOptions: {
-        tabBarLabel:"ChatList",
-        tabBarIcon: ({ tintColor }) => <Icon name={"ios-add"} size={30} color={tintColor} />
+        tabBarLabel:"Program",
+        tabBarIcon: ({ tintColor }) => <Icon name={"calendar"} size={30} color={tintColor} />
     }
   },
-  Comments: {
-    screen: Screens.Comments,
+  Connect: {
+    screen: Screens.Chat,
     navigationOptions: {
-        tabBarLabel:"Comments",
-        tabBarIcon: ({ tintColor }) => <Icon name={"ios-add"} size={30} color={tintColor} />
+        tabBarLabel:"Connect",
+        tabBarIcon: ({ tintColor }) => <Icon name={"slideshare"} size={30} color={tintColor} />
+    }
+  },
+  Speakers: {
+    screen: Screens.Chat,
+    navigationOptions: {
+        tabBarLabel:"Speakers",
+        tabBarIcon: ({ tintColor }) => <Icon name={"users"} size={30} color={tintColor} />
+    }
+  },
+  Buzz: {
+    screen: Screens.Chat,
+    navigationOptions: {
+        tabBarLabel:"Buzz",
+        tabBarIcon: ({ tintColor }) => <Icon name={"bubbles"} size={30} color={tintColor} />
     }
   }
 }, {
+      animationEnabled: true,
       tabBarOptions: {
           activeTintColor: '#222',
-      }
+          showIcon: true
+      },
+      tabBarPosition: "bottom",
+      swipeEnabled: true,
 });
 
 export class HomePage extends React.Component {
