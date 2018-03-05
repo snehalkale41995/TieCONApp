@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Kitten Tricks",
-    "slug": "kitten-tricks",
-    "githubUrl": "https://github.com/akveo/kittenTricks",
+    "name": "TiECON Pune",
+    "slug": "tiecon-pune",
+    "githubUrl": "https://github.com/shaggyshelar/TieCONApp",
     "sdkVersion": "24.0.0",
     "icon": "./icon.png",
     "orientation": "portrait",
@@ -13,14 +13,14 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "bundleIdentifier": "com.akveo.kittentricks",
+      "bundleIdentifier": "com.eternus.tieconpune",
       "buildNumber": "1.0.10",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.akveo.kittentricks",
+      "package": "com.eternus.tieconpune",
       "versionCode": 16
     },
-    "version": "1.0.10"
+    "version": "1.0.1"
   }
 }

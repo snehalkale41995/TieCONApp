@@ -27,7 +27,7 @@ function getCurrentRouteName(navigationState) {
 }
 
 let SideMenu = withRkTheme(Screens.SideMenu);
-const KittenApp = StackNavigator({
+const TiECONApp = StackNavigator({
   First: {
     screen: Screens.SplashScreen
   },
@@ -75,7 +75,7 @@ export default class App extends React.Component {
 
     return (
       <View style={{flex: 1}}>
-        <KittenApp
+        <TiECONApp
           onNavigationStateChange={(prevState, currentState) => {
             const currentScreen = getCurrentRouteName(currentState);
             const prevScreen = getCurrentRouteName(prevState);
