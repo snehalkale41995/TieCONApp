@@ -85,25 +85,25 @@ export default class App extends React.Component {
       return <AppLoading />;
     }
 
-    const { checkedSignIn, signedIn } = this.state;
+    // const { checkedSignIn, signedIn } = this.state;
 
-    const Layout = createRootNavigator(signedIn);
-    return <Layout />;
+    // const Layout = createRootNavigator(signedIn);
+    // return <Layout />;
 
-    // return (
-    //   <View style={{flex: 1}}>
-    //     <KittenApp
-    //       onNavigationStateChange={(prevState, currentState) => {
-    //         const currentScreen = getCurrentRouteName(currentState);
-    //         const prevScreen = getCurrentRouteName(prevState);
+    return (
+      <View style={{flex: 1}}>
+        <KittenApp
+          onNavigationStateChange={(prevState, currentState) => {
+            const currentScreen = getCurrentRouteName(currentState);
+            const prevScreen = getCurrentRouteName(prevState);
 
-    //         if (prevScreen !== currentScreen) {
-    //           track(currentScreen);
-    //         }
-    //       }}
-    //     />
-    //   </View>
-    // );
+            if (prevScreen !== currentScreen) {
+              track(currentScreen);
+            }
+          }}
+        />
+      </View>
+    );
   }
 }
 
