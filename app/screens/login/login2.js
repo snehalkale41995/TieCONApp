@@ -47,7 +47,7 @@ export class LoginV2 extends React.Component {
             <RkTextInput rkType='rounded' placeholder='Username'/>
             <RkTextInput rkType='rounded' placeholder='Password' secureTextEntry={true}/>
             <GradientButton style={styles.save} rkType='large' text='LOGIN' onPress={() => {
-              onSignIn().then(() => this.props.navigation.navigate("SignedIn"));
+              onSignIn().then(() => this.props.navigation.navigate("App"));
             }}/>
           </View>
           <View style={styles.buttons}>

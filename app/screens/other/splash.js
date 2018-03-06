@@ -4,7 +4,7 @@ import {
   Image,
   View,
   Dimensions,
-  StatusBar
+  StatusBar, AsyncStorage
 } from 'react-native';
 import {
   RkText,
@@ -28,6 +28,15 @@ export class SplashScreen extends React.Component {
     }
   }
 
+  // Fetch the token from storage then navigate to our appropriate place
+  _bootstrapAsync = async () => {
+    const userToken = await AsyncStorage.getItem('userToken');
+
+    // This will switch to the App screen or Auth screen and this loading
+    // screen will be unmounted and thrown away.
+    this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+  };
+
   componentDidMount() {
     StatusBar.setHidden(true, 'none');
     RkTheme.setTheme(KittenTheme);
@@ -37,11 +46,12 @@ export class SplashScreen extends React.Component {
         clearInterval(this.timer);
         setTimeout(() => {
           StatusBar.setHidden(false, 'slide');
-          let toHome = NavigationActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({routeName: 'Home'})]
-          });
-          this.props.navigation.dispatch(toHome)
+          // let toHome = NavigationActions.reset({
+          //   index: 0,
+          //   actions: [NavigationActions.navigate({routeName: 'Auth'})]
+          // });
+          // this.props.navigation.dispatch(toHome)
+          this._bootstrapAsync();
         }, timeFrame);
       } else {
         let random = Math.random() * 0.5;

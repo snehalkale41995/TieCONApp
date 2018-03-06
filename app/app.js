@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   DrawerNavigator,
-  StackNavigator
+  StackNavigator, SwitchNavigator
 } from 'react-navigation';
 import {withRkTheme} from 'react-native-ui-kitten';
 import {AppRoutes} from './config/navigation/routesBuilder';
@@ -10,11 +10,7 @@ import {bootstrap} from './config/bootstrap';
 import track from './config/analytics';
 import {data} from './data'
 import {AppLoading, Font} from 'expo';
-import {View} from "react-native";
-
-import { createRootNavigator } from "./initialRouter";
-import { isSignedIn } from "./auth";
-
+import {View, Text} from "react-native";
 
 bootstrap();
 data.populateData();
@@ -31,24 +27,28 @@ function getCurrentRouteName(navigationState) {
 }
 
 let SideMenu = withRkTheme(Screens.SideMenu);
-const KittenApp = StackNavigator({
-  First: {
-    screen: Screens.SplashScreen
-  },
-  Home: {
-    screen: DrawerNavigator({
-        ...AppRoutes,
-      },
-      {
-        drawerOpenRoute: 'DrawerOpen',
-        drawerCloseRoute: 'DrawerClose',
-        drawerToggleRoute: 'DrawerToggle',
-        contentComponent: (props) => <SideMenu {...props}/>
-      })
-  }
-}, {
-  headerMode: 'none',
+const AppStack = DrawerNavigator({
+  ...AppRoutes,
+},
+{
+  drawerOpenRoute: 'DrawerOpen',
+  drawerCloseRoute: 'DrawerClose',
+  drawerToggleRoute: 'DrawerToggle',
+  contentComponent: (props) => <SideMenu {...props}/>
 });
+const AuthStack = StackNavigator({ SignIn: { screen: Screens.LoginV2 } });
+
+const SwitchStack = SwitchNavigator(
+  {
+    AuthLoading: Screens.SplashScreen,
+    App: AppStack,
+    Auth: AuthStack,
+  },
+  {
+    initialRouteName: 'AuthLoading',
+  }
+);
+
 
 export default class App extends React.Component {
   state = {
@@ -59,9 +59,6 @@ export default class App extends React.Component {
 
   componentWillMount() {
     this._loadAssets();
-    isSignedIn()
-      .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
-      .catch(err => alert("An error occurred"));
   }
 
   _loadAssets = async() => {
@@ -85,24 +82,8 @@ export default class App extends React.Component {
       return <AppLoading />;
     }
 
-    // const { checkedSignIn, signedIn } = this.state;
-
-    // const Layout = createRootNavigator(signedIn);
-    // return <Layout />;
-
     return (
-      <View style={{flex: 1}}>
-        <KittenApp
-          onNavigationStateChange={(prevState, currentState) => {
-            const currentScreen = getCurrentRouteName(currentState);
-            const prevScreen = getCurrentRouteName(prevState);
-
-            if (prevScreen !== currentScreen) {
-              track(currentScreen);
-            }
-          }}
-        />
-      </View>
+      <SwitchStack />
     );
   }
 }
