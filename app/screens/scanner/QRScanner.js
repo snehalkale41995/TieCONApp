@@ -7,6 +7,9 @@ import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
 import { NavigationActions } from 'react-navigation';
 import { BarCodeScanner, Permissions } from 'expo';
 
+import firebase from '../../config/firebase';
+var firestoreDB = firebase.firestore();
+
 
 export class QRScanner extends React.Component {
   static navigationOptions = ({navigation}) => ({
@@ -32,10 +35,65 @@ export class QRScanner extends React.Component {
     });
   };
 
+  _updateUserData(scannedData) {
+    this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn });
+    firestoreDB.collection('usersInEvent').doc('fromDevices').set({
+			EventName: 'Entry',
+			ConfRoom: 'Conf1',
+			Name: 'Sagar Shelar'
+		})
+    .then((docRef) => {
+      this.setState({ lastScannedUrl: 'Updated' });
+    })
+    .catch((error) => {
+      this.setState({ lastScannedUrl: 'Error Updating' });
+    });
+  }
+
+  _setVCardDetails = (scannedResult) => {
+		let Re1 = /^(version|fn|title|org):(.+)$/i;
+		let Re2 = /^([^:;]+);([^:]+):(.+)$/;
+		let ReKey = /item\d{1,2}\./;
+    let fields = {};
+		scannedResult.split(/\r\n|\r|\n/).forEach((line) => {
+			let results, key;
+			if (Re1.test(line)) {
+				results = line.match(Re1);
+				key = results[1].toLowerCase();
+				fields[key] = results[2];
+			} else if (Re2.test(line)) {
+				results = line.match(Re2);
+				key = results[1].replace(ReKey, '').toLowerCase();
+	
+				let meta = {};
+				results[2].split(';')
+					.map((p, i) => {
+						let match = p.match(/([a-z]+)=(.*)/i);
+						if (match) {
+							return [match[1], match[2]];
+						}
+						return ['TYPE' + (i === 0 ? '' : i), p];
+						
+					})
+					.forEach((p) => {
+						meta[p[0]] = p[1];
+					});
+	
+				if (!fields[key]) fields[key] = [];
+	
+				fields[key].push({
+					meta,
+					value: results[3].split(';')
+				});
+			}
+    });
+    this._updateUserData(fields);
+	}
+
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl) {
       LayoutAnimation.spring();
-      this.setState({ lastScannedUrl: result.data });
+      this._setVCardDetails(result.data);
     }
   };
 
