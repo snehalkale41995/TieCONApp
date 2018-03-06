@@ -38,21 +38,21 @@ const TabNav = TabNavigator({
     screen: Screens.Chat,
     navigationOptions: {
         tabBarLabel:"Connect",
-        tabBarIcon: ({ tintColor }) => <Icon name={"slideshare"} size={30} color={tintColor} />
+        tabBarIcon: ({ tintColor }) => <Icon name={"ios-link"} size={30} color={tintColor} />
     }
   },
   Speakers: {
     screen: Screens.Chat,
     navigationOptions: {
         tabBarLabel:"Speakers",
-        tabBarIcon: ({ tintColor }) => <Icon name={"users"} size={30} color={tintColor} />
+        tabBarIcon: ({ tintColor }) => <Icon name={"ios-people"} size={30} color={tintColor} />
     }
   },
   Buzz: {
     screen: Screens.Chat,
     navigationOptions: {
         tabBarLabel:"Buzz",
-        tabBarIcon: ({ tintColor }) => <Icon name={"bubbles"} size={30} color={tintColor} />
+        tabBarIcon: ({ tintColor }) => <Icon name={"ios-chatbubbles"} size={30} color={tintColor} />
     }
   }
 }, {
