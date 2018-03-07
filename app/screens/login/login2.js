@@ -7,7 +7,6 @@ import {RkTheme} from 'react-native-ui-kitten';
 import {scale, scaleModerate, scaleVertical} from '../../utils/scale';
 import { onSignIn } from "../../auth";
 import firebase from '../../config/firebase';
-import validateEmail from '../../utils/textUtils';
 
 export class LoginV2 extends React.Component {
   static navigationOptions = {

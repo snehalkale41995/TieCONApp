@@ -1,15 +1,17 @@
 import React from 'react';
-import { LayoutAnimation, StatusBar, StyleSheet, Alert, Linking, View, ScrollView, TouchableOpacity, Text, Image, Dimensions, Keyboard } from 'react-native';
-import { RkButton, RkText, RkChoice, RkModalImg, RkCard, RkTextInput, RkAvoidKeyboard, RkStyleSheet, RkTabView, RkTheme } from 'react-native-ui-kitten';
+import { LayoutAnimation, StatusBar, StyleSheet, Alert, Linking, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Keyboard } from 'react-native';
+import { RkButton, RkText, RkTextInput, RkStyleSheet, RkTheme, RkAvoidKeyboard } from 'react-native-ui-kitten';
 import { FontAwesome } from '../../assets/icons';
 import { GradientButton } from '../../components/gradientButton';
 import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
 import { NavigationActions } from 'react-navigation';
 import { BarCodeScanner, Permissions } from 'expo';
+import { Container, Header, Title, Content, Button, Icon, Right, Body, Left, Picker, ListItem } from "native-base";
 
 import firebase from '../../config/firebase';
 var firestoreDB = firebase.firestore();
 
+const Item = Picker.Item;
 
 export class QRScanner extends React.Component {
   static navigationOptions = ({navigation}) => ({
@@ -21,7 +23,13 @@ export class QRScanner extends React.Component {
     this.state = {
         hasCameraPermission: null,
         lastScannedUrl: null,
-        isErrorDisplayed: false
+        isErrorDisplayed: false,
+        selectedItem: undefined,
+        selectedConf: "Conf 1",
+        selectedEvent: "Entry",
+        results: {
+          items: []
+        }
       };
   }
 
@@ -38,9 +46,10 @@ export class QRScanner extends React.Component {
 
   _updateUserData(scannedData) {
     this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn });
+    
     firestoreDB.collection('usersInEvent').doc(scannedData.fn).set({
-			EventName: 'Entry',
-			ConfRoom: 'Conf1',
+			EventName: this.state.selectedEvent,
+			ConfRoom: this.state.selectedConf,
 			Name: scannedData.fn
 		})
     .then((docRef) => {
@@ -116,28 +125,133 @@ export class QRScanner extends React.Component {
     }
   };
 
+  onConfChange(value: string) {
+    this.setState({
+      selectedConf: value
+    });
+  }
+
+  onEventChange(value: string) {
+    this.setState({
+      selectedEvent: value
+    });
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-
-        {this.state.hasCameraPermission === null
-          ? <Text>Requesting for camera permission</Text>
-          : this.state.hasCameraPermission === false
-              ? <Text style={{ color: '#fff' }}>
-                  Camera permission is not granted
-                </Text>
-              : <BarCodeScanner
-                  onBarCodeRead={this._handleBarCodeRead}
-                  style={{
-                    height: Dimensions.get('window').height,
-                    width: Dimensions.get('window').width,
-                  }}
-                />}
-
-        {this._maybeRenderUrl()}
-
-        <StatusBar hidden />
-      </View>
+      <RkAvoidKeyboard
+        style={styles.screen}
+        onStartShouldSetResponder={ (e) => true}
+        onResponderRelease={ (e) => Keyboard.dismiss()}>
+        <ListItem icon>
+            <Left>
+              <Button style={{ backgroundColor: "#4CDA64" }}>
+                <Icon name="arrow-dropdown" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>Select Conf Room</Text>
+            </Body>
+            <Right>
+              <Picker
+                note
+                mode="dropdown"
+                style={{ width: 120 }}
+                selectedValue={this.state.selectedConf}
+                onValueChange={this.onConfChange.bind(this)}
+              >
+                <Item label="Conf 1" value="Conf 1" />
+                <Item label="Conf 2" value="Conf 2" />
+                <Item label="Conf 3" value="Conf 3" />
+                <Item label="Conf 4" value="Conf 4" />
+              </Picker>
+            </Right>
+        </ListItem>
+        <ListItem icon>
+            <Left>
+              <Button style={{ backgroundColor: "#4CDA64" }}>
+                <Icon name="arrow-dropdown" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>Select Event</Text>
+            </Body>
+            <Right>
+              <Picker
+                note
+                mode="dropdown"
+                style={{ width: 120 }}
+                selectedValue={this.state.selectedEvent}
+                onValueChange={this.onEventChange.bind(this)}
+              >
+                <Item label="Entry" value="Entry" />
+                <Item label="Exit" value="Exit" />
+              </Picker>
+            </Right>
+        </ListItem>
+        <View>
+          {this.state.hasCameraPermission === null
+            ? <RkText>Requesting for camera permission</RkText>
+            : this.state.hasCameraPermission === false
+                ? <RkText style={{ color: '#fff' }}>
+                    Camera permission is not granted
+                  </RkText>
+                : <BarCodeScanner
+                    onBarCodeRead={this._handleBarCodeRead}
+                    style={{
+                      //height: Dimensions.get('window').height,
+                      // width: Dimensions.get('window').width,
+                      height: (Dimensions.get('window').height - 180),
+                      width: (Dimensions.get('window').width - 30),
+                    }}
+                  />}
+          {this._maybeRenderUrl()}
+          <StatusBar hidden />
+          </View>
+      </RkAvoidKeyboard>
+        
+      /* <View style={styles.container}>
+        <Text> Hello World </Text>
+          <ListItem icon>
+            <Left>
+              <Button style={{ backgroundColor: "#4CDA64" }}>
+                <Icon name="arrow-dropdown" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>Select Conf Room</Text>
+            </Body>
+            <Right>
+              <Picker
+                note
+                mode="dropdown"
+                style={{ width: 120 }}
+                selectedValue={this.state.selected1}
+                onValueChange={this.onValueChange.bind(this)}
+              >
+                <Item label="TATA" value="key0" />
+                <Item label="AIRTEL" value="key1" />
+              </Picker>
+            </Right>
+          </ListItem>           
+          <View>
+            {this.state.hasCameraPermission === null
+              ? <Text>Requesting for camera permission</Text>
+              : this.state.hasCameraPermission === false
+                  ? <Text style={{ color: '#fff' }}>
+                      Camera permission is not granted
+                    </Text>
+                  : <BarCodeScanner
+                      onBarCodeRead={this._handleBarCodeRead}
+                      style={{
+                        height: Dimensions.get('window').height,
+                        width: Dimensions.get('window').width,
+                      }}
+                    />}
+            {this._maybeRenderUrl()}
+            <StatusBar hidden />
+          </View>
+          </View> */
     );
   }
 
@@ -184,36 +298,34 @@ export class QRScanner extends React.Component {
   };
 }
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#000',
-    },
-    bottomBar: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      padding: 15,
-      flexDirection: 'row',
-    },
-    url: {
-      flex: 1,
-    },
-    urlText: {
-      color: '#fff',
-      fontSize: 20,
-    },
-    cancelButton: {
-      marginLeft: 10,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    cancelButtonText: {
-      color: 'rgba(255,255,255,0.8)',
-      fontSize: 18,
-    },
-  });
+let styles = RkStyleSheet.create(theme => ({
+  screen: {
+    padding: 16,
+    flex: 1,
+    backgroundColor: theme.colors.screen.base
+  },
+  image: {
+    marginBottom: 10,
+    height:scaleVertical(77),
+    resizeMode:'contain'
+  },
+  content: {
+    justifyContent: 'space-between'
+  },
+  save: {
+    marginVertical: 20
+  },
+  buttons: {
+    flexDirection: 'row',
+    marginBottom: 24,
+    marginHorizontal: 24,
+    justifyContent: 'space-around'
+  },
+  footer:{
+    justifyContent:'flex-end'
+  },
+  textRow: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+}));
