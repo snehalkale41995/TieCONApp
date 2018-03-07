@@ -1,20 +1,13 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  Keyboard
-} from 'react-native';
-import {
-  RkButton,
-  RkText,
-  RkTextInput,
-  RkAvoidKeyboard, RkStyleSheet
-} from 'react-native-ui-kitten';
+import { View, Image, Alert, Keyboard } from 'react-native';
+import { RkButton, RkText, RkTextInput, RkAvoidKeyboard, RkStyleSheet } from 'react-native-ui-kitten';
 import {FontAwesome} from '../../assets/icons';
 import {GradientButton} from '../../components/gradientButton';
 import {RkTheme} from 'react-native-ui-kitten';
 import {scale, scaleModerate, scaleVertical} from '../../utils/scale';
 import { onSignIn } from "../../auth";
+import firebase from '../../config/firebase';
+import validator from 'react-validation';
 
 export class LoginV2 extends React.Component {
   static navigationOptions = {
@@ -23,6 +16,49 @@ export class LoginV2 extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      email: '',
+      password: ''
+    };
+  }
+
+  _onAuthenticate() {
+    if (!validator.isEmail(this.state.email)) {
+      Alert.alert(
+        'Invalid Email',
+        'Please enter valid email.',
+        [
+          { text: 'Ok', onPress: () => {} },
+        ],
+        { cancellable: false }
+      );
+      return;
+    }
+
+    if (!this.state.password.toString().trim().length < 6 ) {
+      Alert.alert(
+        'Invalid Email',
+        'Invalid length of password.',
+        [
+          { text: 'Ok', onPress: () => {} },
+        ],
+        { cancellable: false }
+      );
+      return;
+    }
+
+    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch((error) => {
+			let errorCode = error.code;
+      let errorMessage = error.message;
+      Alert.alert(
+        errorCode,
+        errorMessage,
+        [
+          { text: 'Cancel', onPress: () => {} },
+        ],
+        { cancellable: false }
+      );
+		});
   }
 
   render() {
@@ -44,11 +80,9 @@ export class LoginV2 extends React.Component {
         </View>
         <View style={styles.content}>
           <View>
-            <RkTextInput rkType='rounded' placeholder='Username'/>
-            <RkTextInput rkType='rounded' placeholder='Password' secureTextEntry={true}/>
-            <GradientButton style={styles.save} rkType='large' text='LOGIN' onPress={() => {
-              onSignIn().then(() => this.props.navigation.navigate("App"));
-            }}/>
+            <RkTextInput rkType='rounded' onChangeText={(text) => this.setState({email: text})} placeholder='Username'/>
+            <RkTextInput rkType='rounded' onChangeText={(text) => this.setState({password: text})} placeholder='Password' secureTextEntry={true}/>
+            <GradientButton style={styles.save} rkType='large' text='LOGIN' onPress={ this._onAuthenticate.bind(this) } />
           </View>
           <View style={styles.buttons}>
             <RkButton style={styles.button} rkType='social'>

@@ -1,20 +1,10 @@
 import React from 'react';
-import {
-  TouchableHighlight,
-  View,
-  ScrollView,
-  Image,
-  Platform,
-  StyleSheet
-} from 'react-native';
+import { TouchableHighlight, View, ScrollView, Image, Platform, StyleSheet, Alert } from 'react-native';
 import {NavigationActions} from 'react-navigation';
-import {
-  RkStyleSheet,
-  RkText,
-  RkTheme
-} from 'react-native-ui-kitten';
+import { RkStyleSheet, RkText, RkTheme } from 'react-native-ui-kitten';
 import {MainRoutes} from '../../config/navigation/routes';
-import {FontAwesome} from '../../assets/icons';
+import firebase from '../../config/firebase';
+import {FontAwesome, FontIcons} from '../../assets/icons';
 
 export class SideMenu extends React.Component {
 
@@ -38,6 +28,25 @@ export class SideMenu extends React.Component {
       return <Image style={styles.icon} source={require('../../assets/images/smallLogo.png')}/>;
     return <Image style={styles.icon} source={require('../../assets/images/smallLogoDark.png')}/>
 
+  }
+
+  _onLogout() {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        { text: 'Yes', onPress: () => {
+            firebase.auth().signOut().then(function() {
+              // Sign-out successful.
+            }).catch(function(error) {
+              // An error happened.
+            });
+          } 
+        },
+        { text: 'No', onPress: () => {} },
+      ],
+      { cancellable: false }
+    );
   }
 
   render() {
@@ -70,6 +79,25 @@ export class SideMenu extends React.Component {
             <RkText rkType='logo'>TiECON</RkText>
           </View>
           {menu}
+          
+
+          <TouchableHighlight
+            style={styles.container}
+            key={'Logout'}
+            underlayColor={RkTheme.current.colors.button.underlay}
+            activeOpacity={1}
+            onPress={ this._onLogout.bind(this) }>
+            <View style={styles.content}>
+              <View style={styles.content}>
+                <RkText style={styles.icon}
+                        rkType='moon primary xlarge'>{FontIcons.login}</RkText>
+                <RkText>Logout</RkText>
+              </View>
+              <RkText rkType='awesome secondaryColor small'>{FontAwesome.chevronRight}</RkText>
+            </View>
+          </TouchableHighlight>
+
+
         </ScrollView>
       </View>
     )

@@ -28,6 +28,7 @@
     "react-native-switch-pro": "0.4.6",
     "react-native-ui-kitten": "3.0.0",
     "react-navigation": "1.4.0",
+    "react-validation": "^3.0.7",
     "victory-native": "0.15.0"
   },
   "devDependencies": {

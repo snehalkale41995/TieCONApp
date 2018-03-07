@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Image,
-  View,
-  Dimensions,
-  StatusBar, AsyncStorage
-} from 'react-native';
+import { StyleSheet, Image, View, Dimensions, StatusBar, AsyncStorage, Alert } from 'react-native';
 import {
   RkText,
   RkTheme
@@ -16,6 +10,7 @@ import {
 } from '../../config/theme';
 import {NavigationActions} from 'react-navigation';
 import {scale, scaleModerate, scaleVertical} from '../../utils/scale';
+import firebase from '../../config/firebase';
 
 let timeFrame = 500;
 
@@ -30,11 +25,14 @@ export class SplashScreen extends React.Component {
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
-    const userToken = await AsyncStorage.getItem('userToken');
-
-    // This will switch to the App screen or Auth screen and this loading
-    // screen will be unmounted and thrown away.
-    this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+    let navigation = this.props.navigation;
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        navigation.navigate('App');
+      } else {
+        navigation.navigate('Auth');
+      }
+    });
   };
 
   componentDidMount() {
