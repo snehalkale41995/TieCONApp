@@ -21,6 +21,7 @@ export class QRScanner extends React.Component {
     this.state = {
         hasCameraPermission: null,
         lastScannedUrl: null,
+        isErrorDisplayed: false
       };
   }
 
@@ -37,10 +38,10 @@ export class QRScanner extends React.Component {
 
   _updateUserData(scannedData) {
     this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn });
-    firestoreDB.collection('usersInEvent').doc('fromDevices').set({
+    firestoreDB.collection('usersInEvent').doc(scannedData.fn).set({
 			EventName: 'Entry',
 			ConfRoom: 'Conf1',
-			Name: 'Sagar Shelar'
+			Name: scannedData.fn
 		})
     .then((docRef) => {
       this.setState({ lastScannedUrl: 'Updated' });
@@ -88,12 +89,30 @@ export class QRScanner extends React.Component {
 			}
     });
     this._updateUserData(fields);
-	}
+  }
+  
+  _validateQRData(data) {
+    if (data.startsWith('BEGIN:VCARD')) {
+      this._setVCardDetails(data);
+    } else {
+      this.setState({isErrorDisplayed: true});
+      Alert.alert(
+        'Invalid Data',
+        'This QR code is not valid TiECON QR Code.',
+        [
+          { text: 'Ok', onPress: () => {
+            this.setState({isErrorDisplayed: false});
+          } },
+        ],
+        { cancellable: false }
+      );
+    }
+  }
 
   _handleBarCodeRead = result => {
-    if (result.data !== this.state.lastScannedUrl) {
+    if (result.data !== this.state.lastScannedUrl && this.state.isErrorDisplayed == false) {
       LayoutAnimation.spring();
-      this._setVCardDetails(result.data);
+      this._validateQRData(result.data);
     }
   };
 

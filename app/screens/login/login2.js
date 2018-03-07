@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Alert, Keyboard } from 'react-native';
+import { View, Image, Alert, Keyboard, ActivityIndicator } from 'react-native';
 import { RkButton, RkText, RkTextInput, RkAvoidKeyboard, RkStyleSheet } from 'react-native-ui-kitten';
 import {FontAwesome} from '../../assets/icons';
 import {GradientButton} from '../../components/gradientButton';
@@ -7,7 +7,7 @@ import {RkTheme} from 'react-native-ui-kitten';
 import {scale, scaleModerate, scaleVertical} from '../../utils/scale';
 import { onSignIn } from "../../auth";
 import firebase from '../../config/firebase';
-import validator from 'react-validation';
+import validateEmail from '../../utils/textUtils';
 
 export class LoginV2 extends React.Component {
   static navigationOptions = {
@@ -23,7 +23,8 @@ export class LoginV2 extends React.Component {
   }
 
   _onAuthenticate() {
-    if (!validator.isEmail(this.state.email)) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!this.state.email || !re.test(this.state.email)) {
       Alert.alert(
         'Invalid Email',
         'Please enter valid email.',
@@ -35,9 +36,9 @@ export class LoginV2 extends React.Component {
       return;
     }
 
-    if (!this.state.password.toString().trim().length < 6 ) {
+    if (!this.state.password || this.state.password.toString().trim().length < 6 ) {
       Alert.alert(
-        'Invalid Email',
+        'Invalid Password',
         'Invalid length of password.',
         [
           { text: 'Ok', onPress: () => {} },
