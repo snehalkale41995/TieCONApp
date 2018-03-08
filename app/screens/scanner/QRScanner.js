@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutAnimation, StatusBar, StyleSheet, Alert, Linking, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Keyboard } from 'react-native';
+import { LayoutAnimation, StatusBar, StyleSheet, Alert, Linking, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Keyboard, ActivityIndicator } from 'react-native';
 import { RkButton, RkText, RkTextInput, RkStyleSheet, RkTheme, RkAvoidKeyboard } from 'react-native-ui-kitten';
 import { FontAwesome } from '../../assets/icons';
 import { GradientButton } from '../../components/gradientButton';
@@ -12,6 +12,14 @@ import firebase from '../../config/firebase';
 var firestoreDB = firebase.firestore();
 
 const Item = Picker.Item;
+
+function renderIf(condition, content) {
+  if (condition) {
+      return content;
+  } else {
+      return null;
+  }
+}
 
 export class QRScanner extends React.Component {
   static navigationOptions = ({navigation}) => ({
@@ -26,7 +34,7 @@ export class QRScanner extends React.Component {
         isErrorDisplayed: false,
         selectedItem: undefined,
         selectedConf: "Conf 1",
-        selectedEvent: "Entry",
+        isLoading: false,
         results: {
           items: []
         }
@@ -48,15 +56,14 @@ export class QRScanner extends React.Component {
     this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn });
     
     firestoreDB.collection('usersInEvent').doc(scannedData.fn).set({
-			EventName: this.state.selectedEvent,
 			ConfRoom: this.state.selectedConf,
 			Name: scannedData.fn
 		})
     .then((docRef) => {
-      this.setState({ lastScannedUrl: 'Updated' });
+      this.setState({ lastScannedUrl: 'Updated', isLoading: false });
     })
     .catch((error) => {
-      this.setState({ lastScannedUrl: 'Error Updating' });
+      this.setState({ lastScannedUrl: 'Error Updating', isLoading: false });
     });
   }
 
@@ -104,7 +111,7 @@ export class QRScanner extends React.Component {
     if (data.startsWith('BEGIN:VCARD')) {
       this._setVCardDetails(data);
     } else {
-      this.setState({isErrorDisplayed: true});
+      this.setState({isErrorDisplayed: true, isLoading: false});
       Alert.alert(
         'Invalid Data',
         'This QR code is not valid TiECON QR Code.',
@@ -121,19 +128,16 @@ export class QRScanner extends React.Component {
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl && this.state.isErrorDisplayed == false) {
       LayoutAnimation.spring();
-      this._validateQRData(result.data);
+      if(!this.state.isLoading) {
+        this.setState({isLoading: true});
+        this._validateQRData(result.data);
+      }
     }
   };
 
   onConfChange(value: string) {
     this.setState({
       selectedConf: value
-    });
-  }
-
-  onEventChange(value: string) {
-    this.setState({
-      selectedEvent: value
     });
   }
 
@@ -167,28 +171,6 @@ export class QRScanner extends React.Component {
               </Picker>
             </Right>
         </ListItem>
-        <ListItem icon>
-            <Left>
-              <Button style={{ backgroundColor: "#4CDA64" }}>
-                <Icon name="arrow-dropdown" />
-              </Button>
-            </Left>
-            <Body>
-              <Text>Select Event</Text>
-            </Body>
-            <Right>
-              <Picker
-                note
-                mode="dropdown"
-                style={{ width: 120 }}
-                selectedValue={this.state.selectedEvent}
-                onValueChange={this.onEventChange.bind(this)}
-              >
-                <Item label="Entry" value="Entry" />
-                <Item label="Exit" value="Exit" />
-              </Picker>
-            </Right>
-        </ListItem>
         <View>
           {this.state.hasCameraPermission === null
             ? <RkText>Requesting for camera permission</RkText>
@@ -197,61 +179,24 @@ export class QRScanner extends React.Component {
                     Camera permission is not granted
                   </RkText>
                 : <BarCodeScanner
+                    style={styles.barCode}
                     onBarCodeRead={this._handleBarCodeRead}
                     style={{
                       //height: Dimensions.get('window').height,
                       // width: Dimensions.get('window').width,
-                      height: (Dimensions.get('window').height - 180),
-                      width: (Dimensions.get('window').width - 30),
+                      height: (Dimensions.get('window').height - 130 ),
+                      width: (Dimensions.get('window').width- 20),
                     }}
                   />}
           {this._maybeRenderUrl()}
           <StatusBar hidden />
           </View>
+          {renderIf(this.state.isLoading,
+            <View style={styles.loading}> 
+              <ActivityIndicator size='large' /> 
+            </View>
+          )}
       </RkAvoidKeyboard>
-        
-      /* <View style={styles.container}>
-        <Text> Hello World </Text>
-          <ListItem icon>
-            <Left>
-              <Button style={{ backgroundColor: "#4CDA64" }}>
-                <Icon name="arrow-dropdown" />
-              </Button>
-            </Left>
-            <Body>
-              <Text>Select Conf Room</Text>
-            </Body>
-            <Right>
-              <Picker
-                note
-                mode="dropdown"
-                style={{ width: 120 }}
-                selectedValue={this.state.selected1}
-                onValueChange={this.onValueChange.bind(this)}
-              >
-                <Item label="TATA" value="key0" />
-                <Item label="AIRTEL" value="key1" />
-              </Picker>
-            </Right>
-          </ListItem>           
-          <View>
-            {this.state.hasCameraPermission === null
-              ? <Text>Requesting for camera permission</Text>
-              : this.state.hasCameraPermission === false
-                  ? <Text style={{ color: '#fff' }}>
-                      Camera permission is not granted
-                    </Text>
-                  : <BarCodeScanner
-                      onBarCodeRead={this._handleBarCodeRead}
-                      style={{
-                        height: Dimensions.get('window').height,
-                        width: Dimensions.get('window').width,
-                      }}
-                    />}
-            {this._maybeRenderUrl()}
-            <StatusBar hidden />
-          </View>
-          </View> */
     );
   }
 
@@ -300,32 +245,22 @@ export class QRScanner extends React.Component {
 
 let styles = RkStyleSheet.create(theme => ({
   screen: {
-    padding: 16,
+    padding: 10,
     flex: 1,
     backgroundColor: theme.colors.screen.base
   },
-  image: {
-    marginBottom: 10,
-    height:scaleVertical(77),
-    resizeMode:'contain'
+  barCode: {
+    padding: 10,
   },
-  content: {
-    justifyContent: 'space-between'
-  },
-  save: {
-    marginVertical: 20
-  },
-  buttons: {
-    flexDirection: 'row',
-    marginBottom: 24,
-    marginHorizontal: 24,
-    justifyContent: 'space-around'
-  },
-  footer:{
-    justifyContent:'flex-end'
-  },
-  textRow: {
-    flexDirection: 'row',
+  loading: {
+    position: 'absolute',
+    left: 0,
+    backgroundColor: 'black',
+    opacity: 0.8,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
     justifyContent: 'center'
-  },
+  }
 }));

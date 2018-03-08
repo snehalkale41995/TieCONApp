@@ -8,6 +8,14 @@ import {scale, scaleModerate, scaleVertical} from '../../utils/scale';
 import { onSignIn } from "../../auth";
 import firebase from '../../config/firebase';
 
+function renderIf(condition, content) {
+  if (condition) {
+      return content;
+  } else {
+      return null;
+  }
+}
+
 export class LoginV2 extends React.Component {
   static navigationOptions = {
     header: null
@@ -17,7 +25,8 @@ export class LoginV2 extends React.Component {
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      isLoading: false,
     };
   }
 
@@ -46,6 +55,8 @@ export class LoginV2 extends React.Component {
       );
       return;
     }
+
+    this.setState({isLoading: true});
 
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch((error) => {
 			let errorCode = error.code;
@@ -105,6 +116,11 @@ export class LoginV2 extends React.Component {
             </View>
           </View>
         </View>
+        {renderIf(this.state.isLoading, 
+            <View style={styles.loading}> 
+              <ActivityIndicator size='large' /> 
+            </View>
+        )}
       </RkAvoidKeyboard>
     )
   }
@@ -146,5 +162,16 @@ let styles = RkStyleSheet.create(theme => ({
   button: {
     borderColor: theme.colors.border.solid
   },
-  footer: {}
+  footer: {},
+  loading: {
+    position: 'absolute',
+    left: 0,
+    backgroundColor: 'black',
+    opacity: 0.5,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 }));
