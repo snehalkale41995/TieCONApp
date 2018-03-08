@@ -8,7 +8,7 @@ import { NavigationActions } from 'react-navigation';
 import { Container, Content, Footer, Header, Title, Button, Icon, Tabs, Tab, Text, Right, Left, Body, TabHeading } from "native-base";
 import { onSignOut } from "../../auth";
 import * as Screens from '../index';
-import { Contacts, Chat } from  '../index';
+import { Contacts, Chat, ProgramsTab, ConnectTab } from  '../index';
 import { TabNavigator, TabView } from 'react-navigation'
 
 export default function renderIf(condition, content) {
@@ -71,12 +71,6 @@ export class HomePage extends React.Component {
     };
   }
 
-  onTabChange = (event, viewName) => {
-    this.setState({
-      currentTab: viewName
-    })
-  }
-
   render() {
     return (
       // <TabNav />
@@ -85,24 +79,17 @@ export class HomePage extends React.Component {
         <Tabs tabBarPosition="bottom" style={{ elevation: 3 }}>
           <Tab
             heading={
-              <TabHeading style={{ flexDirection: 'column' }}><Icon name="home"/><Text>Home</Text></TabHeading>
-            }
-          >
-            <Contacts />
-          </Tab>
-          <Tab
-            heading={
               <TabHeading style={{ flexDirection: 'column' }}><Icon name="calendar"/><Text>Program</Text></TabHeading>
             }
           >
-            <Contacts />
+            <ProgramsTab />
           </Tab>
           <Tab
             heading={
               <TabHeading style={{ flexDirection: 'column' }}><Icon name="ios-link"/><Text>Connect</Text></TabHeading>
             }
           >
-            <Contacts />
+            <ConnectTab />
           </Tab>
           <Tab
             heading={
