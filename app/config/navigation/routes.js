@@ -1,14 +1,27 @@
+import React from 'react';
 import {FontIcons} from '../../assets/icons';
 import * as Screens from '../../screens/index';
+import { HomePage } from '../../screens/index';
 import _ from 'lodash';
 import { TabNavigator, TabView } from 'react-navigation'
+
+export class HomePageMenuScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Home'.toUpperCase()
+  };
+  render() {
+    return (
+     <HomePage navigation={this.props.navigation} />
+    )
+  }
+}
 
 export const MainRoutes = [
   {
     id: 'HomeMenu',
     title: 'Home',
     icon: FontIcons.login,
-    screen: Screens.HomePage,
+    screen: HomePageMenuScreen,
     children: [
       {
         id: 'Contacts',
@@ -16,6 +29,24 @@ export const MainRoutes = [
         screen: Screens.Contacts,
         children: []
       },
+      {
+        id: 'Chat',
+        title: 'Chat',
+        screen: Screens.Chat,
+        children: []
+      },
+      {
+        id: 'ChatList',
+        title: 'Chat List',
+        screen: Screens.ChatList,
+        children: []
+      },
+      {
+        id: 'ProfileV1',
+        title: 'User Profile V1',
+        screen: Screens.ProfileV1,
+        children: []
+      }
     ]
   },
   {
@@ -69,12 +100,18 @@ let menuRoutes = _.cloneDeep(MainRoutes);
 menuRoutes.unshift({
   id: 'GridV2',
   title: 'Start',
-  screen: Screens.HomePage,
+  screen: HomePageMenuScreen,
   children: [
     {
       id: 'Contacts',
       title: 'Contacts',
       screen: Screens.Contacts,
+      children: []
+    },
+    {
+      id: 'Chat',
+      title: 'Chat',
+      screen: Screens.Chat,
       children: []
     },
   ]

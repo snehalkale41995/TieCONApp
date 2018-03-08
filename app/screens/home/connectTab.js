@@ -1,7 +1,7 @@
 import React from 'react';
 import { RkAvoidKeyboard, RkStyleSheet } from 'react-native-ui-kitten';
 import { Tabs, Tab, Icon, Text, TabHeading } from "native-base";
-import { Chat, Contacts } from  '../index';
+import { ChatList, Contacts } from  '../index';
 
 export class ConnectTab extends React.Component {
   constructor(props) {
@@ -23,14 +23,14 @@ export class ConnectTab extends React.Component {
               <TabHeading><Icon name="calendar"/><Text>All Attendees</Text></TabHeading>
             }
           >
-            <Contacts />
+            <Contacts navigation={this.props.navigation} />
           </Tab>
           <Tab
             heading={
               <TabHeading><Icon name="ios-link"/><Text>My Chats</Text></TabHeading>
             }
           >
-            <Text>My Chats</Text>
+            <ChatList navigation={this.props.navigation} />
           </Tab>
         </Tabs>
       </RkAvoidKeyboard>        
