@@ -16,9 +16,9 @@ import {Avatar} from '../../components/avatar';
 import {FontAwesome} from '../../assets/icons';
 
 export class Contacts extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation}) => ({
     title: 'Contacts'.toUpperCase()
-  };
+  });
 
   constructor(props) {
     super(props);

@@ -5,9 +5,10 @@ import { FontAwesome } from '../../assets/icons';
 import { GradientButton } from '../../components/gradientButton';
 import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
 import { NavigationActions } from 'react-navigation';
-import { Container, Header, Content, Footer, FooterTab, Button, Icon, Text } from 'native-base';
+import { Container, Content, Footer, Header, Title, Button, Icon, Tabs, Tab, Text, Right, Left, Body, TabHeading } from "native-base";
 import { onSignOut } from "../../auth";
 import * as Screens from '../index';
+import { Contacts, Chat } from  '../index';
 import { TabNavigator, TabView } from 'react-navigation'
 
 export default function renderIf(condition, content) {
@@ -42,19 +43,12 @@ const TabNav = TabNavigator({
     }
   },
   Speakers: {
-    screen: Screens.Chat,
+    screen: Screens.Contacts,
     navigationOptions: {
         tabBarLabel:"Speakers",
         tabBarIcon: ({ tintColor }) => <Icon name={"ios-people"} size={30} color={tintColor} />
     }
   },
-  Buzz: {
-    screen: Screens.Chat,
-    navigationOptions: {
-        tabBarLabel:"Buzz",
-        tabBarIcon: ({ tintColor }) => <Icon name={"ios-chatbubbles"} size={30} color={tintColor} />
-    }
-  }
 }, {
       animationEnabled: true,
       tabBarOptions: {
@@ -85,37 +79,40 @@ export class HomePage extends React.Component {
 
   render() {
     return (
-      <TabNav />
-      // <Container>
-      //   <Header />
-      //   <Content>
-      //     <Text>Body</Text>
-      //   </Content>
-      //   <Footer>
-      //   <FooterTab>
-      //     <Button active onPress={(event) => this.onTabChange(event, 'Home')} vertical>
-      //       <Icon name="apps" />
-      //       <Text>Home</Text>
-      //     </Button>
-      //     <Button active onPress={(event) => this.onTabChange(event, 'Program')} vertical>
-      //       <Icon name="apps" />
-      //       <Text>Program</Text>
-      //     </Button>
-      //     <Button vertical onPress={(event) => onSignOut().then(() => this.props.navigation.navigate("SignedOut"))} vertical>
-      //       <Icon name="camera" />
-      //       <Text>Signout</Text>
-      //     </Button>
-      //     <Button vertical onPress={(event) => this.onTabChange(event, 'Speakers')} vertical>
-      //       <Icon active name="navigate" />
-      //       <Text>Speaker</Text>
-      //     </Button>
-      //     <Button vertical onPress={(event) => this.onTabChange(event, 'Buzz')} vertical>
-      //       <Icon name="person" />
-      //       <Text>Buzz</Text>
-      //     </Button>
-      //   </FooterTab>
-      //   </Footer>
-      // </Container>
+      // <TabNav />
+      // <Contacts />
+      <Container>
+        <Tabs tabBarPosition="bottom" style={{ elevation: 3 }}>
+          <Tab
+            heading={
+              <TabHeading style={{ flexDirection: 'column' }}><Icon name="home"/><Text>Home</Text></TabHeading>
+            }
+          >
+            <Contacts />
+          </Tab>
+          <Tab
+            heading={
+              <TabHeading style={{ flexDirection: 'column' }}><Icon name="calendar"/><Text>Program</Text></TabHeading>
+            }
+          >
+            <Contacts />
+          </Tab>
+          <Tab
+            heading={
+              <TabHeading style={{ flexDirection: 'column' }}><Icon name="ios-link"/><Text>Connect</Text></TabHeading>
+            }
+          >
+            <Contacts />
+          </Tab>
+          <Tab
+            heading={
+              <TabHeading style={{ flexDirection: 'column' }}><Icon name="ios-people"/><Text>Speakers</Text></TabHeading>
+            }
+          >
+            <Contacts />
+          </Tab>
+        </Tabs>
+      </Container>
     )
   }
 }

@@ -10,6 +10,12 @@ export const MainRoutes = [
     icon: FontIcons.login,
     screen: Screens.HomePage,
     children: [
+      {
+        id: 'Contacts',
+        title: 'Contacts',
+        screen: Screens.Contacts,
+        children: []
+      },
     ]
   },
   {
@@ -64,8 +70,14 @@ menuRoutes.unshift({
   id: 'GridV2',
   title: 'Start',
   screen: Screens.HomePage,
-  // screen: ({ navigation }) => <TabNav screenProps={{ rootNavigation: navigation }} />,
-  children: []
+  children: [
+    {
+      id: 'Contacts',
+      title: 'Contacts',
+      screen: Screens.Contacts,
+      children: []
+    },
+  ]
 },);
 
 export const MenuRoutes = menuRoutes;
