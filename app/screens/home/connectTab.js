@@ -13,27 +13,22 @@ export class ConnectTab extends React.Component {
 
   render() {
     return (
-      <RkAvoidKeyboard
-        style={styles.screen}
-        onStartShouldSetResponder={ (e) => true}
-        onResponderRelease={ (e) => Keyboard.dismiss()}>
-        <Tabs style={{ elevation: 3 }}>
-          <Tab
-            heading={
-              <TabHeading><Icon name="calendar"/><Text>All Attendees</Text></TabHeading>
-            }
-          >
-            <Contacts navigation={this.props.navigation} />
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading><Icon name="ios-link"/><Text>My Chats</Text></TabHeading>
-            }
-          >
-            <ChatList navigation={this.props.navigation} />
-          </Tab>
-        </Tabs>
-      </RkAvoidKeyboard>        
+      <Tabs style={{ elevation: 3 }}>
+        <Tab
+          heading={
+            <TabHeading><Icon name="calendar"/><Text>All Attendees</Text></TabHeading>
+          }
+        >
+          <Contacts navigation={this.props.navigation} />
+        </Tab>
+        <Tab
+          heading={
+            <TabHeading><Icon name="ios-link"/><Text>My Chats</Text></TabHeading>
+          }
+        >
+          <ChatList navigation={this.props.navigation} />
+        </Tab>
+      </Tabs>
     );
   }
 }

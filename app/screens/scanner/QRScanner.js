@@ -189,7 +189,6 @@ export class QRScanner extends React.Component {
                     }}
                   />}
           {this._maybeRenderUrl()}
-          <StatusBar hidden />
           </View>
           {renderIf(this.state.isLoading,
             <View style={styles.loading}> 

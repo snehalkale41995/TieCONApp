@@ -12,27 +12,22 @@ export class ProgramsTab extends React.Component {
 
   render() {
     return (
-      <RkAvoidKeyboard
-        style={styles.screen}
-        onStartShouldSetResponder={ (e) => true}
-        onResponderRelease={ (e) => Keyboard.dismiss()}>
-        <Tabs style={{ elevation: 3 }}>
-          <Tab
-            heading={
-              <TabHeading><Icon name="calendar"/><Text>Schedule</Text></TabHeading>
-            }
-          >
-            <Text> Schedule </Text>
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading><Icon name="ios-link"/><Text>My Agenda</Text></TabHeading>
-            }
-          >
-            <Text> My Agenda </Text>
-          </Tab>
-        </Tabs>
-      </RkAvoidKeyboard>        
+      <Tabs style={{ elevation: 3 }}>
+        <Tab
+          heading={
+            <TabHeading><Icon name="calendar"/><Text>Schedule</Text></TabHeading>
+          }
+        >
+          <Text> Schedule </Text>
+        </Tab>
+        <Tab
+          heading={
+            <TabHeading><Icon name="ios-link"/><Text>My Agenda</Text></TabHeading>
+          }
+        >
+          <Text> My Agenda </Text>
+        </Tab>
+      </Tabs>
     );
   }
 }

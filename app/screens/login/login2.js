@@ -95,7 +95,7 @@ export class LoginV2 extends React.Component {
             <RkTextInput rkType='rounded' onChangeText={(text) => this.setState({password: text})} placeholder='Password' secureTextEntry={true}/>
             <GradientButton style={styles.save} rkType='large' text='LOGIN' onPress={ this._onAuthenticate.bind(this) } />
           </View>
-          <View style={styles.buttons}>
+          {/* <View style={styles.buttons}>
             <RkButton style={styles.button} rkType='social'>
               <RkText rkType='awesome hero'>{FontAwesome.twitter}</RkText>
             </RkButton>
@@ -105,16 +105,16 @@ export class LoginV2 extends React.Component {
             <RkButton style={styles.button} rkType='social'>
               <RkText rkType='awesome hero'>{FontAwesome.facebook}</RkText>
             </RkButton>
-          </View>
+          </View> */}
 
-          <View style={styles.footer}>
+          {/* <View style={styles.footer}>
             <View style={styles.textRow}>
               <RkText rkType='primary3'>Don’t have an account?</RkText>
               <RkButton rkType='clear' onPress={() => this.props.navigation.navigate('SignUp')}>
                 <RkText rkType='header6'> Sign up now </RkText>
               </RkButton>
             </View>
-          </View>
+          </View> */}
         </View>
         {renderIf(this.state.isLoading, 
             <View style={styles.loading}> 
