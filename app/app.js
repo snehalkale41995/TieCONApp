@@ -10,7 +10,8 @@ import {bootstrap} from './config/bootstrap';
 import track from './config/analytics';
 import {data} from './data'
 import {AppLoading, Font} from 'expo';
-import {View, Text} from "react-native";
+import {View, Text, Alert} from "react-native";
+import { Permissions, Notifications } from 'expo';
 
 bootstrap();
 data.populateData();
@@ -49,17 +50,62 @@ const SwitchStack = SwitchNavigator(
   }
 );
 
+async function registerForPushNotificationsAsync() {
+  const { status: existingStatus } = await Permissions.getAsync(
+    Permissions.NOTIFICATIONS
+  );
+  let finalStatus = existingStatus;
+
+  // only ask if permissions have not already been determined, because
+  // iOS won't necessarily prompt the user a second time.
+  if (existingStatus !== 'granted') {
+    // Android remote notification permissions are granted during the app
+    // install, so this will only ask on iOS
+    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    finalStatus = status;
+  }
+
+  // Stop here if the user did not grant permissions
+  if (finalStatus !== 'granted') {
+    return;
+  }
+
+  // Get the token that uniquely identifies this device
+  let token = await Notifications.getExpoPushTokenAsync();
+  // console.warn('Token', token);
+}
+
 
 export default class App extends React.Component {
   state = {
     loaded: false,
     signedIn: false,
-    checkedSignIn: false
+    checkedSignIn: false,
+    notification: {},
   };
 
   componentWillMount() {
     this._loadAssets();
+    registerForPushNotificationsAsync();
+  
+    // Handle notifications that are received or selected while the app
+    // is open. If the app was closed and then opened by tapping the
+    // notification (rather than just tapping the app icon to open it),
+    // this function will fire on the next tick after the app starts
+    // with the notification data.
+    this._notificationSubscription = Notifications.addListener(this._handleNotification);
   }
+
+  _handleNotification = (notification) => {
+    Alert.alert(
+      'Token',
+      'Some Notification Received.',
+      [
+        { text: 'Ok', onPress: () => {} },
+      ],
+      { cancellable: false }
+    );
+  };
 
   _loadAssets = async() => {
     await Font.loadAsync({

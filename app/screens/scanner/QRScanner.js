@@ -55,8 +55,8 @@ export class QRScanner extends React.Component {
   _updateUserData(scannedData) {
     this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn });
     
-    //firestoreDB.collection('Attendance').doc(scannedData.fn).set({
-    firestoreDB.collection('Attendance').doc(scannedData.fn).collection("events").add({
+    firestoreDB.collection('Attendance').doc(scannedData.fn).set({
+    //firestoreDB.collection('Attendance').doc(scannedData.fn).collection("events").add({
 			confRoom: this.state.selectedConf,
 			timesteamp: firebase.firestore.FieldValue.serverTimestamp()
 		})
