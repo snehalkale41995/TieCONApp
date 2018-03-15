@@ -6,12 +6,25 @@ import {MainRoutes} from '../../config/navigation/routes';
 import firebase from '../../config/firebase';
 import { Icon } from "native-base";
 import {FontAwesome, FontIcons} from '../../assets/icons';
+import { AsyncStorage } from 'react-native';
 
 export class SideMenu extends React.Component {
 
   constructor(props) {
     super(props);
     this._navigateAction = this._navigate.bind(this);
+    this.state = {
+      userDetails: {}
+    }
+  }
+  
+  componentWillMount() {
+    AsyncStorage.getItem("USER_DETAILS").then((userDetails)=>{
+       this.setState({userDetails: JSON.parse(userDetails)})
+      })
+      .catch(err => {
+        console.warn('Errors');
+      });
   }
 
   _navigate(route) {
@@ -28,7 +41,6 @@ export class SideMenu extends React.Component {
     if (RkTheme.current.name === 'light')
       return <Image style={styles.icon} source={require('../../assets/images/smallLogo.png')}/>;
     return <Image style={styles.icon} source={require('../../assets/images/smallLogoDark.png')}/>
-
   }
 
   _onLogout() {
@@ -39,6 +51,7 @@ export class SideMenu extends React.Component {
         { text: 'Yes', onPress: () => {
             firebase.auth().signOut().then(function() {
               // Sign-out successful.
+              AsyncStorage.removeItem("USER_DETAILS")
             }).catch(function(error) {
               // An error happened.
             });
@@ -52,22 +65,28 @@ export class SideMenu extends React.Component {
 
   render() {
     let menu = MainRoutes.map((route, index) => {
+      if (this.state.userDetails && this.state.userDetails.roleId && route.roleId) {
+        if(this.state.userDetails.roleId != route.roleId){
+          return null;
+        }
+      }
+
       return (
-        <TouchableHighlight
-          style={styles.container}
-          key={route.id}
-          underlayColor={RkTheme.current.colors.button.underlay}
-          activeOpacity={1}
-          onPress={() => this._navigateAction(route)}>
-          <View style={styles.content}>
+          <TouchableHighlight
+            style={styles.container}
+            key={route.id}
+            underlayColor={RkTheme.current.colors.button.underlay}
+            activeOpacity={1}
+            onPress={() => this._navigateAction(route)}>
             <View style={styles.content}>
-              <RkText style={styles.icon}
-                      rkType='moon primary xlarge'><Icon name={route.icon}/></RkText>
-              <RkText>{route.title}</RkText>
+              <View style={styles.content}>
+                <RkText style={styles.icon}
+                        rkType='moon primary xlarge'><Icon name={route.icon}/></RkText>
+                <RkText>{route.title}</RkText>
+              </View>
+              <RkText rkType='awesome secondaryColor small'>{FontAwesome.chevronRight}</RkText>
             </View>
-            <RkText rkType='awesome secondaryColor small'>{FontAwesome.chevronRight}</RkText>
-          </View>
-        </TouchableHighlight>
+          </TouchableHighlight>
       )
     });
 

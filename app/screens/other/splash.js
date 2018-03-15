@@ -11,6 +11,7 @@ import {
 import {NavigationActions} from 'react-navigation';
 import {scale, scaleModerate, scaleVertical} from '../../utils/scale';
 import firebase from '../../config/firebase';
+import { Toast } from 'native-base';
 
 let timeFrame = 500;
 
@@ -28,7 +29,28 @@ export class SplashScreen extends React.Component {
     let navigation = this.props.navigation;
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        navigation.navigate('App');
+        AsyncStorage.getItem("USER_DETAILS").then((userDetails)=>{
+          if(userDetails) {
+            navigation.navigate('App');
+          } else {
+            var db = firebase.firestore();
+            var docRef = db.collection("Users").doc(user.uid);
+            docRef.get().then(function(doc) {
+                if (doc.exists) {
+                    let userInfo = JSON.stringify(doc.data());
+                    AsyncStorage.setItem("USER_DETAILS", userInfo);
+                    navigation.navigate('App');
+                } else {
+                   console.warn('Unable to get document');
+                }
+            }).catch(function(error) {
+                console.warn("Error getting warn:", error);
+            });
+          }
+        }).catch(function(error) {
+          console.warn('Error reading local storage.');
+        });;
+        //navigation.navigate('App');
       } else {
         navigation.navigate('Auth');
       }
