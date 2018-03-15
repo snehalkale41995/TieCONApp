@@ -65,8 +65,8 @@ export class SideMenu extends React.Component {
 
   render() {
     let menu = MainRoutes.map((route, index) => {
-      if (this.state.userDetails && this.state.userDetails.roleId && route.roleId) {
-        if(this.state.userDetails.roleId != route.roleId){
+      if (this.state.userDetails && this.state.userDetails.roleName && route.roleName) {
+        if(this.state.userDetails.roleName != route.roleName){
           return null;
         }
       }
