@@ -19,7 +19,7 @@ export const MainRoutes = [
   {
     id: 'HomeMenu',
     title: 'Home',
-    icon: FontIcons.login,
+    icon: 'md-home',
     screen: HomePageMenuScreen,
     children: [
       {
@@ -51,24 +51,24 @@ export const MainRoutes = [
   {
     id: 'QRScanner',
     title: 'QR Scanner',
-    icon: FontIcons.login,
+    icon: 'md-qr-scanner',
     screen: Screens.QRScanner,
     children: []
   },
-  {
-    id: 'Dashboard',
-    title: 'Dashboard',
-    icon: FontIcons.dashboard,
-    screen: Screens.Dashboard,
-    children: []
-  },
-  {
-    id: 'Themes',
-    title: 'Themes',
-    icon: FontIcons.theme,
-    screen: Screens.Themes,
-    children: []
-  },
+  // {
+  //   id: 'Dashboard',
+  //   title: 'Dashboard',
+  //   icon: 'ios-list',
+  //   screen: Screens.Dashboard,
+  //   children: []
+  // },
+  // {
+  //   id: 'Themes',
+  //   title: 'Themes',
+  //   icon: FontIcons.theme,
+  //   screen: Screens.Themes,
+  //   children: []
+  // },
 ];
 
 let menuRoutes = _.cloneDeep(MainRoutes);

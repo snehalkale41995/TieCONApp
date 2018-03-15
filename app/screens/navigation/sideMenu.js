@@ -4,6 +4,7 @@ import {NavigationActions} from 'react-navigation';
 import { RkStyleSheet, RkText, RkTheme } from 'react-native-ui-kitten';
 import {MainRoutes} from '../../config/navigation/routes';
 import firebase from '../../config/firebase';
+import { Icon } from "native-base";
 import {FontAwesome, FontIcons} from '../../assets/icons';
 
 export class SideMenu extends React.Component {
@@ -61,7 +62,7 @@ export class SideMenu extends React.Component {
           <View style={styles.content}>
             <View style={styles.content}>
               <RkText style={styles.icon}
-                      rkType='moon primary xlarge'>{route.icon}</RkText>
+                      rkType='moon primary xlarge'><Icon name={route.icon}/></RkText>
               <RkText>{route.title}</RkText>
             </View>
             <RkText rkType='awesome secondaryColor small'>{FontAwesome.chevronRight}</RkText>
@@ -90,7 +91,7 @@ export class SideMenu extends React.Component {
             <View style={styles.content}>
               <View style={styles.content}>
                 <RkText style={styles.icon}
-                        rkType='moon primary xlarge'>{FontIcons.login}</RkText>
+                        rkType='moon primary xlarge'><Icon name="ios-exit"/></RkText>
                 <RkText>Logout</RkText>
               </View>
               <RkText rkType='awesome secondaryColor small'>{FontAwesome.chevronRight}</RkText>
