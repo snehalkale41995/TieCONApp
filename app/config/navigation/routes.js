@@ -54,7 +54,7 @@ export const MainRoutes = [
     icon: 'md-qr-scanner',
     screen: Screens.QRScanner,
     children: [],
-    roleNames: ['Admin','Speaker']
+    roleNames: ['Admin','Volunteer']
   },
   // {
   //   id: 'Dashboard',
