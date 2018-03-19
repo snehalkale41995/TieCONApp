@@ -2,6 +2,8 @@ import React from 'react';
 import { RkAvoidKeyboard, RkStyleSheet } from 'react-native-ui-kitten';
 import { Tabs, Tab, Icon, Text, TabHeading } from "native-base";
 
+import Schedule from './schedule/Schedule';
+
 export class ProgramsTab extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +20,7 @@ export class ProgramsTab extends React.Component {
             <TabHeading><Icon name="calendar"/><Text>Schedule</Text></TabHeading>
           }
         >
-          <Text> Schedule </Text>
+          <Schedule />
         </Tab>
         <Tab
           heading={
