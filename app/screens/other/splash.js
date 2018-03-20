@@ -37,7 +37,9 @@ export class SplashScreen extends React.Component {
             var docRef = db.collection("Users").doc(user.uid);
             docRef.get().then(function(doc) {
                 if (doc.exists) {
-                    let userInfo = JSON.stringify(doc.data());
+                    let data = doc.data();
+                    data.uid = user.uid;
+                    let userInfo = JSON.stringify(data);
                     AsyncStorage.setItem("USER_DETAILS", userInfo);
                     navigation.navigate('App');
                 } else {
