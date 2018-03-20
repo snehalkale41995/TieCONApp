@@ -61,6 +61,7 @@ export class LoginV2 extends React.Component {
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch((error) => {
 			let errorCode = error.code;
       let errorMessage = error.message;
+      this.setState({isLoading: false});
       Alert.alert(
         errorCode,
         errorMessage,
