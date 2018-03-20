@@ -53,6 +53,7 @@ export class SideMenu extends React.Component {
             firebase.auth().signOut().then(function() {
               // Sign-out successful.
               AsyncStorage.removeItem("USER_DETAILS")
+              AsyncStorage.removeItem("USER_LINKEDIN_TOKEN")
             }).catch(function(error) {
               // An error happened.
             });
