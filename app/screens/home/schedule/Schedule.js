@@ -1,10 +1,10 @@
 import React from 'react';
 import {Text, View} from 'native-base';
-import {FlatList} from 'react-native';
+import {FlatList, SectionList} from 'react-native';
 import ScheduleTile from './Schedule-tile';
+import Moment from 'moment';
 
 import {Service} from '../../../services';
-//import {Service} from '../../../services/Service';
 
 /**
  *
@@ -19,21 +19,6 @@ export default class Schedule extends React.Component {
 
         this.state = {
             sessionList: [],
-            todos: [
-                {
-                    title: 'Hello Mahesh',
-                    completed: false
-                }, {
-                    title: 'Hello Yogesh',
-                    completed: true
-                }, {
-                    title: 'Hello Monia',
-                    completed: false
-                }, {
-                    title: 'Hello Sayali',
-                    completed: true
-                }
-            ]
         }
     }
     /**
@@ -55,7 +40,17 @@ export default class Schedule extends React.Component {
         Service.addSnapshotListener('Event', (snapshot) => {
             const sessionList = [];
             snapshot.forEach((event) => {
-                const {eventName, extraServices, isRegrequired, room, startTime, speakers} = event.data();
+                const {
+                    eventName,
+                    extraServices,
+                    isRegrequired,
+                    room,
+                    startTime,
+                    speakers, 
+                    endTime
+                } = event.data();
+                const duration = Moment(endTime).diff(Moment(startTime), 'minutes');
+
                 sessionList.push({
                     key: event.id,
                     eventName,
@@ -63,7 +58,9 @@ export default class Schedule extends React.Component {
                     isRegrequired,
                     room,
                     speakers,
-                    startTime
+                    startTime,
+                    endTime,
+                    duration
                 });
             });
             this.setState({sessionList});
@@ -77,13 +74,14 @@ export default class Schedule extends React.Component {
         /* Pre-render Processing */
         / * Display Logic * /
         return (
-            <View style={{
-                flex: 1
-            }}>
+            <View style={{ flex: 1 }}>
                 <FlatList
                     data={this.state.sessionList}
-                    renderItem={({item}) => <ScheduleTile session={item}/>}/>
+                    renderItem={({item}) => <ScheduleTile 
+                    navigation={this.props.navigation} 
+                    session={item}/>}/>                
             </View >
         );
     }
 }
+

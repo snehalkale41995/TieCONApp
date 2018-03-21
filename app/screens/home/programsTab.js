@@ -20,7 +20,7 @@ export class ProgramsTab extends React.Component {
             <TabHeading><Icon name="calendar"/><Text>Schedule</Text></TabHeading>
           }
         >
-          <Schedule />
+          <Schedule navigation={this.props.navigation}/>
         </Tab>
         <Tab
           heading={
