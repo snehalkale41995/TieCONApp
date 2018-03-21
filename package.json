@@ -1,8 +1,8 @@
 {
-  "name": "kittenTricks",
+  "name": "TiECON",
   "version": "1.0.9",
   "private": true,
-  "author": "akveo",
+  "author": "sagar shelar",
   "scripts": {
     "start": "react-native-scripts start",
     "eject": "react-native-scripts eject",
