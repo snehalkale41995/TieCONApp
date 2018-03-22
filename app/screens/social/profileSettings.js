@@ -37,7 +37,8 @@ export class ProfileSettings extends React.Component {
       linkedInSummary: '',
       isLinkedInConnected: false,
       linkedInToken: {},
-      userDetails: {}
+      userDetails: {},
+      pictureUrl: 'https://randomuser.me/api/portraits/men/84.jpg'
     }
     this.onLinkedInError = this.onLinkedInError.bind(this);
     this.onLinkedInConnect = this.onLinkedInConnect.bind(this);
@@ -59,7 +60,8 @@ export class ProfileSettings extends React.Component {
         lastName: user.lastName,
         email: user.emailId,
         phone: user.contactNo,
-        linkedInSummary: user.linkedInSummary
+        linkedInSummary: user.linkedInSummary,
+        pictureUrl: user.pictureUrl ? user.pictureUrl : 'https://randomuser.me/api/portraits/men/84.jpg'
       });
      })
      .catch(err => {
@@ -93,6 +95,7 @@ export class ProfileSettings extends React.Component {
         'last-name',
         'industry',
         'summary',
+        'picture-url',
         'picture-urls::(original)',
         'headline',
         'email-address',
@@ -104,14 +107,16 @@ export class ProfileSettings extends React.Component {
         },
       }).then((response) => {
         response.json().then((payload) => {
-          this.setState({linkedInSummary: payload.headline});
+          this.setState({linkedInSummary: payload.headline, pictureUrl: payload.pictureUrl});
           firestoreDB.collection('Users').doc(this.state.userDetails.uid).set({
-              linkedInSummary: payload.headline
+              linkedInSummary: payload.headline,
+              pictureUrl: payload.pictureUrl
             }, { merge: true })
             .then((docRef) => {
               this.setState({linkedInSummary: payload.headline});
               let userDetailsToSave = this.state.userDetails;
               userDetailsToSave.linkedInSummary = payload.headline;
+              userDetailsToSave.pictureUrl = payload.pictureUrl;
               AsyncStorage.setItem("USER_DETAILS", JSON.stringify(userDetailsToSave));
             })
             .catch((error) => {
@@ -129,7 +134,7 @@ export class ProfileSettings extends React.Component {
       <ScrollView style={styles.root}>
         <RkAvoidKeyboard>
           <View style={styles.header}>
-            <Avatar img={this.user.photo} rkType='big'/>
+            <Avatar imagePath={this.state.pictureUrl} rkType='big'/>
           </View>
           <View style={styles.section}>
             <View style={[styles.row, styles.heading]}>
@@ -171,9 +176,11 @@ export class ProfileSettings extends React.Component {
             </View>
             <View style={styles.row}>
               <RkTextInput label='Summary'
-                           value={this.state.linkedInSummary}
-                           rkType='right clear'
-                           onChangeText={(text) => this.setState({linkedInSummary: text})}/>
+                           value=''
+                           rkType='right clear' />
+            </View>
+            <View style={styles.row}>
+              <RkText rkType='header4'>{this.state.linkedInSummary}</RkText>
             </View>
             <GradientButton rkType='large' style={styles.button} text='Update from Linkedin Profile' onPress={() => this.getLinkedinProfileDetails()} />
           </View>
