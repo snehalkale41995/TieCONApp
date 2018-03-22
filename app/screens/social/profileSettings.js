@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Alert, AsyncStorage } from 'react-native';
+import { ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator } from 'react-native';
 import { RkText, RkTextInput, RkAvoidKeyboard, RkTheme, RkStyleSheet } from 'react-native-ui-kitten';
 import {data} from '../../data';
 import {Avatar} from '../../components';
@@ -31,6 +31,7 @@ export class ProfileSettings extends React.Component {
       // lastName: this.user.lastName,
       // email: this.user.email,
       // phone: this.user.phone,
+      isLoading: true,
       password: this.user.password,
       newPassword: this.user.newPassword,
       confirmPassword: this.user.confirmPassword,
@@ -61,6 +62,7 @@ export class ProfileSettings extends React.Component {
         email: user.emailId,
         phone: user.contactNo,
         linkedInSummary: user.linkedInSummary,
+        isLoading: false,
         pictureUrl: user.pictureUrl ? user.pictureUrl : 'https://randomuser.me/api/portraits/men/84.jpg'
       });
      })
@@ -88,6 +90,7 @@ export class ProfileSettings extends React.Component {
 
   getLinkedinProfileDetails(forceConnect = false) {
     if(this.state.isLinkedInConnected || forceConnect){
+      this.setState({ isLoading: true });
       const baseApi = 'https://api.linkedin.com/v1/people/';
       const qs = { format: 'json' };
       const params = [
@@ -106,6 +109,7 @@ export class ProfileSettings extends React.Component {
           Authorization: 'Bearer ' + this.state.linkedInToken.access_token,
         },
       }).then((response) => {
+        this.setState({ isLoading: false });
         response.json().then((payload) => {
           this.setState({linkedInSummary: payload.headline, pictureUrl: payload.pictureUrl});
           firestoreDB.collection('Users').doc(this.state.userDetails.uid).set({
@@ -201,7 +205,13 @@ export class ProfileSettings extends React.Component {
           onError={error => this.onLinkedInError(error)}
           onSuccess={token => this.onLinkedInConnect(token) }
         />
+        {renderIf(this.state.isLoading,
+            <View style={styles.loading}> 
+              <ActivityIndicator size='large' /> 
+            </View>
+          )}
       </View>
+
       </ScrollView>
     )
   }
@@ -223,6 +233,17 @@ let styles = RkStyleSheet.create(theme => ({
   },
   section: {
     marginVertical: 25
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    backgroundColor: 'black',
+    opacity: 0.8,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   heading: {
     paddingBottom: 12.5
