@@ -11,4 +11,15 @@ export class Service {
             successFn(snapshot);
         });
     }
+    static getList(docName, successFn, errorFn){
+        Service.getDocRef(docName).get().then(
+            (snapshot)=>{
+                successFn(snapshot)
+            }
+        ).catch((error)=>{
+            if(errorFn){
+                errorFn(error);
+            }
+        });
+    }
 }
