@@ -35,10 +35,25 @@ export class QRScanner extends React.Component {
         selectedItem: undefined,
         selectedConf: "Conf 1",
         isLoading: false,
+        sessions: [],
         results: {
           items: []
         }
       };
+  }
+  
+  componentWillMount() {
+    var db = firebase.firestore();
+    let sessions = [];
+    let thisRef = this;
+    db.collection("Sessions").get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        sessions.push(doc.data());
+      });
+      thisRef.setState({sessions});
+    }).catch(function(error) {
+        console.warn("Error getting Sessions:", error);
+    });
   }
 
   componentDidMount() {
@@ -80,20 +95,6 @@ export class QRScanner extends React.Component {
       ],
       { cancellable: false }
     );
-
-
-
-    // firestoreDB.collection('Attendance').doc(scannedData.fn).set({
-    // //firestoreDB.collection('Attendance').doc(scannedData.fn).collection("events").add({
-		// 	confRoom: this.state.selectedConf,
-		// 	timesteamp: firebase.firestore.FieldValue.serverTimestamp()
-		// })
-    // .then((docRef) => {
-    //   this.setState({ lastScannedUrl: 'Updated', isLoading: false });
-    // })
-    // .catch((error) => {
-    //   this.setState({ lastScannedUrl: 'Error Updating', isLoading: false });
-    // });
   }
 
   _setVCardDetails = (scannedResult) => {
@@ -164,13 +165,20 @@ export class QRScanner extends React.Component {
     }
   };
 
-  onConfChange(value: string) {
+  onConfChange(value) {
     this.setState({
       selectedConf: value
     });
   }
 
   render() {
+
+    let sessionItems = this.state.sessions.map(function (session, index) {
+      return (
+        <Item key={index} label={session.eventName} value={session.eventName} />
+      )
+    });
+
     return (
       <RkAvoidKeyboard
         style={styles.screen}
@@ -178,27 +186,18 @@ export class QRScanner extends React.Component {
         onResponderRelease={ (e) => Keyboard.dismiss()}>
         <ListItem icon>
             <Left>
-              <Button style={{ backgroundColor: "#4CDA64" }}>
-                <Icon name="arrow-dropdown" />
-              </Button>
+              <Text>Select Session</Text>
             </Left>
             <Body>
-              <Text>Select Conf Room</Text>
-            </Body>
-            <Right>
               <Picker
-                note
-                mode="dropdown"
-                style={{ width: 120 }}
-                selectedValue={this.state.selectedConf}
-                onValueChange={this.onConfChange.bind(this)}
-              >
-                <Item label="Conf 1" value="Conf 1" />
-                <Item label="Conf 2" value="Conf 2" />
-                <Item label="Conf 3" value="Conf 3" />
-                <Item label="Conf 4" value="Conf 4" />
-              </Picker>
-            </Right>
+                  note
+                  mode="dropdown"
+                  selectedValue={this.state.selectedConf}
+                  onValueChange={this.onConfChange.bind(this)}
+                >
+                  {sessionItems}
+                </Picker>
+            </Body>
         </ListItem>
         <View>
           {this.state.hasCameraPermission === null
