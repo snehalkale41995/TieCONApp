@@ -37,13 +37,11 @@ export default class EventCal extends Component {
     }
 
     renderDay = (day, item) => {
-            console.log("Render Day called");
             return (
                 <Text>{item?item.eventName : 'default'}</Text>
             )
     }
     loadItems = (day) => {
-        
         Service.getDocRef(SESSIONS_TABLE).where("startTime", ">=", new Date());
         Service.getList(SESSIONS_TABLE, (snapshot) => {
             const sessions = [];
@@ -57,12 +55,9 @@ export default class EventCal extends Component {
                     speakers,
                     endTime
                 } = event.data();
-                console.log("eventName: "+eventName);
-                console.log("Start Time: "+startTime);
-                console.log("End Time: "+endTime + "\n\n");
                 const duration = Moment(endTime).diff(Moment(startTime), 'minutes');
                 
-                const startingAt = "Hello Mahesh";//Moment().format("hh:mm");
+                const startingAt = Moment().format("hh:mm");
                 sessions.push({
                     key: event.id,
                     eventName,
@@ -75,10 +70,10 @@ export default class EventCal extends Component {
                     endTime,
                     duration
                 });
-                console.log("Data Loaded as expected");
             });
             let newItems = {};
-            newItems["2018-04-20"] = sessions;
+            console.log("date String"+day.dateString);
+            newItems[Moment(day.dateString).format("YYYY-MM-DD")] = sessions;
             this.setState({items: newItems});
         })
     }
