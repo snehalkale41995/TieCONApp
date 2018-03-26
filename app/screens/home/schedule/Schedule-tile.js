@@ -70,7 +70,7 @@ export default class ScheduleTile extends RkComponent {
                     <View rkCardHeader style = {styles.header}> 
                         <Text style={styles.roomName}>{this.props.session.room}</Text>
                         <View style={styles.mainHeader}>
-                            <Text style={styles.headerText}>{this.props.session.key}</Text> 
+                            <Text style={styles.headerText}>{this.props.session.eventName}</Text> 
                             <RkButton rkType = 'success small' style ={styles.actionBtn} onPress={this.onAttendRequest}> Attend </RkButton>
                         </View>
                     </View >
