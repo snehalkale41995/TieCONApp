@@ -18,5 +18,6 @@ firebase.initializeApp({
     storageBucket: "tie-con-management.appspot.com",
     messagingSenderId: "852890830155"
 });
+export const firestoreDB = firebase.firestore();
 
 export default firebase;

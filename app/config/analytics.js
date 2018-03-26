@@ -1,6 +1,7 @@
 import { Analytics, PageHit } from 'expo-analytics';
 
-let google_analytics_id = 'UA-112172761-2';
+//TODO: Change ID
+let google_analytics_id = '';
 
 let analytics = new Analytics(google_analytics_id);
 
