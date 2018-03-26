@@ -4,6 +4,7 @@ import { RkButton, RkText, RkTextInput, RkStyleSheet, RkTheme, RkAvoidKeyboard }
 import { FontAwesome } from '../../assets/icons';
 import { GradientButton } from '../../components/gradientButton';
 import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
+import { Platform } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import { BarCodeScanner, Permissions } from 'expo';
 import { Container, Header, Title, Content, Button, Icon, Right, Body, Left, Picker, ListItem } from "native-base";
@@ -33,8 +34,8 @@ export class QRScanner extends React.Component {
         lastScannedUrl: null,
         isErrorDisplayed: false,
         selectedItem: undefined,
-        selectedConf: "Conf 1",
-        isLoading: false,
+        selectedConf: "",
+        isLoading: true,
         sessions: [],
         scanHistory: [],
         sessionUsers: [],
@@ -42,6 +43,7 @@ export class QRScanner extends React.Component {
           items: []
         }
       };
+    this._getCurrentSessionUsers = this._getCurrentSessionUsers.bind(this);
   }
   
   componentWillMount() {
@@ -54,9 +56,16 @@ export class QRScanner extends React.Component {
         sessionData['id'] = doc.id;
         sessions.push(sessionData);
       });
-      thisRef.setState({sessions});
+      if(sessions.length > 0)
+      {
+        thisRef.setState({sessions, selectedConf: sessions[0].id});
+        thisRef._getCurrentSessionUsers(sessions[0].id);
+      } else {
+        thisRef.setState({error: 'No sessions found.', isLoading: false})
+      }
     }).catch(function(error) {
-        console.warn("Error getting Sessions:", error);
+      thisRef.setState({error: 'Error getting Sessions.', isLoading: false})
+      console.warn("Error getting Sessions:", error);
     });
   }
 
@@ -187,27 +196,28 @@ export class QRScanner extends React.Component {
     }
   };
 
-  onConfChange(value) {
-    console.warn(value);
-    this.setState({
-      selectedConf: value,
-      isLoading: true
-    });
-
+  _getCurrentSessionUsers(selectedSessionId) {
     let thisRef = this;
     let sessionUsers = [];
     var db = firebase.firestore();
-    db.collection("RegistrationResponse").where("sessionId", "==", value).get().then(function(querySnapshot) {
+    db.collection("RegistrationResponse").where("sessionId", "==", selectedSessionId).get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
         let sessionData = doc.data();
         sessionUsers.push(sessionData.userId);
       });
-      console.warn(sessionUsers);
       thisRef.setState({sessionUsers, isLoading: false});
     }).catch(function(error) {
         thisRef.setState({isLoading: false});
         console.warn("Error getting Session Users:", error);
     });
+  }
+
+  onConfChange(selectedSessionId) {
+    this.setState({
+      selectedConf: selectedSessionId,
+      isLoading: true
+    });
+    this._getCurrentSessionUsers(selectedSessionId);
   }
 
   render() {
@@ -249,9 +259,7 @@ export class QRScanner extends React.Component {
                     style={styles.barCode}
                     onBarCodeRead={this._handleBarCodeRead}
                     style={{
-                      //height: Dimensions.get('window').height,
-                      // width: Dimensions.get('window').width,
-                      height: (Dimensions.get('window').height - 130 ),
+                      height: (Dimensions.get('window').height - (Platform.OS === 'ios' ? 130 : 145) ),
                       width: (Dimensions.get('window').width- 20),
                     }}
                   />}
