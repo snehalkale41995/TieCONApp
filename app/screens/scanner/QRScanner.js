@@ -35,10 +35,29 @@ export class QRScanner extends React.Component {
         selectedItem: undefined,
         selectedConf: "Conf 1",
         isLoading: false,
+        sessions: [],
+        scanHistory: [],
+        sessionUsers: [],
         results: {
           items: []
         }
       };
+  }
+  
+  componentWillMount() {
+    var db = firebase.firestore();
+    let sessions = [];
+    let thisRef = this;
+    db.collection("Sessions").get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        let sessionData = doc.data();
+        sessionData['id'] = doc.id;
+        sessions.push(sessionData);
+      });
+      thisRef.setState({sessions});
+    }).catch(function(error) {
+        console.warn("Error getting Sessions:", error);
+    });
   }
 
   componentDidMount() {
@@ -53,47 +72,50 @@ export class QRScanner extends React.Component {
   };
 
   _updateUserData(scannedData) {
-    this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn });
-    
-    Alert.alert(
-      'Scanned Info',
-      scannedData.fn,
-      [
-        { text: 'Update', onPress: () => {
-            firestoreDB.collection('Attendance').doc(scannedData.fn).set({
-              //firestoreDB.collection('Attendance').doc(scannedData.fn).collection("events").add({
-                confRoom: this.state.selectedConf,
-                timesteamp: firebase.firestore.FieldValue.serverTimestamp()
-              })
-              .then((docRef) => {
-                this.setState({ lastScannedUrl: 'Updated', isLoading: false });
-              })
-              .catch((error) => {
-                this.setState({ lastScannedUrl: 'Error Updating', isLoading: false });
-              });
-          } 
-        },
-        { text: 'Cancel', onPress: () => {
-          this.setState({isLoading: false});
-          } 
-        },
-      ],
-      { cancellable: false }
-    );
 
+    if(this.state.scanHistory.indexOf(scannedData.fn) > -1 && !this.state.isLoading) {
+      this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn , isLoading: true });
+      this.state.scanHistory.push(scannedData.fn);
 
-
-    // firestoreDB.collection('Attendance').doc(scannedData.fn).set({
-    // //firestoreDB.collection('Attendance').doc(scannedData.fn).collection("events").add({
-		// 	confRoom: this.state.selectedConf,
-		// 	timesteamp: firebase.firestore.FieldValue.serverTimestamp()
-		// })
-    // .then((docRef) => {
-    //   this.setState({ lastScannedUrl: 'Updated', isLoading: false });
-    // })
-    // .catch((error) => {
-    //   this.setState({ lastScannedUrl: 'Error Updating', isLoading: false });
-    // });
+      // TODO: Change to id
+      if(this.state.sessionUsers.indexOf(scannedData.fn) == -1) {
+        Alert.alert(
+          'Unregistered User',
+          'This user is not registered for this session. Do you still want to continue?',
+          [
+            { text: 'Yes', onPress: () => {
+                firestoreDB.collection('Attendance').doc(scannedData.fn).set({
+                  confRoom: this.state.selectedConf,
+                  timesteamp: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then((docRef) => {
+                  this.setState({ lastScannedUrl: 'Updated', isLoading: false });
+                })
+                .catch((error) => {
+                  this.setState({ lastScannedUrl: 'Error Updating', isLoading: false });
+                });
+              } 
+            },
+            { text: 'No', onPress: () => {
+              this.setState({isLoading: false});
+              } 
+            },
+          ],
+          { cancellable: false }
+        );
+      } else {
+        firestoreDB.collection('Attendance').doc(scannedData.fn).set({
+          confRoom: this.state.selectedConf,
+          timesteamp: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then((docRef) => {
+          this.setState({ lastScannedUrl: 'Updated', isLoading: false });
+        })
+        .catch((error) => {
+          this.setState({ lastScannedUrl: 'Error Updating', isLoading: false });
+        });
+      }
+    }
   }
 
   _setVCardDetails = (scannedResult) => {
@@ -157,20 +179,45 @@ export class QRScanner extends React.Component {
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl && this.state.isErrorDisplayed == false) {
       LayoutAnimation.spring();
-      if(!this.state.isLoading) {
-        this.setState({isLoading: true});
-        this._validateQRData(result.data);
-      }
+      // if(!this.state.isLoading) {
+      //   this.setState({isLoading: true});
+      //   this._validateQRData(result.data);
+      // }
+      this._validateQRData(result.data);
     }
   };
 
-  onConfChange(value: string) {
+  onConfChange(value) {
+    console.warn(value);
     this.setState({
-      selectedConf: value
+      selectedConf: value,
+      isLoading: true
+    });
+
+    let thisRef = this;
+    let sessionUsers = [];
+    var db = firebase.firestore();
+    db.collection("RegistrationResponse").where("sessionId", "==", value).get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        let sessionData = doc.data();
+        sessionUsers.push(sessionData.userId);
+      });
+      console.warn(sessionUsers);
+      thisRef.setState({sessionUsers, isLoading: false});
+    }).catch(function(error) {
+        thisRef.setState({isLoading: false});
+        console.warn("Error getting Session Users:", error);
     });
   }
 
   render() {
+
+    let sessionItems = this.state.sessions.map(function (session, index) {
+      return (
+        <Item key={index} label={session.eventName} value={session.id} />
+      )
+    });
+
     return (
       <RkAvoidKeyboard
         style={styles.screen}
@@ -178,27 +225,18 @@ export class QRScanner extends React.Component {
         onResponderRelease={ (e) => Keyboard.dismiss()}>
         <ListItem icon>
             <Left>
-              <Button style={{ backgroundColor: "#4CDA64" }}>
-                <Icon name="arrow-dropdown" />
-              </Button>
+              <Text>Select Session</Text>
             </Left>
             <Body>
-              <Text>Select Conf Room</Text>
-            </Body>
-            <Right>
               <Picker
-                note
-                mode="dropdown"
-                style={{ width: 120 }}
-                selectedValue={this.state.selectedConf}
-                onValueChange={this.onConfChange.bind(this)}
-              >
-                <Item label="Conf 1" value="Conf 1" />
-                <Item label="Conf 2" value="Conf 2" />
-                <Item label="Conf 3" value="Conf 3" />
-                <Item label="Conf 4" value="Conf 4" />
-              </Picker>
-            </Right>
+                  note
+                  mode="dropdown"
+                  selectedValue={this.state.selectedConf}
+                  onValueChange={this.onConfChange.bind(this)}
+                >
+                  {sessionItems}
+                </Picker>
+            </Body>
         </ListItem>
         <View>
           {this.state.hasCameraPermission === null
