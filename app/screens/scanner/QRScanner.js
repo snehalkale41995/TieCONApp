@@ -81,49 +81,71 @@ export class QRScanner extends React.Component {
   };
 
   _updateUserData(scannedData) {
+    if(scannedData.title.startsWith('id')) {
+      if(this.state.scanHistory.indexOf(scannedData.fn) == -1 && !this.state.isLoading) {
+        this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn , isLoading: true });
+        let updatedScannedHistory = this.state.scanHistory;
+        if(updatedScannedHistory.length >= 5) {
+          updatedScannedHistory.push(scannedData.fn);
+          updatedScannedHistory.slice(0, updatedScannedHistory.length-1)
+        }
 
-    if(this.state.scanHistory.indexOf(scannedData.fn) > -1 && !this.state.isLoading) {
-      this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn , isLoading: true });
-      this.state.scanHistory.push(scannedData.fn);
+        this.setState({scanHistory: updatedScannedHistory});
 
-      // TODO: Change to id
-      if(this.state.sessionUsers.indexOf(scannedData.fn) == -1) {
-        Alert.alert(
-          'Unregistered User',
-          'This user is not registered for this session. Do you still want to continue?',
-          [
-            { text: 'Yes', onPress: () => {
-                firestoreDB.collection('Attendance').doc(scannedData.fn).set({
-                  confRoom: this.state.selectedConf,
-                  timesteamp: firebase.firestore.FieldValue.serverTimestamp()
-                })
-                .then((docRef) => {
-                  this.setState({ lastScannedUrl: 'Updated', isLoading: false });
-                })
-                .catch((error) => {
-                  this.setState({ lastScannedUrl: 'Error Updating', isLoading: false });
-                });
-              } 
-            },
-            { text: 'No', onPress: () => {
-              this.setState({isLoading: false});
-              } 
-            },
-          ],
-          { cancellable: false }
-        );
-      } else {
-        firestoreDB.collection('Attendance').doc(scannedData.fn).set({
-          confRoom: this.state.selectedConf,
-          timesteamp: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .then((docRef) => {
-          this.setState({ lastScannedUrl: 'Updated', isLoading: false });
-        })
-        .catch((error) => {
-          this.setState({ lastScannedUrl: 'Error Updating', isLoading: false });
-        });
+        if(this.state.sessionUsers.indexOf(scannedData.fn) == -1) {
+          Alert.alert(
+            'Unregistered User',
+            'This user is not registered for this session. Do you still want to continue?',
+            [
+              { text: 'Yes', onPress: () => {
+                  firestoreDB.collection('Attendance').doc(scannedData.title.substring(3)).set({
+                    userId: scannedData.title.substring(3),
+                    fullName: scannedData.fn,
+                    sessionId: this.state.selectedConf,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                  })
+                  .then((docRef) => {
+                    this.setState({ lastScannedUrl: 'Updated', isLoading: false });
+                  })
+                  .catch((error) => {
+                    this.setState({ lastScannedUrl: 'Error Updating', isLoading: false });
+                  });
+                } 
+              },
+              { text: 'No', onPress: () => {
+                this.setState({isLoading: false});
+                } 
+              },
+            ],
+            { cancellable: false }
+          );
+        } else {
+          firestoreDB.collection('Attendance').doc(scannedData.title.substring(3)).set({
+            userId: scannedData.title.substring(3),
+            fullName: scannedData.fn,
+            sessionId: this.state.selectedConf,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          })
+          .then((docRef) => {
+            this.setState({ lastScannedUrl: 'Updated', isLoading: false });
+          })
+          .catch((error) => {
+            this.setState({ lastScannedUrl: 'Error Updating', isLoading: false });
+          });
+        }
       }
+    } else {
+      this.setState({isErrorDisplayed: true, isLoading: false});
+      Alert.alert(
+        'Invalid Data',
+        'This QR code is not valid TiECON QR Code.',
+        [
+          { text: 'Ok', onPress: () => {
+            this.setState({isErrorDisplayed: false});
+          } },
+        ],
+        { cancellable: false }
+      );
     }
   }
 
@@ -168,7 +190,7 @@ export class QRScanner extends React.Component {
   }
   
   _validateQRData(data) {
-    if (data.startsWith('BEGIN:VCARD')) {
+    if (data.startsWith('BEGIN:VCARD') && data.indexOf('TITLE') > -1) {
       this._setVCardDetails(data);
     } else {
       this.setState({isErrorDisplayed: true, isLoading: false});
@@ -188,10 +210,6 @@ export class QRScanner extends React.Component {
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl && this.state.isErrorDisplayed == false) {
       LayoutAnimation.spring();
-      // if(!this.state.isLoading) {
-      //   this.setState({isLoading: true});
-      //   this._validateQRData(result.data);
-      // }
       this._validateQRData(result.data);
     }
   };
@@ -215,7 +233,8 @@ export class QRScanner extends React.Component {
   onConfChange(selectedSessionId) {
     this.setState({
       selectedConf: selectedSessionId,
-      isLoading: true
+      isLoading: true,
+      scanHistory: []
     });
     this._getCurrentSessionUsers(selectedSessionId);
   }
@@ -263,7 +282,7 @@ export class QRScanner extends React.Component {
                       width: (Dimensions.get('window').width- 20),
                     }}
                   />}
-          {this._maybeRenderUrl()}
+          {/* {this._maybeRenderUrl()} */}
           </View>
           {renderIf(this.state.isLoading,
             <View style={styles.loading}> 
