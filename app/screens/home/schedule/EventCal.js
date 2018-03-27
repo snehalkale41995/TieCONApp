@@ -37,7 +37,7 @@ export default class EventCal extends Component {
      */
     renderDay = (day, item) => {
             return (
-                <Text>{item?Moment(item.startTime).format("hh:mm") : 'default'}</Text>
+                <Text>{item?Moment(item.startTime).format("hh:mm") : ''}</Text>
             )
     }
     /**
@@ -65,7 +65,6 @@ export default class EventCal extends Component {
                     endTime
                 } = session.data();
                 const duration = Moment(endTime).diff(Moment(startTime), 'minutes');
-
                 const startingAt = Moment().format("hh:mm");
                 sessions.push({
                     key: session.id,
