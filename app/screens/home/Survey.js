@@ -18,14 +18,14 @@ export class Survey extends RkComponent {
         this.state = {
             queForm: [],
             askedBy: "",
-            Responses : [],
-            AnswerInput  : [],
-            ShareInput : [],
-            QueArray : [],
+            responses : [],
+            answerInput  : [],
+            renderQuestions : [],
+            queArray : [],
             sessionId : this.props.navigation.state.params.sessionId,
         }
         this.onFormSelectValue = this.onFormSelectValue.bind(this);
-        this.onChangeMultiChoice = this.onChangeMultiChoice.bind(this);
+        this.onMultiChoiceChange = this.onMultiChoiceChange.bind(this);
     }
     componentWillMount() {
         this.getForm();
@@ -53,16 +53,16 @@ export class Survey extends RkComponent {
         });
     }
     onSubmitResponse = () => {
-        this.state.QueArray.forEach(fItem => {
+        this.state.queArray.forEach(fItem => {
             if (fItem.Answer.size >= 1)
                 fItem.Answer = Array.from(fItem.Answer);
         })
         this.setState({
-            Responses: this.state.QueArray,
+            responses: this.state.queArray,
         })
         let thisRef = this;
         firestoreDB.collection('SessionSurvey').add({
-            Responses: thisRef.state.QueArray,
+            Responses: thisRef.state.queArray,
             ResponseBy: thisRef.state.askedBy,
             date: firebase.firestore.FieldValue.serverTimestamp(),
             SessionId :  thisRef.state.sessionId
@@ -75,8 +75,8 @@ export class Survey extends RkComponent {
         });
     }
     onFormSelectValue = (queForm) => {
-         this.state.ShareInput = this.state.queForm.map(Fitem => {
-            this.state.QueArray.push({ Question: Fitem.QuestionTitle, Answer: new Set() });
+         this.state.renderQuestions = this.state.queForm.map(Fitem => {
+            this.state.queArray.push({ Question: Fitem.QuestionTitle, Answer: new Set() });
             return (
                     <View style={{ marginLeft: 10 ,marginBottom :10}}>
                         <Label style={{ flexDirection: 'row', fontFamily: RkTheme.current.fonts.family.regular, alignItems: 'center', marginTop: 3, marginBottom: 2, fontSize: 20 }}>Que.{Fitem.QueId} :{Fitem.QuestionTitle}</Label>
@@ -85,41 +85,41 @@ export class Survey extends RkComponent {
             )
         });
 
-        return this.state.ShareInput;
+        return this.state.renderQuestions;
     }
 
     renderAnswerField = (item) => {
-        let AnswerInput = [];
+        let answerInput = [];
         if (item.AnswerFeild == "Input Text") {
 
-           AnswerInput :
+           answerInput :
             return (
-                <RkTextInput type="text" placeholder="Answer Title" name="Answer" onChangeText={(text) => this.onChangeText(text, item.QueId)} id={item.QueId} />
+                <RkTextInput type="text" placeholder="Answer Title" name="Answer" onChangeText={(text) => this.onTextChange(text, item.QueId)} id={item.QueId} />
             )
         } else if (item.AnswerFeild == "Mulitple Choice") {
 
-            AnswerInput:
+            answerInput:
             return (
-                <RkChoiceGroup radio style={{ marginTop: 3, marginBottom: 3 }} onChange={(id) => { this.onChangeMultiChoice(item.value, item.QueId, id) }} >
-                    {this.onMultiChoice(item.value, item.QueId)}
+                <RkChoiceGroup radio style={{ marginTop: 3, marginBottom: 3 }} onChange={(id) => { this.onMultiChoiceChange(item.value, item.QueId, id) }} >
+                    {this.onRenderMultiChoice(item.value, item.QueId)}
                 </RkChoiceGroup>
             )
         }
         else if (item.AnswerFeild == "Check Box") {
 
-            AnswerInput:
+            answerInput:
             return (
                 <RkChoiceGroup style={{ marginTop: 3, marginBottom: 3 }}>
-                    {this.onCheckBox(item.value, item.QueId)}
+                    {this.onRenderCheckBox(item.value, item.QueId)}
                 </RkChoiceGroup >
             )
         }
         this.setState({
-            AnswerInput : AnswerInput
+            answerInput : answerInput
         })
-        return this.state.AnswerInput;
+        return this.state.answerInput;
     }
-    onMultiChoice = (value, Qid) => {
+    onRenderMultiChoice = (value, Qid) => {
         let MultiChoice = value.map(fItem => {
             return (
                 <TouchableOpacity choiceTrigger >
@@ -137,33 +137,33 @@ export class Survey extends RkComponent {
     }
 
 
-    onCheckBox = (value, Qid) => {
+    onRenderCheckBox = (value, Qid) => {
         let CheckBox1 = value.map(fItem => {
             return (
                 <View style={{ flexDirection: 'row', marginBottom: 3,marginRight :15 ,marginTop: 1, alignItems: 'center' }}>
                     <RkChoice rkType='clear'
                         id={Qid} value={fItem.Value} 
-                        onChange={(id) => {this.onChangeCheckBox(id ,fItem.Value,Qid)}} />
+                        onChange={(id) => {this.onCheckBoxChange(id ,fItem.Value,Qid)}} />
                     <Text>{fItem.Value}</Text>
                 </View>
             )
         })
         return CheckBox1;
     }
-    onChangeCheckBox = (eventValue , value, Qid) => {
+    onCheckBoxChange = (eventValue , value, Qid) => {
         let label = value;
-        if(this.state.QueArray[Qid].Answer.has(label)){
-            this.state.QueArray[Qid].Answer.delete(label);
+        if(this.state.queArray[Qid].Answer.has(label)){
+            this.state.queArray[Qid].Answer.delete(label);
         }
         else{
-            this.state.QueArray[Qid].Answer.add(label);
+            this.state.queArray[Qid].Answer.add(label);
         }
     }
-    onChangeMultiChoice = (values, Qid, eventId) => {
-        this.state.QueArray[Qid].Answer = values[eventId].Value;
+    onMultiChoiceChange = (values, Qid, eventId) => {
+        this.state.queArray[Qid].Answer = values[eventId].Value;
     }
-    onChangeText(text, Qid) {
-        this.state.QueArray[Qid].Answer = text;
+    onTextChange(text, Qid) {
+        this.state.queArray[Qid].Answer = text;
     }
     render() {
         if (this.state.queForm.length == 0 ){

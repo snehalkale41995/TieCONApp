@@ -40,7 +40,7 @@ export default class PollSession extends React.Component {
         let thisRef = this;
         let sessionId = this.state.sessionId;
         let user  = this.state.feedBackGiver;
-        var query = firestoreDB.collection("Feedback_Responses")
+        var query = firestoreDB.collection("feedbackResponses")
         query = query.where("FeedBackGiver", "==" , user);
         query = query.where("sessionId" ,"==" , sessionId);
         query.get().then(function(docRef){
@@ -60,7 +60,7 @@ export default class PollSession extends React.Component {
         let thisRef = this;
         this.state.value.map(fItem =>{
             if(fItem == "Yes"){
-                var query = firestoreDB.collection("Feedback_Responses")
+                var query = firestoreDB.collection("feedbackResponses")
                 query = query.where("Response", "==" , fItem);
                 query = query.where("sessionId" ,"==" , sessionId);
                 query.get().then(function(docRef){
@@ -73,7 +73,7 @@ export default class PollSession extends React.Component {
                 })
             }
             else{
-                var query = firestoreDB.collection("Feedback_Responses")
+                var query = firestoreDB.collection("feedbackResponses")
                 query = query.where("Response", "==" , fItem);
                 query = query.where("sessionId" ,"==" , sessionId);
                 query.get().then(function(docRef){
@@ -97,7 +97,7 @@ export default class PollSession extends React.Component {
     onSubmitResponse = () => {
         let thisRef = this;
         if (this.state.response !== "") {
-            firestoreDB.collection("Feedback_Responses")
+            firestoreDB.collection("feedbackResponses")
                 .add({
                     question: thisRef.state.question,
                     Response: thisRef.state.response,
