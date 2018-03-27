@@ -30,9 +30,7 @@ export class HomePage extends React.Component {
         <Tabs tabBarPosition="bottom" style={{ elevation: 3 }}>
           <Tab
             heading={
-              // <TabHeading style={{ flexDirection: 'column' }}><Icon name="calendar"/><Text>Program</Text></TabHeading>
               <TabHeading style={{ flexDirection: 'column' }}><Icon name="calendar"/><Text>Program</Text></TabHeading>
-
             }
           >
             <EventCal navigation={this.props.navigation}/>

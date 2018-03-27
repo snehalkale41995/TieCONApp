@@ -3,12 +3,10 @@ import { View, Text } from 'native-base';
 import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage } from 'react-native';
 import { RkComponent, RkTheme, RkText, RkStyleSheet, RkChoiceGroup, RkChoice, RkAvoidKeyboard, RkButton, RkCard, RkTextInput } from 'react-native-ui-kitten';
 import { NavigationActions } from 'react-navigation';
-
 import { PieChart } from 'react-native-svg-charts'
-//import { Text } from 'react-native-svg'
 import firebase from '../../../config/firebase'
-var firestoreDB = firebase.firestore();
 
+var firestoreDB = firebase.firestore();
 
 export default class PollSession extends React.Component {
     static navigationOptions = {
@@ -16,7 +14,6 @@ export default class PollSession extends React.Component {
     };
     constructor(props) {
         super(props);
-        console.log("SessionID", this.props.navigation.state.params.sessionId);
         this.state = {
             sessionId: this.props.navigation.state.params.sessionId,
             Question: "Are you coming to Pune ?",
@@ -32,42 +29,39 @@ export default class PollSession extends React.Component {
         let thisRef = this;
         AsyncStorage.getItem("USER_DETAILS").then((userDetails) => {
             let user = JSON.parse(userDetails)
-            let Name = user.firstName + " " + user.lastName;
             thisRef.setState({
-                FeedBackGiver: Name
+                FeedBackGiver: user.firstName + " " + user.lastName
             })
         })
-            .catch(err => {
-                console.warn('Errors');
-            });
+        .catch(err => {
+            console.warn('Errors', err);
+        });       
     }
 
-    onChange = (id) => {
+    onSelectOption = (id) => {
         var Response = this.state.Value[id];
         this.setState({
             Response: Response
         })
     }
 
-    onSubmit = () => {
-        let compRef = this;
+    onSubmitResponse = () => {
+        let thisRef = this;
         if (this.state.Response !== "") {
             firestoreDB.collection("Feedback_Responses")
                 .add({
-                    Question: compRef.state.Question,
-                    Response: compRef.state.Response,
-                    Date: new Date(),
-                    FeedBackGiver: compRef.state.FeedBackGiver,
-                    sessionId: compRef.state.sessionId
+                    Question: thisRef.state.Question,
+                    Response: thisRef.state.Response,
+                    Date: firebase.firestore.FieldValue.serverTimestamp(),
+                    FeedBackGiver: thisRef.state.FeedBackGiver,
+                    sessionId: thisRef.state.sessionId
                 })
                 .then(function (docRef) {
-                    compRef.GetPollData();
-                    compRef.setState({
+                    thisRef.getPollData();
+                    thisRef.setState({
                         Response: "",
                         ShowGraph : true
-                    })
-                    
-                   
+                    }) 
                 })
                 .catch(function (error) {
                 });
@@ -76,20 +70,16 @@ export default class PollSession extends React.Component {
             Alert.alert("Please give feedback");
         }
     }
-    GetPollData = () => {
-        let Positive = "";
-        let Negative = "";
-        let compRef = this;
-
+    getPollData = () => {
+        let thisRef = this;
         this.state.Value.map(fItem => {
             if (fItem == "Yes") {
                 firestoreDB.collection("Feedback_Responses")
                     .where("Response", "==", fItem)
                     .get()
                     .then(function (docRef) {
-                        Positive = docRef.docs.length;
-                        compRef.setState({
-                            PositiveResponse: Positive
+                        thisRef.setState({
+                            PositiveResponse: docRef.docs.length
                         })
                     })
                     .catch(function (error) {
@@ -100,9 +90,8 @@ export default class PollSession extends React.Component {
                     .where("Response", "==", fItem)
                     .get()
                     .then(function (docRef) {
-                        Negative = docRef.docs.length;
-                        compRef.setState({
-                            NegativeResponse: Negative  
+                        thisRef.setState({
+                            NegativeResponse: docRef.docs.length
                         })
                     })
                     .catch(function (error) {
@@ -115,12 +104,10 @@ export default class PollSession extends React.Component {
             {
                 key: 1,
                 amount: parseInt(this.state.PositiveResponse),
-                //amount: 20,
                 svg: { fill: 'green' },
             },
             {
                 key: 2,
-               // amount: 120,
                 amount: parseInt(this.state.NegativeResponse),
                 svg: { fill: 'red' }
             }
@@ -129,7 +116,7 @@ export default class PollSession extends React.Component {
             return (
                 <View style={{marginTop : 5 , marginLeft : 10}}>
                     <Text>{this.state.Question}</Text>
-                    <RkChoiceGroup radio style={{ marginTop: 3, marginBottom: 3 }} onChange={(id) => { this.onChange(id) }} >
+                    <RkChoiceGroup radio style={{ marginTop: 3, marginBottom: 3 }} onChange={(id) => { this.onSelectOption(id) }} >
                         <TouchableOpacity choiceTrigger >
                             <View style={{ flexDirection: 'row', marginBottom: 3, marginRight: 15, alignItems: 'center' }}>
                                 <RkChoice rkType='radio'
@@ -150,7 +137,7 @@ export default class PollSession extends React.Component {
                             </View>
                         </TouchableOpacity>
                     </RkChoiceGroup>
-                    <RkButton rkType='success' style={{ alignSelf: 'center', width: 340 }} onPress={() => this.onSubmit()}> Submit </RkButton>
+                    <RkButton rkType='success' style={{ alignSelf: 'center', width: 340 }} onPress={() => this.onSubmitResponse()}> Submit </RkButton>
     
                 </View>
     

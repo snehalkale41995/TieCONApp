@@ -2,7 +2,6 @@ import React from 'react';
 import { RkAvoidKeyboard, RkStyleSheet } from 'react-native-ui-kitten';
 import { Tabs, Tab, Icon, Text, TabHeading } from "native-base";
 import { AsyncStorage } from "react-native";
-
 import AskQuestion from './Questions/AskQuestion';
 import PollSession from './Questions/PollSession';
 
@@ -14,7 +13,6 @@ export  class QueTab extends React.Component {
     super(props);
     this.state ={
       sessionId : this.props.navigation.state.params.sessionId,
-      //UserName : ''
     }
   }
 

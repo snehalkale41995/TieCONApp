@@ -7,8 +7,6 @@ import { HomePage } from '../../screens/index';
 import { Questions } from '../../screens/index';
 import _ from 'lodash';
 import {data} from '../../data';
-//import firebase from '../firebase';
-
 
 export class HomePageMenuScreen extends React.Component {
   static navigationOptions = {
@@ -16,27 +14,14 @@ export class HomePageMenuScreen extends React.Component {
   };
   constructor(){
     super()
-    this.user = data.getUser()
+   
   }
-  componentWillMount(){
-    let thisRef =this;
-    AsyncStorage.getItem("USER_DETAILS").then((userDetails)=>{
-      let user = JSON.parse(userDetails)
-        let userDetails1 = user
-        console.log('User' ,userDetails1);
-     })
-     .catch(err => {
-       console.warn('Errors');
-     });
-  }
+ 
   render() {
     return (
       <HomePage navigation={this.props.navigation} />
      )
 
-    // return (
-    //  <Questions navigation={this.props.navigation} />
-    // )
   }
 }
 
