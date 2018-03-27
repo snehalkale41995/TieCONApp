@@ -13,8 +13,36 @@ export default class ScheduleTile extends RkComponent {
 
     constructor(props) {
         super(props);
+        this.state = props;
     }
 
+    /**
+        Get Speaker Details
+     */
+    componentDidMount() {
+        this
+            .props
+            .session
+            .speakers
+            .forEach((speaker) => {
+                Service.getDocument("Attendee", speaker, (data) => {
+                    const prevSpeakersDetails = this.state.session.speakersDetails;
+                    let newSession = Object.assign(this.state.session, {
+                        speakersDetails: [
+                            ...prevSpeakersDetails,
+                            data
+                        ]
+                    });
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        session: newSession
+                    }));
+                });
+            })
+    }
+    /**
+     * Handle Add to agenda screen
+     */
     onShowDetails = (event) => {
         Alert.alert('Test Dialog');
     }
@@ -27,34 +55,40 @@ export default class ScheduleTile extends RkComponent {
         Alert.alert('Added to agenda');
     }
     /**
-        * Render Schedule Tile
-        */
-    render() {
-        if (this.props.session) {
-            const speakers = this
-                .props
-                .session
-                .speakers
-                .map((speaker, index) => {
+     * Fetch Speaker Details 
+     */
+    getSpeakers = ()=>{
+        return this.props
+            .session
+            .speakersDetails
+            .map((speaker, index) => {
                     let avatar;
                     if (speaker.image) {
                         avatar = <Image style={image} source={this.props.img}/>
                     } else {
-                        let firstLetter = speaker[0];
+                        let firstLetter = speaker.firstName[0];
                         avatar = <Text style={styles.avatar}>{firstLetter}</Text>
                     }
                     return (
                         <TouchableOpacity
                             key={index}
-                            onPress={() => this.props.navigation.navigate('AttendeeProfile', {id: speaker})}
+                            onPress={() => this.props.navigation.navigate('AttendeeProfile', {speaker : speaker})}
                             style={{
                             flexDirection: 'row'
                         }}>
                             {avatar}
-                            <Text style={styles.speakerName}>{speaker}</Text>
+                            <Text style={styles.speakerName}>{speaker.firstName + ' ' + speaker.lastName}</Text>
                         </TouchableOpacity>
                     )
                 });
+
+    }
+    /**
+    * Render Schedule Tile
+    */
+    render() {
+        if (this.props.session) {
+            const speakers = this.getSpeakers();
             const startTime = this
                 .props
                 .session
@@ -67,7 +101,7 @@ export default class ScheduleTile extends RkComponent {
                 .toString();
             return (
                 <RkCard>
-                    <View rkCardHeader style = {styles.header}> 
+                    <View rkCardHeader style={styles.header}>
                         <Text style={styles.roomName}>{this.props.session.room}</Text>
                         <View style={styles.mainHeader}>
                             <TouchableOpacity
@@ -75,14 +109,19 @@ export default class ScheduleTile extends RkComponent {
                                 style={{
                                 flexDirection: 'row'
                             }}>
-                                <Text style={styles.headerText}>{this.props.session.eventName}</Text> 
+                                <Text style={styles.headerText}>{this.props.session.eventName}</Text>
                             </TouchableOpacity>
-                            <RkButton rkType = 'success small' style ={styles.actionBtn} onPress={this.onAttendRequest}> Attend </RkButton>
+                            <RkButton
+                                rkType='success small'
+                                style
+                                ={styles.actionBtn}
+                                onPress={this.onAttendRequest}>
+                                Attend
+                            </RkButton>
                         </View>
                     </View >
                     <View rkCardContent>
                         {speakers}
-                        <Text>{Moment(this.props.session.startTime).format('DD-MMM HH:mm')}</Text>
                         <View
                             style={{
                             flexDirection: 'row'
@@ -93,49 +132,53 @@ export default class ScheduleTile extends RkComponent {
                     </View>
                 </RkCard>
             );
-        } else { 
-            return (<Text> Unable to fetch detailis </Text>);
+        } else {
+            return (
+                <Text>
+                    Unable to fetch detailis
+                </Text>
+            );
         }
     }
 }
 
 /** * Component Styling Details */
-const styles = StyleSheet.create ({
-   header : {
-       flex : 1,
-       flexDirection : 'column'
-   },
-   mainHeader:{
-       flex : 1,
-       flexDirection : 'row',
-       justifyContent: 'space-between',
-   },
-   roomName:{
-       fontSize: 15,
-       color : '#C9C9C9'
-   },
-   headerText : {
-       fontWeight: 'bold',
-       fontSize: 25
-   },
-   actionBtn : {
-       width: 85,
-       height: 20,
-       alignSelf: 'flex-end'
-   },
-   avatar : {
-       backgroundColor : '#C0C0C0',
-       width: 40,
-       height: 40,
-       borderRadius: 20,
-       textAlign: 'center',
-       fontSize: 20,
-       textAlignVertical: 'center' ,
-       marginRight:5
-   },
-   speakerName: {
-       textAlignVertical: 'center',
-       fontStyle:'italic',
-       fontSize: 15
-   }
+const styles = StyleSheet.create({
+    header: {
+        flex: 1,
+        flexDirection: 'column'
+    },
+    mainHeader: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    roomName: {
+        fontSize: 15,
+        color: '#C9C9C9'
+    },
+    headerText: {
+        fontWeight: 'bold',
+        fontSize: 25
+    },
+    actionBtn: {
+        width: 85,
+        height: 20,
+        alignSelf: 'flex-end'
+    },
+    avatar: {
+        backgroundColor: '#C0C0C0',
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        textAlign: 'center',
+        fontSize: 20,
+        textAlignVertical: 'center',
+        marginRight: 5
+    },
+    speakerName: {
+        textAlignVertical: 'center',
+        fontStyle: 'italic',
+        fontSize: 15
+    }
 });

@@ -11,24 +11,19 @@ export class AttendeeProfile extends Component {
     constructor(props) {
         super(props);
         let {params} = this.props.navigation.state;
-        this.userId = params.id;
-    }
-
-    componentDidMount(){
-        //Fetch User Details
-        this.user = this.getAttendeeDetails();
-    }
-
-    getAttendeeDetails = ()=>{
-
+        this.speaker = params.speaker;
     }
     render() {
+        const speaker = this.speaker;
         return (
-            <Text>{this.userId}</Text>
+            <Text>Speaker : {speaker.firstName + ' '+ speaker.lastName }</Text>
         )
     }
 }
 
+/**
+ * Component Styles
+ */
 let styles = RkStyleSheet.create(theme => ({
     root: {
         backgroundColor: theme.colors.screen.base
