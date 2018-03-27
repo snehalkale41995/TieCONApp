@@ -9,18 +9,19 @@ import ReactMoment from 'react-moment';
 import Moment from 'moment';
 import {Avatar} from '../../../components';
 
+const DEFAULT_ID = "XCLfwGTY2PVNh7casAsO";
+
 export default class ScheduleTile extends RkComponent {
 
     constructor(props) {
         super(props);
         this.state = props;
+        this.state.userDetails = {};
     }
     componentWillMount(){
-        AsyncStorage.getItem("USER_DETAILS").then((userDetails)=>{
-                this.setState({userDetails: JSON.parse(userDetails)})
-            }).catch(err => {
-                console.warn('Errors');
-            });
+        Service.getCurrentUser((userDetails)=>{
+            this.setState({userDetails: userDetails});
+        });
     }
     /**
      *  Get Speaker Details
@@ -34,9 +35,10 @@ export default class ScheduleTile extends RkComponent {
      */
     fetchRegistrationStatus = () => {
         const baseObj = this;
-        
+        const attendeeId = (this.state.userDetails && this.state.userDetails.attendee)? this.state.userDetails.attendee.key: DEFAULT_ID;
         Service.getDocRef("RegistrationResponse")
             .where("sessionId", "==", this.state.session.key)
+            .where("attendeeId", "==", attendeeId)
             .get().then((snapshot) => {
                 if (snapshot.size > 0) {
                     snapshot.forEach((doc) => {
@@ -70,12 +72,30 @@ export default class ScheduleTile extends RkComponent {
                 });
             });
     }
+    
     /**
     * Session Attend Request raised by Attendee
     *
     */
     onAttendRequest = (event) => {
-        Alert.alert('Added to agenda');
+        const attendeeId = (this.state.userDetails && this.state.userDetails.attendee)? this.state.userDetails.attendee.key: DEFAULT_ID;
+        let attendRequest = {
+            sessionId : this.state.session.key,
+            //session : this.state.session,
+            registeredAt : new Date(),
+            status : "Pending",
+            attendee : {},
+            attendeeId : attendeeId
+        }
+        Service.getDocRef("RegistrationResponse").add(attendRequest).then((req)=>{
+            let newSession = Object.assign(this.state.session, {regStatus: req.status});
+            this.setState((prevState) => ({
+                ...prevState,
+                session: newSession
+            }));
+        }).catch((error)=>{
+            console.warn(error);
+        });
     }
     /**
      * Fetch Speaker Details
@@ -104,35 +124,52 @@ export default class ScheduleTile extends RkComponent {
             });
 
     }
+    getDuration = ()=>{
+        let _endTime =new Date(this.props.session.endTime).getTime();
+        let _startTime = new Date(this.props.session.startTime).getTime();
+        let difference = (_endTime - _startTime)/(60000);
+        let __minutes = (difference % 60);
+        let __hours = Math.floor(difference/60);  
+        return (<Text>{(__hours>0)? __hours +' Hrs': ''} {__minutes + 'Min'}</Text>);
+    }
+    
+    getStatusStyle =()=>{
+        let regStatus = this.state.session.regStatus;
+        switch(regStatus){
+            case "Going": {
+                return {
+                    color : '#00FF00'
+                }
+            }
+            case "Pending" : {
+                return {
+                    color : '#FFFF00'
+                }
+            }
+            case "Denied" : {
+                return  {
+                    color : '#FF0000'
+                }
+            }
+        }
+    }
     /**
     * Render Schedule Tile
     */
     render() {
         if (this.props.session) {
             const speakers = this.getSpeakers();
-            const startTime = this
-                .props
-                .session
-                .startTime
-                .toString();
-            const endTime = this
-                .props
-                .session
-                .endTime
-                .toString();
             let attendRequest = (
                 <RkButton
                     rkType='success small'
-                    style
-                    ={styles.actionBtn}
+                    style ={styles.actionBtn}
                     onPress={this.onAttendRequest}>
                     Attend
                 </RkButton>
             );
-            if (this.state.session.regStatus) {
-                console.log("Inside RegStatus Loop");
+            if (this.state.session.regStatus) {                
                 attendRequest = (
-                    <Text>Going</Text>
+                    <Text style={this.getStatusStyle()}>{this.state.session.regStatus}</Text>
                 )
             }
             return (
@@ -156,8 +193,7 @@ export default class ScheduleTile extends RkComponent {
                             style={{
                             flexDirection: 'row'
                         }}>
-                            <ReactMoment element={Text} diff={startTime} unit="minutes">{endTime}</ReactMoment>
-                            <Text>Minutes</Text>
+                            {this.getDuration()}
                         </View>
                     </View>
                 </RkCard>

@@ -1,4 +1,5 @@
 import firebase, {firestoreDB} from '../config/firebase';
+import {AsyncStorage} from 'react-native';
 
 export class Service {
     static getDocRef(docName) {
@@ -43,6 +44,18 @@ export class Service {
             }else{
                 console.error(error);
             }
+        });
+    }
+
+    static getCurrentUser(successFn, errorFn){
+        AsyncStorage.getItem("USER_DETAILS").then((userDetails)=>{
+                successFn(JSON.parse(userDetails));
+            }).catch(err => {
+                console.warn('Errors');
+                if(errorFn){
+                    errorFn(err);
+                }
+                
         });
     }
 }
