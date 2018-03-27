@@ -16,13 +16,13 @@ export default class PollSession extends React.Component {
         super(props);
         this.state = {
             sessionId: this.props.navigation.state.params.sessionId,
-            Question: "Are you coming to Pune ?",
-            Value: ["Yes", "No"],
-            Response: "",
-            PositiveResponse: "",
-            NegativeResponse: "",
-            ShowGraph: false,
-            FeedBackGiver: ""
+            question: "Are you coming to Pune ?",
+            value: ["Yes", "No"],
+            response: "",
+            positiveResponse: "",
+            negativeResponse: "",
+            showGraph: false,
+            feedBackGiver: ""
         }
     }
     componentWillMount() {
@@ -30,37 +30,89 @@ export default class PollSession extends React.Component {
         AsyncStorage.getItem("USER_DETAILS").then((userDetails) => {
             let user = JSON.parse(userDetails)
             thisRef.setState({
-                FeedBackGiver: user.firstName + " " + user.lastName
-            })
+                feedBackGiver: user.firstName + " " + user.lastName    
+            })  
+            thisRef.checkPollResponse();
         })
         .catch(err => {
             console.warn('Errors', err);
-        });       
+        });  
     }
 
+    checkPollResponse = () =>{
+        let thisRef = this;
+        let sessionId = this.state.sessionId;
+        let user  = this.state.feedBackGiver;
+        var query = firestoreDB.collection("Feedback_Responses")
+        query = query.where("FeedBackGiver", "==" , user);
+        query = query.where("sessionId" ,"==" , sessionId);
+        query.get().then(function(docRef){
+           if(docRef.docs.length > 0){
+            thisRef.setState({
+                showGraph : true
+            })
+            thisRef.getSessionPollOverview();
+           }
+        })
+        .catch( function ( error){
+            console.log("error", error);
+        })
+    }
+    getSessionPollOverview = () => {
+        let sessionId = this.state.sessionId;
+        let thisRef = this;
+        this.state.value.map(fItem =>{
+            if(fItem == "Yes"){
+                var query = firestoreDB.collection("Feedback_Responses")
+                query = query.where("Response", "==" , fItem);
+                query = query.where("sessionId" ,"==" , sessionId);
+                query.get().then(function(docRef){
+                    thisRef.setState({
+                        positiveResponse : docRef.docs.length
+                    })
+                })
+                .catch( function ( error){
+                    console.log("error", error);
+                })
+            }
+            else{
+                var query = firestoreDB.collection("Feedback_Responses")
+                query = query.where("Response", "==" , fItem);
+                query = query.where("sessionId" ,"==" , sessionId);
+                query.get().then(function(docRef){
+                    thisRef.setState({
+                        negativeResponse : docRef.docs.length
+                    })
+                })
+                .catch( function ( error){
+                    console.log("error", error);
+                })
+            }
+        }) 
+    }
     onSelectOption = (id) => {
-        var Response = this.state.Value[id];
+        var response = this.state.value[id];
         this.setState({
-            Response: Response
+            response: response
         })
     }
 
     onSubmitResponse = () => {
         let thisRef = this;
-        if (this.state.Response !== "") {
+        if (this.state.response !== "") {
             firestoreDB.collection("Feedback_Responses")
                 .add({
-                    Question: thisRef.state.Question,
-                    Response: thisRef.state.Response,
+                    question: thisRef.state.question,
+                    Response: thisRef.state.response,
                     Date: firebase.firestore.FieldValue.serverTimestamp(),
-                    FeedBackGiver: thisRef.state.FeedBackGiver,
+                    FeedBackGiver: thisRef.state.feedBackGiver,
                     sessionId: thisRef.state.sessionId
                 })
                 .then(function (docRef) {
-                    thisRef.getPollData();
+                    thisRef.getSessionPollOverview();
                     thisRef.setState({
-                        Response: "",
-                        ShowGraph : true
+                        response: "",
+                        showGraph : true
                     }) 
                 })
                 .catch(function (error) {
@@ -70,52 +122,23 @@ export default class PollSession extends React.Component {
             Alert.alert("Please give feedback");
         }
     }
-    getPollData = () => {
-        let thisRef = this;
-        this.state.Value.map(fItem => {
-            if (fItem == "Yes") {
-                firestoreDB.collection("Feedback_Responses")
-                    .where("Response", "==", fItem)
-                    .get()
-                    .then(function (docRef) {
-                        thisRef.setState({
-                            PositiveResponse: docRef.docs.length
-                        })
-                    })
-                    .catch(function (error) {
-                    });
-            }
-            else {
-                firestoreDB.collection("Feedback_Responses")
-                    .where("Response", "==", fItem)
-                    .get()
-                    .then(function (docRef) {
-                        thisRef.setState({
-                            NegativeResponse: docRef.docs.length
-                        })
-                    })
-                    .catch(function (error) {
-                    });
-            }
-        })
-    }
     render(){
         const data = [
             {
                 key: 1,
-                amount: parseInt(this.state.PositiveResponse),
+                amount: parseInt(this.state.positiveResponse),
                 svg: { fill: 'green' },
             },
             {
                 key: 2,
-                amount: parseInt(this.state.NegativeResponse),
+                amount: parseInt(this.state.negativeResponse),
                 svg: { fill: 'red' }
             }
         ]
-        if(this.state.ShowGraph == false){
+        if(this.state.showGraph == false){
             return (
                 <View style={{marginTop : 5 , marginLeft : 10}}>
-                    <Text>{this.state.Question}</Text>
+                    <Text>{this.state.question}</Text>
                     <RkChoiceGroup radio style={{ marginTop: 3, marginBottom: 3 }} onChange={(id) => { this.onSelectOption(id) }} >
                         <TouchableOpacity choiceTrigger >
                             <View style={{ flexDirection: 'row', marginBottom: 3, marginRight: 15, alignItems: 'center' }}>
@@ -170,9 +193,9 @@ export default class PollSession extends React.Component {
                        
                     )} 
                 />
-                 <Text >{this.state.Question}</Text>
-                 <Text style={{color : "red"}}>Negative Response =>  {this.state.NegativeResponse}</Text>
-                 <Text style={{color : "green"}}>Positive Response => {this.state.PositiveResponse}</Text>
+                 <Text >{this.state.question}</Text>
+                 <Text style={{color : "red"}}>Negative response =>  {this.state.negativeResponse}</Text>
+                 <Text style={{color : "green"}}>Positive response => {this.state.positiveResponse}</Text>
             </View>
             );
             
