@@ -8,7 +8,7 @@ import { NavigationActions } from 'react-navigation';
 import { Container, Content, Footer, Header, Title, Button, Icon, Tabs, Tab, Text, Right, Left, Body, TabHeading } from "native-base";
 import { onSignOut } from "../../auth";
 import * as Screens from '../index';
-import { Contacts, Chat, ProgramsTab, ConnectTab } from  '../index';
+import { Contacts, Chat, ProgramsTab, ConnectTab,QueTab} from  '../index';
 import { TabNavigator, TabView } from 'react-navigation'
 import EventCal from './schedule/EventCal';
 

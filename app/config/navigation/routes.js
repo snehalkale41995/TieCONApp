@@ -1,17 +1,27 @@
 import React from 'react';
+import { ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator } from 'react-native';
+
 import {FontIcons} from '../../assets/icons';
 import * as Screens from '../../screens/index';
 import { HomePage } from '../../screens/index';
+import { Questions } from '../../screens/index';
 import _ from 'lodash';
+import {data} from '../../data';
 
 export class HomePageMenuScreen extends React.Component {
   static navigationOptions = {
     title: 'Home'.toUpperCase()
   };
+  constructor(){
+    super()
+   
+  }
+ 
   render() {
     return (
-     <HomePage navigation={this.props.navigation} />
-    )
+      <HomePage navigation={this.props.navigation} />
+     )
+
   }
 }
 
@@ -56,6 +66,18 @@ export const MainRoutes = [
         id: 'SessionDetails',
         title: 'Session Details',
         screen: Screens.SessionDetails,
+        children: []
+      },
+      {
+        id: 'QueTab',
+        title: 'Ask Questions',
+        screen: Screens.QueTab,
+        children: []
+      },
+      {
+        id: 'Survey',
+        title: 'Survey',
+        screen: Screens.Survey,
         children: []
       }
     ]
