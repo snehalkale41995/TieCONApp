@@ -14,8 +14,6 @@ export default class EventCal extends Component {
         };
     }
 
-    componentWillMount() {}
-
     render() {
         return (<Agenda
             items={this.state.items}
@@ -31,21 +29,32 @@ export default class EventCal extends Component {
             theme={{
                 agendaKnobColor: 'green'
             }}
-
-            //renderDay={this.renderDay}
+            renderDay={this.renderDay}
         />);
     }
-
+    /**
+     * Render time on left side of tile
+     */
     renderDay = (day, item) => {
             return (
-                <Text>{item?item.eventName : 'default'}</Text>
+                <Text>{item?Moment(item.startTime).format("hh:mm") : 'default'}</Text>
             )
     }
+    /**
+     * Fetch Sessions for selected date
+     */
     loadItems = (day) => {
-        Service.getDocRef(SESSIONS_TABLE).where("startTime", ">=", new Date());
-        Service.getList(SESSIONS_TABLE, (snapshot) => {
-            const sessions = [];
-            snapshot.forEach((event) => {
+        const currentDate = Moment(day.dateString).format("YYYY-MM-DD");
+        Service.getDocRef(SESSIONS_TABLE)
+        .where("startTime", ">=", Moment(day.dateString).toDate())
+        .where("startTime", "<=", Moment(day.dateString).add(1,'day').toDate())
+        .orderBy("startTime")
+        .get().then((snapshot)=>{
+            var sessions = [];
+            let allSpeakers =[];
+            let index=0;
+            snapshot.forEach((session)=>{
+                const __index = ++index;
                 const {
                     eventName,
                     extraServices,
@@ -54,17 +63,18 @@ export default class EventCal extends Component {
                     startTime,
                     speakers,
                     endTime
-                } = event.data();
+                } = session.data();
                 const duration = Moment(endTime).diff(Moment(startTime), 'minutes');
-                
+
                 const startingAt = Moment().format("hh:mm");
                 sessions.push({
-                    key: event.id,
+                    key: session.id,
                     eventName,
                     extraServices,
                     isRegrequired,
                     room,
                     speakers,
+                    speakersDetails:[],
                     startTime,
                     startingAt,
                     endTime,
@@ -72,16 +82,20 @@ export default class EventCal extends Component {
                 });
             });
             let newItems = {};
-            console.log("date String"+day.dateString);
-            newItems[Moment(day.dateString).format("YYYY-MM-DD")] = sessions;
+            newItems[currentDate] = sessions;
             this.setState({items: newItems});
-        })
+        });
     }
-
+    /**
+     * Session Rendering
+     */
     renderItem = (item) => {
         return (<ScheduleTile navigation={this.props.navigation} session={item}/>);
     }
-
+    /**
+     * Handle Session Rendering 
+     * when no event is present on selected date
+     */
     renderEmptyDate = () => {
         return (
             <View style={styles.emptyDate}>
@@ -89,11 +103,14 @@ export default class EventCal extends Component {
             </View>
         );
     }
-
+    /**
+     */
     rowHasChanged = (r1, r2) => {
         return r1.name !== r2.name;
     }
-
+    /**
+     * get the time in string format
+     */
     timeToString = (time) => {
         const date = new Date(time);
         return date
@@ -101,7 +118,9 @@ export default class EventCal extends Component {
             .split('T')[0];
     }
 }
-
+/**
+ * Component Styles parameters
+ */
 const styles = StyleSheet.create({
     item: {
         backgroundColor: 'white',
