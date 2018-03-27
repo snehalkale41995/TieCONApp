@@ -20,17 +20,16 @@ export class SessionDetails extends Component {
     return (
       <View style={styles.sessionView}>
         <Text>
-            Session Details here
+          Session Details here
         </Text>
-        <RkButton rkType='dark' style={{ flexDirection : 'row', width: 200 ,marginBottom : 5}}
-          onPress={() => this.props.navigation.navigate('Survey', { sessionId: this.state.sessionId })}
-        >Give Feedback </RkButton>
-        <RkButton rkType='success' style={{ flexDirection : 'row', width: 200}}
-          onPress={() => this.props.navigation.navigate('QueTab', { sessionId: this.state.sessionId })}
-        >Ask Questions </RkButton>
-
-        
-
+        <View style= {{alignSelf : 'center' ,marginTop : 395 ,width : 400}}>
+          <RkButton rkType='dark' style={{alignSelf : 'center' , flexDirection: 'row', width: 340, marginBottom: 5 }}
+            onPress={() => this.props.navigation.navigate('Survey', { sessionId: this.state.sessionId })}
+          >Give Feedback </RkButton>
+          <RkButton rkType='success' style={{alignSelf : 'center', flexDirection: 'row', width: 340 }}
+            onPress={() => this.props.navigation.navigate('QueTab', { sessionId: this.state.sessionId })}
+          >Ask Questions </RkButton>
+        </View>
       </View>
     )
   }

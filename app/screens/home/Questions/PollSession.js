@@ -9,9 +9,6 @@ import firebase from '../../../config/firebase'
 var firestoreDB = firebase.firestore();
 
 export default class PollSession extends React.Component {
-    static navigationOptions = {
-        title: 'PollSession'.toUpperCase()
-    };
     constructor(props) {
         super(props);
         this.state = {
