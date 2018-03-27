@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View} from 'native-base';
-import {StyleSheet, FlatList, TouchableOpacity, Alert} from 'react-native';
+import {AsyncStorage, StyleSheet, FlatList, TouchableOpacity, Alert} from 'react-native';
 import {RkComponent, RkTheme, RkText, RkButton, RkCard} from 'react-native-ui-kitten';
 import {NavigationActions} from 'react-navigation';
 
@@ -15,16 +15,46 @@ export default class ScheduleTile extends RkComponent {
         super(props);
         this.state = props;
     }
-
+    componentWillMount(){
+        AsyncStorage.getItem("USER_DETAILS").then((userDetails)=>{
+                this.setState({userDetails: JSON.parse(userDetails)})
+            }).catch(err => {
+                console.warn('Errors');
+            });
+    }
     /**
-        Get Speaker Details
+     *  Get Speaker Details
      */
     componentDidMount() {
-        this
-            .props
-            .session
-            .speakers
-            .forEach((speaker) => {
+        this.fetchSpeakers();
+        this.fetchRegistrationStatus();
+    }
+    /**
+     * Fetch Registration Status
+     */
+    fetchRegistrationStatus = () => {
+        const baseObj = this;
+        
+        Service.getDocRef("RegistrationResponse")
+            .where("sessionId", "==", this.state.session.key)
+            .get().then((snapshot) => {
+                if (snapshot.size > 0) {
+                    snapshot.forEach((doc) => {
+                        let regResponse = doc.data();
+                        let newSession = Object.assign(this.state.session, {regStatus: regResponse.status});
+                        baseObj.setState((prevState) => ({
+                            ...prevState,
+                            session: newSession
+                        }));
+                    });
+                }
+            });
+    }
+    /**
+     * Fetch Speaker Details
+     */
+    fetchSpeakers = () => {
+        this.props.session.speakers.forEach((speaker) => {
                 Service.getDocument("Attendee", speaker, (data) => {
                     const prevSpeakersDetails = this.state.session.speakersDetails;
                     let newSession = Object.assign(this.state.session, {
@@ -38,15 +68,8 @@ export default class ScheduleTile extends RkComponent {
                         session: newSession
                     }));
                 });
-            })
+            });
     }
-    /**
-     * Handle Add to agenda screen
-     */
-    onShowDetails = (event) => {
-        Alert.alert('Test Dialog');
-    }
-
     /**
     * Session Attend Request raised by Attendee
     *
@@ -55,32 +78,30 @@ export default class ScheduleTile extends RkComponent {
         Alert.alert('Added to agenda');
     }
     /**
-     * Fetch Speaker Details 
+     * Fetch Speaker Details
      */
-    getSpeakers = ()=>{
-        return this.props
-            .session
-            .speakersDetails
+    getSpeakers = () => {
+        return this.props.session.speakersDetails
             .map((speaker, index) => {
-                    let avatar;
-                    if (speaker.image) {
-                        avatar = <Image style={image} source={this.props.img}/>
-                    } else {
-                        let firstLetter = speaker.firstName[0];
-                        avatar = <Text style={styles.avatar}>{firstLetter}</Text>
-                    }
-                    return (
-                        <TouchableOpacity
-                            key={index}
-                            onPress={() => this.props.navigation.navigate('AttendeeProfile', {speaker : speaker})}
-                            style={{
-                            flexDirection: 'row'
-                        }}>
-                            {avatar}
-                            <Text style={styles.speakerName}>{speaker.firstName + ' ' + speaker.lastName}</Text>
-                        </TouchableOpacity>
-                    )
-                });
+                let avatar;
+                if (speaker.image) {
+                    avatar = <Image style={image} source={this.props.img}/>
+                } else {
+                    let firstLetter = speaker.firstName ? speaker.firstName[0]: '?';
+                    avatar = <Text style={styles.avatar}>{firstLetter}</Text>
+                }
+                return (
+                    <TouchableOpacity
+                        key={index}
+                        onPress={() => this.props.navigation.navigate('AttendeeProfile', {speaker: speaker})}
+                        style={{
+                        flexDirection: 'row'
+                    }}>
+                        {avatar}
+                        <Text style={styles.speakerName}>{speaker.firstName + ' ' + speaker.lastName}</Text>
+                    </TouchableOpacity>
+                )
+            });
 
     }
     /**
@@ -99,6 +120,21 @@ export default class ScheduleTile extends RkComponent {
                 .session
                 .endTime
                 .toString();
+            let attendRequest = (
+                <RkButton
+                    rkType='success small'
+                    style
+                    ={styles.actionBtn}
+                    onPress={this.onAttendRequest}>
+                    Attend
+                </RkButton>
+            );
+            if (this.state.session.regStatus) {
+                console.log("Inside RegStatus Loop");
+                attendRequest = (
+                    <Text>Going</Text>
+                )
+            }
             return (
                 <RkCard>
                     <View rkCardHeader style={styles.header}>
@@ -111,13 +147,7 @@ export default class ScheduleTile extends RkComponent {
                             }}>
                                 <Text style={styles.headerText}>{this.props.session.eventName}</Text>
                             </TouchableOpacity>
-                            <RkButton
-                                rkType='success small'
-                                style
-                                ={styles.actionBtn}
-                                onPress={this.onAttendRequest}>
-                                Attend
-                            </RkButton>
+                            {attendRequest}
                         </View>
                     </View >
                     <View rkCardContent>
