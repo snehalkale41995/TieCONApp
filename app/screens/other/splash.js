@@ -34,7 +34,7 @@ export class SplashScreen extends React.Component {
             navigation.navigate('App');
           } else {
             var db = firebase.firestore();
-            var docRef = db.collection("Users").doc(user.uid);
+            var docRef = db.collection("Attendee").doc(user.uid);
             docRef.get().then(function(doc) {
                 if (doc.exists) {
                     let data = doc.data();

@@ -39,7 +39,7 @@ export class ProfileSettings extends React.Component {
       isLinkedInConnected: false,
       linkedInToken: {},
       userDetails: {},
-      pictureUrl: 'https://randomuser.me/api/portraits/men/84.jpg'
+      pictureUrl: 'https://randomuser.me/api/portraits/men/49.jpg'
     }
     this.onLinkedInError = this.onLinkedInError.bind(this);
     this.onLinkedInConnect = this.onLinkedInConnect.bind(this);
@@ -59,11 +59,11 @@ export class ProfileSettings extends React.Component {
         userDetails: user,
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.emailId,
+        email: user.email,
         phone: user.contactNo,
         linkedInSummary: user.linkedInSummary,
         isLoading: false,
-        pictureUrl: user.pictureUrl ? user.pictureUrl : 'https://randomuser.me/api/portraits/men/84.jpg'
+        pictureUrl: user.pictureUrl ? user.pictureUrl : 'https://randomuser.me/api/portraits/men/49.jpg'
       });
      })
      .catch(err => {
@@ -112,7 +112,7 @@ export class ProfileSettings extends React.Component {
         this.setState({ isLoading: false });
         response.json().then((payload) => {
           this.setState({linkedInSummary: payload.headline, pictureUrl: payload.pictureUrl});
-          firestoreDB.collection('Users').doc(this.state.userDetails.uid).set({
+          firestoreDB.collection('Attendee').doc(this.state.userDetails.uid).set({
               linkedInSummary: payload.headline,
               pictureUrl: payload.pictureUrl
             }, { merge: true })

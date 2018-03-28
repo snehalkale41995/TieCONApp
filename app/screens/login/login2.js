@@ -63,7 +63,8 @@ export class LoginV2 extends React.Component {
       let errorMessage = error.message;
       this.setState({isLoading: false});
       Alert.alert(
-        errorCode,
+        // errorCode,
+        'Error',
         errorMessage,
         [
           { text: 'Cancel', onPress: () => {} },
