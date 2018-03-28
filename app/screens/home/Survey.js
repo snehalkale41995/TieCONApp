@@ -19,8 +19,6 @@ export class Survey extends RkComponent {
             queForm: [],
             askedBy: "",
             responses : [],
-            answerInput  : [],
-            renderQuestions : [],
             queArray : [],
             sessionId : this.props.navigation.state.params.sessionId,
         }
@@ -64,7 +62,7 @@ export class Survey extends RkComponent {
         firestoreDB.collection('SessionSurvey').add({
             Responses: thisRef.state.queArray,
             ResponseBy: thisRef.state.askedBy,
-            date: firebase.firestore.FieldValue.serverTimestamp(),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             SessionId :  thisRef.state.sessionId
         })
         .then(function (docRef) {
@@ -75,7 +73,7 @@ export class Survey extends RkComponent {
         });
     }
     onFormSelectValue = (queForm) => {
-         this.state.renderQuestions = this.state.queForm.map(Fitem => {
+        let renderQuestions = this.state.queForm.map(Fitem => {
             this.state.queArray.push({ Question: Fitem.QuestionTitle, Answer: new Set() });
             return (
                     <View style={{ marginLeft: 10 ,marginBottom :10}}>
@@ -84,8 +82,7 @@ export class Survey extends RkComponent {
                     </View>
             )
         });
-
-        return this.state.renderQuestions;
+        return  renderQuestions;
     }
 
     renderAnswerField = (item) => {
@@ -114,10 +111,7 @@ export class Survey extends RkComponent {
                 </RkChoiceGroup >
             )
         }
-        this.setState({
-            answerInput : answerInput
-        })
-        return this.state.answerInput;
+       return  answerInput;
     }
     onRenderMultiChoice = (value, Qid) => {
         let MultiChoice = value.map(fItem => {

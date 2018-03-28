@@ -14,7 +14,7 @@ export default class PollSession extends React.Component {
         this.state = {
             sessionId: this.props.navigation.state.params.sessionId,
             question: "Are you coming to Pune ?",
-            value: ["Yes", "No"],
+            pollResponseValue: ["Yes", "No"],
             response: "",
             positiveResponse: "",
             negativeResponse: "",
@@ -40,10 +40,10 @@ export default class PollSession extends React.Component {
         let thisRef = this;
         let sessionId = this.state.sessionId;
         let user  = this.state.feedBackGiver;
-        var query = firestoreDB.collection("feedbackResponses")
-        query = query.where("FeedBackGiver", "==" , user);
-        query = query.where("sessionId" ,"==" , sessionId);
-        query.get().then(function(docRef){
+        var getPollResponse= firestoreDB.collection("feedbackResponses")
+        getPollResponse = getPollResponse.where("FeedBackGiver", "==" , user)
+        getPollResponse = getPollResponse.where("sessionId" ,"==" , sessionId)
+        getPollResponse.get().then(function(docRef){
            if(docRef.docs.length > 0){
             thisRef.setState({
                 showGraph : true
@@ -58,12 +58,12 @@ export default class PollSession extends React.Component {
     getSessionPollOverview = () => {
         let sessionId = this.state.sessionId;
         let thisRef = this;
-        this.state.value.map(fItem =>{
+        this.state.pollResponseValue.map(fItem =>{
             if(fItem == "Yes"){
-                var query = firestoreDB.collection("feedbackResponses")
-                query = query.where("Response", "==" , fItem);
-                query = query.where("sessionId" ,"==" , sessionId);
-                query.get().then(function(docRef){
+                var getPositiveCount = firestoreDB.collection("feedbackResponses")
+                getPositiveCount = getPositiveCount.where("Response", "==" , fItem)
+                getPositiveCount = getPositiveCount.where("sessionId" ,"==" , sessionId)
+                getPositiveCount.get().then(function(docRef){
                     thisRef.setState({
                         positiveResponse : docRef.docs.length
                     })
@@ -73,10 +73,10 @@ export default class PollSession extends React.Component {
                 })
             }
             else{
-                var query = firestoreDB.collection("feedbackResponses")
-                query = query.where("Response", "==" , fItem);
-                query = query.where("sessionId" ,"==" , sessionId);
-                query.get().then(function(docRef){
+                var getNegativeCount = firestoreDB.collection("feedbackResponses")
+                getNegativeCount = getNegativeCount.where("Response", "==" , fItem)
+                getNegativeCount = getNegativeCount.where("sessionId" ,"==" , sessionId)
+                getNegativeCount.get().then(function(docRef){
                     thisRef.setState({
                         negativeResponse : docRef.docs.length
                     })
@@ -88,7 +88,7 @@ export default class PollSession extends React.Component {
         }) 
     }
     onSelectOption = (id) => {
-        var response = this.state.value[id];
+        var response = this.state.pollResponseValue[id];
         this.setState({
             response: response
         })
@@ -101,7 +101,7 @@ export default class PollSession extends React.Component {
                 .add({
                     question: thisRef.state.question,
                     Response: thisRef.state.response,
-                    Date: firebase.firestore.FieldValue.serverTimestamp(),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                     FeedBackGiver: thisRef.state.feedBackGiver,
                     sessionId: thisRef.state.sessionId
                 })
