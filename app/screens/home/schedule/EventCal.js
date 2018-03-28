@@ -6,21 +6,24 @@ import ScheduleTile from './Schedule-tile';
 import Moment from 'moment';
 
 const SESSIONS_TABLE = 'Sessions';
+const REGISTRATION_RESPONSE_TABLE = "RegistrationResponse";
 export default class EventCal extends Component {
     constructor(props) {
         super(props);
+        this.props.agenda
         this.state = {
-            items: {}
+            sessions: {},
+            agenda : this.props.agenda? this.props.agenda : false
         };
     }
 
     render() {
         return (<Agenda
-            items={this.state.items}
+            items={this.state.sessions}
             hideKnob={true}
-            loadItemsForMonth={this.loadItems}
+            loadItemsForMonth={this.loadSessions}
             selected={'2018-04-20'}
-            renderItem={this.renderItem}
+            renderItem={this.renderSession}
             renderEmptyDate={this.renderEmptyDate}
             rowHasChanged={this.rowHasChanged}
             minDate={'2018-04-20'}
@@ -43,11 +46,11 @@ export default class EventCal extends Component {
     /**
      * Fetch Sessions for selected date
      */
-    loadItems = (day) => {
+    loadSessions = (day) => {
         const currentDate = Moment(day.dateString).format("YYYY-MM-DD");
         Service.getDocRef(SESSIONS_TABLE)
         .where("startTime", ">=", Moment(day.dateString).toDate())
-        .where("startTime", "<=", Moment(day.dateString).add(1,'day').toDate())
+        .where("startTime", "<=", Moment(day.dateString).add(1,'day').toDate())    
         .orderBy("startTime")
         .get().then((snapshot)=>{
             var sessions = [];
@@ -82,16 +85,16 @@ export default class EventCal extends Component {
                     description
                 });
             });
-            let newItems = {};
-            newItems[currentDate] = sessions;
-            this.setState({items: newItems});
+            let newSessions = {};
+            newSessions[currentDate] = sessions;
+            this.setState({sessions: newSessions});
         });
     }
     /**
      * Session Rendering
      */
-    renderItem = (item) => {
-        return (<ScheduleTile navigation={this.props.navigation} session={item}/>);
+    renderSession = (item) => {
+        return (<ScheduleTile navigation={this.props.navigation} session={item} agenda={this.state.agenda}/>);
     }
     /**
      * Handle Session Rendering 

@@ -19,15 +19,15 @@ export class ProgramsTab extends React.Component {
           heading={
             <TabHeading><Icon name="calendar"/><Text>Schedule</Text></TabHeading>
           }
-        >
-          <Schedule navigation={this.props.navigation}/>
+        >        
+          <EventCal navigation={this.props.navigation}/>
         </Tab>
         <Tab
           heading={
             <TabHeading><Icon name="ios-link"/><Text>My Agenda</Text></TabHeading>
           }
         >
-          <EventCal />
+          <Text>In Progress </Text>
         </Tab>
       </Tabs>
     );
