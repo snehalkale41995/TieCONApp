@@ -9,6 +9,7 @@ import {Service} from '../../../services';
 /**
  *
  */
+const SESSIONS_TABLE = 'Sessions';
 export default class Schedule extends React.Component {
     /**
      *
@@ -37,7 +38,7 @@ export default class Schedule extends React.Component {
      *
      */
     fetchSessionList = () => {
-        Service.addSnapshotListener('Event', (snapshot) => {
+        Service.addSnapshotListener(SESSIONS_TABLE, (snapshot) => {
             const sessionList = [];
             snapshot.forEach((event) => {
                 const {
@@ -64,6 +65,8 @@ export default class Schedule extends React.Component {
                 });
             });
             this.setState({sessionList});
+        }, (error)=>{
+            console.log("Error has occurred");
         });
     }
 

@@ -83,12 +83,12 @@ export default class ScheduleTile extends RkComponent {
             sessionId : this.state.session.key,
             //session : this.state.session,
             registeredAt : new Date(),
-            status : "Pending",
+            status : this.state.session.isRegrequired? "Pending" : "Going",
             attendee : {},
             attendeeId : attendeeId
         }
         Service.getDocRef("RegistrationResponse").add(attendRequest).then((req)=>{
-            let newSession = Object.assign(this.state.session, {regStatus: req.status});
+            let newSession = Object.assign(this.state.session, {regStatus: attendRequest.status});
             this.setState((prevState) => ({
                 ...prevState,
                 session: newSession
@@ -115,7 +115,7 @@ export default class ScheduleTile extends RkComponent {
                         key={index}
                         onPress={() => this.props.navigation.navigate('AttendeeProfile', {speaker: speaker})}
                         style={{
-                        flexDirection: 'row'
+                        flexDirection: 'row',
                     }}>
                         {avatar}
                         <Text style={styles.speakerName}>{speaker.firstName + ' ' + speaker.lastName}</Text>
@@ -130,7 +130,7 @@ export default class ScheduleTile extends RkComponent {
         let difference = (_endTime - _startTime)/(60000);
         let __minutes = (difference % 60);
         let __hours = Math.floor(difference/60);  
-        return (<Text>{(__hours>0)? __hours +' Hrs': ''} {__minutes + 'Min'}</Text>);
+        return (<Text style={styles.duration}>{(__hours>0)? __hours +' Hrs': ''} {__minutes + 'Min'}</Text>);
     }
     
     getStatusStyle =()=>{
@@ -153,13 +153,13 @@ export default class ScheduleTile extends RkComponent {
             }
         }
     }
-    /**
-    * Render Schedule Tile
-    */
-    render() {
-        if (this.props.session) {
-            const speakers = this.getSpeakers();
-            let attendRequest = (
+    attendRequestStatus = ()=> {
+        if (this.state.session.regStatus) {                
+            return (
+                <Text style={this.getStatusStyle()}>{this.state.session.regStatus}</Text>
+            )
+        }else{
+            return (
                 <RkButton
                     rkType='success small'
                     style ={styles.actionBtn}
@@ -167,13 +167,17 @@ export default class ScheduleTile extends RkComponent {
                     Attend
                 </RkButton>
             );
-            if (this.state.session.regStatus) {                
-                attendRequest = (
-                    <Text style={this.getStatusStyle()}>{this.state.session.regStatus}</Text>
-                )
-            }
+        }
+    }
+    /**
+    * Render Schedule Tile
+    */
+    render() {
+        if (this.props.session) {
+            const speakers = this.getSpeakers();
+            
             return (
-                <RkCard>
+                <RkCard rkType='shadowed'>
                     <View rkCardHeader style={styles.header}>
                         <Text style={styles.roomName}>{this.props.session.room}</Text>
                         <View style={styles.mainHeader}>
@@ -184,10 +188,10 @@ export default class ScheduleTile extends RkComponent {
                             }}>
                                 <Text style={styles.headerText}>{this.props.session.eventName}</Text>
                             </TouchableOpacity>
-                            {attendRequest}
+                            {this.attendRequestStatus()}
                         </View>
                     </View >
-                    <View rkCardContent>
+                    <View rkCardContent style={{margin: 0, padding:0}}>
                         {speakers}
                         <View
                             style={{
@@ -212,7 +216,7 @@ export default class ScheduleTile extends RkComponent {
 const styles = StyleSheet.create({
     header: {
         flex: 1,
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     mainHeader: {
         flex: 1,
@@ -220,12 +224,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     roomName: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#C9C9C9'
     },
     headerText: {
         fontWeight: 'bold',
-        fontSize: 25
+        fontSize: 16
     },
     actionBtn: {
         width: 85,
@@ -245,6 +249,10 @@ const styles = StyleSheet.create({
     speakerName: {
         textAlignVertical: 'center',
         fontStyle: 'italic',
-        fontSize: 15
+        fontSize: 14
+    },
+    duration: {
+        fontSize : 11,
+        fontStyle: 'italic'
     }
 });
