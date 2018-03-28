@@ -62,7 +62,8 @@ export default class EventCal extends Component {
                     room,
                     startTime,
                     speakers,
-                    endTime
+                    endTime,
+                    description
                 } = session.data();
                 const duration = Moment(endTime).diff(Moment(startTime), 'minutes');
                 const startingAt = Moment().format("hh:mm");
@@ -77,7 +78,8 @@ export default class EventCal extends Component {
                     startTime,
                     startingAt,
                     endTime,
-                    duration
+                    duration,
+                    description
                 });
             });
             let newItems = {};
