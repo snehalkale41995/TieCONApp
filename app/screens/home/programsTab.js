@@ -2,14 +2,13 @@ import React from 'react';
 import { RkAvoidKeyboard, RkStyleSheet } from 'react-native-ui-kitten';
 import { Tabs, Tab, Icon, Text, TabHeading } from "native-base";
 
-import Schedule from './schedule/Schedule';
+import MyAgenda from './schedule/MyAgenda';
 import EventCal from './schedule/EventCal';
+import {Service} from '../../services';
+
 export class ProgramsTab extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount() {
   }
 
   render() {
@@ -27,7 +26,7 @@ export class ProgramsTab extends React.Component {
             <TabHeading><Icon name="ios-link"/><Text>My Agenda</Text></TabHeading>
           }
         >
-          <Text>In Progress </Text>
+          <MyAgenda navigation={this.props.navigation} />
         </Tab>
       </Tabs>
     );

@@ -10,13 +10,17 @@ const REGISTRATION_RESPONSE_TABLE = "RegistrationResponse";
 export default class EventCal extends Component {
     constructor(props) {
         super(props);
-        this.props.agenda
-        this.state = {
-            sessions: {},
-            agenda : this.props.agenda? this.props.agenda : false
-        };
+        this.state = props;
+        this.state.sessions={};
+        this.state.user = {};
     }
-
+    
+    componentDidMount() {
+        let __self = this;
+            Service.getCurrentUser((userObj)=>{
+            __self.setState({user: userObj});
+        });
+    }
     render() {
         return (<Agenda
             items={this.state.sessions}
@@ -29,9 +33,6 @@ export default class EventCal extends Component {
             minDate={'2018-04-20'}
             maxDate={'2018-04-21'}
             monthFormat={'yyyy'}
-            theme={{
-                agendaKnobColor: 'green'
-            }}
             renderDay={this.renderDay}
         />);
     }
@@ -40,7 +41,7 @@ export default class EventCal extends Component {
      */
     renderDay = (day, item) => {
             return (
-                <Text>{item?Moment(item.startTime).format("hh:mm") : ''}</Text>
+                <View />
             )
     }
     /**
@@ -68,8 +69,6 @@ export default class EventCal extends Component {
                     endTime,
                     description
                 } = session.data();
-                const duration = Moment(endTime).diff(Moment(startTime), 'minutes');
-                const startingAt = Moment().format("hh:mm");
                 sessions.push({
                     key: session.id,
                     eventName,
@@ -79,9 +78,7 @@ export default class EventCal extends Component {
                     speakers,
                     speakersDetails:[],
                     startTime,
-                    startingAt,
                     endTime,
-                    duration,
                     description
                 });
             });
@@ -94,7 +91,7 @@ export default class EventCal extends Component {
      * Session Rendering
      */
     renderSession = (item) => {
-        return (<ScheduleTile navigation={this.props.navigation} session={item} agenda={this.state.agenda}/>);
+        return (<ScheduleTile navigation={this.props.navigation} user={this.state.user} session={item}/>);
     }
     /**
      * Handle Session Rendering 
