@@ -47,7 +47,7 @@ export default class ScheduleTile extends RkComponent {
                     }
                 });
         }else{
-            console.log("Still undefined");
+            console.warn("User object is undefined");
         }
     }
     /**

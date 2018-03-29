@@ -48,7 +48,6 @@ export default class MyAgenda extends React.Component {
                 snapshot.forEach((request)=>{
                     const obj = request.data();
                     const session = obj.session;
-                    console.log(session.id);
                     sessions.push({
                         key: obj.sessionId,
                         eventName: session.eventName,
