@@ -129,7 +129,7 @@ export class SideMenu extends React.Component {
 
 let styles = RkStyleSheet.create(theme => ({
   container: {
-    height: 80,
+    height: 40,
     paddingHorizontal: 16,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderColor: theme.colors.border.base
@@ -141,7 +141,7 @@ let styles = RkStyleSheet.create(theme => ({
   content: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   icon: {
     marginRight: 13,

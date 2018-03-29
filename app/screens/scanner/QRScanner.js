@@ -80,7 +80,13 @@ export class QRScanner extends React.Component {
     });
   };
 
+  _getSelectedSession =  () => {
+    let session = _.find(this.state.sessions, { 'id': this.state.selectedConf });
+    return session;
+  }
+
   _updateUserData(scannedData) {
+
     if(scannedData.title.startsWith('id')) {
       if(this.state.scanHistory.indexOf(scannedData.fn) == -1 && !this.state.isLoading) {
         this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn , isLoading: true });
@@ -102,6 +108,7 @@ export class QRScanner extends React.Component {
                     userId: scannedData.title.substring(3),
                     fullName: scannedData.fn,
                     sessionId: this.state.selectedConf,
+                    session: this._getSelectedSession(),
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                   })
                   .then((docRef) => {
@@ -124,6 +131,7 @@ export class QRScanner extends React.Component {
             userId: scannedData.title.substring(3),
             fullName: scannedData.fn,
             sessionId: this.state.selectedConf,
+            session: this._getSelectedSession(),
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           })
           .then((docRef) => {
@@ -208,7 +216,7 @@ export class QRScanner extends React.Component {
   }
 
   _handleBarCodeRead = result => {
-    if (result.data !== this.state.lastScannedUrl && this.state.isErrorDisplayed == false) {
+    if (this.state.isErrorDisplayed == false) {
       LayoutAnimation.spring();
       this._validateQRData(result.data);
     }
