@@ -50,14 +50,14 @@ export class SessionDetails extends Component {
   getSurveyAccess = () => {
     if (this.state.showSurveyButton == true) {
       return (
-        <View style={{ alignItems: 'baseline', flexDirection: 'row', width: 380, marginBottom: 3, marginLeft: 5, marginRight: 5 }}>
-          <View style={{ width: 180 }} >
-            <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 5, marginRight: 5 }}
+        <View style={{ alignItems: 'baseline', flexDirection: 'row', width: 380, marginBottom: 3 }}>
+          <View style={{ width: 182 }} >
+            <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 5, marginRight: 2 }}
               onPress={() => this.props.navigation.navigate('Survey', { sessionId: this.state.sessionId })}
             >Survey </RkButton>
           </View>
-          <View style={{ width: 180 }} >
-            <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 5, marginRight: 5 }}
+          <View style={{ width: 182 }} >
+            <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 2, marginRight: 5 }}
               onPress={() => this.props.navigation.navigate('QueTab', { sessionId: this.state.sessionId })}
             >Ask Questions </RkButton>
           </View>
