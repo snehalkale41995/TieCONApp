@@ -1,8 +1,7 @@
 {
   "expo": {
-    "name": "TiECON",
-    "slug": "tiecon",
-    "githubUrl": "https://github.com/shaggyshelar/TieCONApp",
+    "name": "TiE Pune Events",
+    "slug": "tieconpuneevents",
     "sdkVersion": "24.0.0",
     "icon": "./icon.png",
     "orientation": "portrait",
@@ -13,12 +12,12 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "bundleIdentifier": "com.eternus.tiecon",
+      "bundleIdentifier": "com.eternus.tieconpuneevents",
       "buildNumber": "1.0.10",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.eternus.tiecon",
+      "package": "com.eternus.tieconpuneevents",
       "versionCode": 16
     },
     "version": "1.0.1"
