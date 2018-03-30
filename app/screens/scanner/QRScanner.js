@@ -31,7 +31,6 @@ export class QRScanner extends React.Component {
     super(props);
     this.state = {
       hasCameraPermission: null,
-      lastScannedUrl: null,
       isErrorDisplayed: false,
       selectedItem: undefined,
       selectedConf: "",
@@ -112,31 +111,29 @@ export class QRScanner extends React.Component {
   }
 
   _updateUserData(scannedData) {
-    if (scannedData.title.startsWith('id')) {
-      if (this.state.scanHistory.indexOf(scannedData.fn) == -1 && !this.state.isLoading) {
-        this.setState({ lastScannedUrl: 'Setting Data for ' + scannedData.fn, isLoading: true });
+      if (this.state.scanHistory.indexOf(scannedData) == -1 && !this.state.isLoading) {
+        this.setState({ isLoading: true });
         let updatedScannedHistory = this.state.scanHistory;
         if (updatedScannedHistory.length >= 5) {
-          updatedScannedHistory.push(scannedData.fn);
+          updatedScannedHistory.push(scannedData);
           updatedScannedHistory.slice(0, updatedScannedHistory.length - 1)
         }
 
         this.setState({ scanHistory: updatedScannedHistory });
-
-        if (this.state.sessionUsers.indexOf(scannedData.fn) == -1) {
+        let selectedSession = this._getSelectedSession();
+        if (this.state.sessionUsers.indexOf(scannedData) == -1) {
           Alert.alert(
             'Unregistered User',
             'This user is not registered for this session. Do you still want to continue?',
             [
               {
                 text: 'Yes', onPress: () => {
-                  firestoreDB.collection('Attendance').doc(scannedData.title.substring(3)).set({
-                    userId: scannedData.title.substring(3),
-                    fullName: scannedData.fn,
+                  firestoreDB.collection('Attendance').doc(scannedData).set({
+                    userId: scannedData,
                     sessionId: this.state.selectedConf,
-                    session: this._getSelectedSession(),
+                    session: selectedSession,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                  })
+                  }, { merge: true })
                     .then((docRef) => {
                       this.setState({ isLoading: false });
                     })
@@ -162,13 +159,12 @@ export class QRScanner extends React.Component {
             { cancellable: false }
           );
         } else {
-          firestoreDB.collection('Attendance').doc(scannedData.title.substring(3)).set({
-            userId: scannedData.title.substring(3),
-            fullName: scannedData.fn,
+          firestoreDB.collection('Attendance').doc(scannedData).set({
+            userId: scannedData,
             sessionId: this.state.selectedConf,
-            session: this._getSelectedSession(),
+            session: selectedSession,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          })
+          }, { merge: true })
             .then((docRef) => {
               this.setState({ isLoading: false });
             })
@@ -185,66 +181,11 @@ export class QRScanner extends React.Component {
             });
         }
       }
-    } else {
-      this.setState({ isErrorDisplayed: true, isLoading: false });
-      Alert.alert(
-        'Invalid Data',
-        'This QR code is not valid TiECON QR Code.',
-        [
-          {
-            text: 'Ok', onPress: () => {
-              this.setState({ isErrorDisplayed: false });
-            }
-          },
-        ],
-        { cancellable: false }
-      );
-    }
-  }
-
-  _setVCardDetails = (scannedResult) => {
-    let Re1 = /^(version|fn|title|org):(.+)$/i;
-    let Re2 = /^([^:;]+);([^:]+):(.+)$/;
-    let ReKey = /item\d{1,2}\./;
-    let fields = {};
-    scannedResult.split(/\r\n|\r|\n/).forEach((line) => {
-      let results, key;
-      if (Re1.test(line)) {
-        results = line.match(Re1);
-        key = results[1].toLowerCase();
-        fields[key] = results[2];
-      } else if (Re2.test(line)) {
-        results = line.match(Re2);
-        key = results[1].replace(ReKey, '').toLowerCase();
-
-        let meta = {};
-        results[2].split(';')
-          .map((p, i) => {
-            let match = p.match(/([a-z]+)=(.*)/i);
-            if (match) {
-              return [match[1], match[2]];
-            }
-            return ['TYPE' + (i === 0 ? '' : i), p];
-
-          })
-          .forEach((p) => {
-            meta[p[0]] = p[1];
-          });
-
-        if (!fields[key]) fields[key] = [];
-
-        fields[key].push({
-          meta,
-          value: results[3].split(';')
-        });
-      }
-    });
-    this._updateUserData(fields);
   }
 
   _validateQRData(data) {
-    if (data.startsWith('BEGIN:VCARD') && data.indexOf('TITLE') > -1) {
-      this._setVCardDetails(data);
+    if (data.startsWith('TIECON:')) {
+      this._updateUserData(data.substring(7));
     } else {
       this.setState({ isErrorDisplayed: true, isLoading: false });
       Alert.alert(
@@ -344,7 +285,6 @@ export class QRScanner extends React.Component {
                   width: (Dimensions.get('window').width - 20),
                 }}
               />}
-          {/* {this._maybeRenderUrl()} */}
         </View>
         {renderIf(this.state.isLoading,
           <View style={styles.loading}>
@@ -354,48 +294,6 @@ export class QRScanner extends React.Component {
       </RkAvoidKeyboard>
     );
   }
-
-  _handlePressUrl = () => {
-    Alert.alert(
-      'Open this URL?',
-      this.state.lastScannedUrl,
-      [
-        {
-          text: 'Yes',
-          onPress: () => Linking.openURL(this.state.lastScannedUrl),
-        },
-        { text: 'No', onPress: () => { } },
-      ],
-      { cancellable: false }
-    );
-  };
-
-  _handlePressCancel = () => {
-    this.setState({ lastScannedUrl: null });
-  };
-
-  _maybeRenderUrl = () => {
-    if (!this.state.lastScannedUrl) {
-      return;
-    }
-
-    return (
-      <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.url} onPress={this._handlePressUrl}>
-          <Text numberOfLines={1} style={styles.urlText}>
-            {this.state.lastScannedUrl}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.cancelButton}
-          onPress={this._handlePressCancel}>
-          <Text style={styles.cancelButtonText}>
-            Cancel
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
 }
 
 let styles = RkStyleSheet.create(theme => ({
