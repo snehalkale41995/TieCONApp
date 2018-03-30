@@ -52,8 +52,11 @@ export class SideMenu extends React.Component {
         { text: 'Yes', onPress: () => {
             firebase.auth().signOut().then(function() {
               // Sign-out successful.
-              AsyncStorage.removeItem("USER_DETAILS")
-              AsyncStorage.removeItem("USER_LINKEDIN_TOKEN")
+              let keysToRemove = ['USER_DETAILS', 'USER_LINKEDIN_TOKEN', 'SESSIONS'];
+              AsyncStorage.multiRemove(keysToRemove, (err) => {
+                // keys k1 & k2 removed, if they existed
+                // do most stuff after removal (if you want)
+              });
             }).catch(function(error) {
               // An error happened.
             });
@@ -129,7 +132,7 @@ export class SideMenu extends React.Component {
 
 let styles = RkStyleSheet.create(theme => ({
   container: {
-    height: 80,
+    height: 40,
     paddingHorizontal: 16,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderColor: theme.colors.border.base
@@ -141,7 +144,7 @@ let styles = RkStyleSheet.create(theme => ({
   content: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   icon: {
     marginRight: 13,
