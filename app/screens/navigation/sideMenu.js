@@ -52,8 +52,11 @@ export class SideMenu extends React.Component {
         { text: 'Yes', onPress: () => {
             firebase.auth().signOut().then(function() {
               // Sign-out successful.
-              AsyncStorage.removeItem("USER_DETAILS")
-              AsyncStorage.removeItem("USER_LINKEDIN_TOKEN")
+              let keysToRemove = ['USER_DETAILS', 'USER_LINKEDIN_TOKEN', 'SESSIONS'];
+              AsyncStorage.multiRemove(keysToRemove, (err) => {
+                // keys k1 & k2 removed, if they existed
+                // do most stuff after removal (if you want)
+              });
             }).catch(function(error) {
               // An error happened.
             });
