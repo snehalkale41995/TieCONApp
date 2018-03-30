@@ -27,7 +27,10 @@ export class HomePage extends React.Component {
   render() {
     return (
       <Container>
-        <Tabs tabBarPosition="bottom" style={{ elevation: 3 }}>
+       <ProgramsTab navigation={this.props.navigation}/>
+        {/*
+        //Networking is not supported in current release hence commenting below block of code
+           <Tabs tabBarPosition="bottom" style={{ elevation: 3 }}>
           <Tab
             heading={
               <TabHeading style={{ flexDirection: 'column' }}><Icon name="calendar"/><Text>Program</Text></TabHeading>
@@ -49,7 +52,7 @@ export class HomePage extends React.Component {
           >
             <Contacts navigation={this.props.navigation}/>
           </Tab>
-        </Tabs>
+        </Tabs>*/}
       </Container>
     )
   }
