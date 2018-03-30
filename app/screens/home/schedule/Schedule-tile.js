@@ -1,9 +1,10 @@
 import React from 'react';
 import {Text, View, Icon} from 'native-base';
-import {AsyncStorage, StyleSheet, FlatList, TouchableOpacity, Alert, Image} from 'react-native';
+import {AsyncStorage, FlatList, TouchableOpacity, Alert, Image} from 'react-native';
 import {RkComponent, RkTheme, RkText, RkButton, RkCard} from 'react-native-ui-kitten';
 import {NavigationActions} from 'react-navigation';
 
+import styleConstructor, {getStatusStyle} from './styles';
 import {Service} from '../../../services';
 import ReactMoment from 'react-moment';
 import Moment from 'moment';
@@ -15,6 +16,7 @@ export default class ScheduleTile extends RkComponent {
 
     constructor(props) {
         super(props);
+        this.styles = styleConstructor();
         this.state = props;
     }
     /**
@@ -103,18 +105,18 @@ export default class ScheduleTile extends RkComponent {
             .map((speaker, index) => {
                 let avatar;
                 if (speaker.profileImageURL) {
-                    avatar = <Image style={styles.avatarImage} source={{uri:speaker.profileImageURL}}/>
+                    avatar = <Image style={this.styles.avatarImage} source={{uri:speaker.profileImageURL}}/>
                 } else {
                     let firstLetter = speaker.firstName ? speaker.firstName[0]: '?';
-                    avatar = <Text style={styles.avatar}>{firstLetter}</Text>
+                    avatar = <Text style={this.styles.avatar}>{firstLetter}</Text>
                 }
                 return (
                     <TouchableOpacity
                         key={index}
                         onPress={() => this.props.navigation.navigate('AttendeeProfile', {speaker: speaker})}
-                        style={styles.speaker}>
+                        style={this.styles.speaker}>
                         {avatar}
-                        <Text style={styles.speakerName}>{speaker.firstName + ' ' + speaker.lastName}</Text>
+                        <Text style={this.styles.speakerName}>{speaker.firstName + ' ' + speaker.lastName}</Text>
                     </TouchableOpacity>
                 )
             });
@@ -126,19 +128,19 @@ export default class ScheduleTile extends RkComponent {
         let difference = (_endTime - _startTime)/(60000);
         let __minutes = (difference % 60);
         let __hours = Math.floor(difference/60);  
-        return (<Text style={styles.duration}>{(__hours>0)? __hours +' Hrs': ''} {__minutes + 'Min'}</Text>);
+        return (<Text style={this.styles.duration}>{(__hours>0)? __hours +' Hrs': ''} {__minutes + 'Min'}</Text>);
     }
     
     attendRequestStatus = ()=> {
         if (this.state.session.regStatus) {                
             return (
-                <Text style={this.getStatusStyle()}>{this.state.session.regStatus}</Text>
+                <Text style={getStatusStyle(this.state.session.regStatus)}>{this.state.session.regStatus}</Text>
             )
         }else{
             return (
                 <RkButton
                     rkType='success small'
-                    style ={styles.actionBtn}
+                    style ={this.styles.actionBtn}
                     onPress={this.onAttendRequest}>
                     Attend
                 </RkButton>
@@ -152,22 +154,22 @@ export default class ScheduleTile extends RkComponent {
         if (this.props.session) {
             const speakers = this.getSpeakers();
             return (
-                <RkCard rkType='shadowed' style={styles.card}>
-                    <View style={styles.header}>
-                        <Text style={styles.roomName}>{this.props.session.room}</Text>
-                        <View style={styles.mainHeader}>
+                <RkCard rkType='shadowed' style={this.styles.card}>
+                    <View style={this.styles.header}>
+                        <Text style={this.styles.roomName}>{this.props.session.room}</Text>
+                        <View style={this.styles.mainHeader}>
                             <TouchableOpacity
                                 onPress={() => this.props.navigation.navigate('SessionDetails', {session: this.props.session})}
                                 style={{
                                 flexDirection: 'row',
                                 flex: 3,
                             }}>
-                                <Text style={styles.headerText}>{this.props.session.eventName}</Text>
+                                <Text style={this.styles.headerText}>{this.props.session.eventName}</Text>
                             </TouchableOpacity>
                             {this.attendRequestStatus()}
                         </View>
                     </View >
-                    <View style={styles.content}>
+                    <View style={this.styles.content}>
                         {speakers}
                         <View
                             style={{
@@ -186,90 +188,4 @@ export default class ScheduleTile extends RkComponent {
             );
         }
     }
-
-    getStatusStyle =()=>{
-        let regStatus = this.state.session.regStatus;
-        switch(regStatus){
-            case "Going": {
-                return {
-                    color : '#00FF00'
-                }
-            }
-            case "Pending" : {
-                return {
-                    color : '#FFFF00'
-                }
-            }
-            case "Denied" : {
-                return  {
-                    color : '#FF0000'
-                }
-            }
-        }
-    }
 }
-
-/** * Component Styling Details */
-const styles = StyleSheet.create({
-    card :{
-        margin : 2,
-        padding: 3,
-    },
-    header: {
-        flex: 1,
-        flexDirection: 'column',
-    },
-    mainHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginLeft : 5,
-    },
-    roomName: {
-        fontSize: 14,
-        color: '#C9C9C9'
-    },
-    headerText: {
-        fontWeight: 'bold',
-        fontSize: 16
-    },
-    content: {
-        margin : 2,
-        padding: 2,
-    },
-    actionBtn: {
-        flex: 1,
-        width: 85,
-        height: 20,
-        alignSelf: 'flex-end'
-    },
-    avatar: {
-        backgroundColor: '#C0C0C0',
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        textAlign: 'center',
-        fontSize: 20,
-        textAlignVertical: 'center',
-        marginRight: 5
-    },
-    avatarImage:{
-        width: 40,
-        height:40,
-        borderRadius:20,
-        marginRight : 5
-    },
-    speaker : {
-        margin: 0,
-        padding: 0,
-        flexDirection: 'row',
-    },
-    speakerName: {
-        textAlignVertical: 'center',
-        fontStyle: 'italic',
-        fontSize: 14
-    },
-    duration: {
-        fontSize : 11,
-        fontStyle: 'italic'
-    }
-});
