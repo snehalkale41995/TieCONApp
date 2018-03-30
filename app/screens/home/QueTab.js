@@ -21,12 +21,10 @@ export  class QueTab extends React.Component {
       <Tabs style={{ elevation: 3 }}>
         <Tab
           heading={
-            <TabHeading><Icon name="question"/><Text>Ask Questions</Text></TabHeading>
+            <TabHeading><Icon name="md-help"/><Text>Ask Questions</Text></TabHeading>
           }
         >
          <AskQuestion  navigation={this.props.navigation} sessionId = {this.state.sessionId}  />
-         
-         
         </Tab>
         <Tab
           heading={

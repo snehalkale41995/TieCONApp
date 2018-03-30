@@ -16,11 +16,11 @@ export class Survey extends RkComponent {
     constructor(props) {
         super(props);
         this.state = {
-            queForm: [],
-            askedBy: "",
+            questionsForm: [],
+            user: "",
             responses : [],
             queArray : [],
-            sessionId : this.props.navigation.state.params.sessionId,
+           sessionId : this.props.navigation.state.params.sessionId,
         }
         this.onFormSelectValue = this.onFormSelectValue.bind(this);
         this.onMultiChoiceChange = this.onMultiChoiceChange.bind(this);
@@ -31,7 +31,7 @@ export class Survey extends RkComponent {
         AsyncStorage.getItem("USER_DETAILS").then((userDetails) => {
             let user = JSON.parse(userDetails)
             thisRef.setState({
-                askedBy: user.firstName + " " + user.lastName
+                user: user.firstName + " " + user.lastName
             })
         })
         .catch(err => {
@@ -44,7 +44,7 @@ export class Survey extends RkComponent {
         firestoreDB.collection("QuestionsForm").doc("oQwNtp86Zxlu1JFkFhwg").get().then(function (doc) {
             let form = doc.data();
             thisRef.setState({
-                queForm: form.Questions
+                questionsForm: form.Questions
             })
         }).catch(function (error) {
             console.log("Error getting document:", error);
@@ -61,7 +61,7 @@ export class Survey extends RkComponent {
         let thisRef = this;
         firestoreDB.collection('SessionSurvey').add({
             Responses: thisRef.state.queArray,
-            ResponseBy: thisRef.state.askedBy,
+            ResponseBy: thisRef.state.user,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             SessionId :  thisRef.state.sessionId
         })
@@ -72,8 +72,8 @@ export class Survey extends RkComponent {
             console.error("Error adding document: ", error);
         });
     }
-    onFormSelectValue = (queForm) => {
-        let renderQuestions = this.state.queForm.map(Fitem => {
+    onFormSelectValue = (questionsForm) => {
+        let renderQuestions = this.state.questionsForm.map(Fitem => {
             this.state.queArray.push({ Question: Fitem.QuestionTitle, Answer: new Set() });
             return (
                     <View style={{ marginLeft: 10 ,marginBottom :10}}>
@@ -160,7 +160,7 @@ export class Survey extends RkComponent {
         this.state.queArray[Qid].Answer = text;
     }
     render() {
-        if (this.state.queForm.length == 0 ){
+        if (this.state.questionsForm.length == 0 ){
             return (
                 <Text style={{fontSize : 20 ,alignSelf: 'center' ,marginTop : 200}} ><Icon name="ios-sync"/>  Loading... </Text>
             );
@@ -169,7 +169,7 @@ export class Survey extends RkComponent {
             return (
                 <Container>
                     <ScrollView>
-                    {this.onFormSelectValue(this.state.queForm)}
+                    {this.onFormSelectValue(this.state.questionsForm)}
                     <RkButton rkType='success'
                         style={{ alignSelf: 'center', width: 340 ,marginTop: 3, marginBottom : 3 }}
                         onPress={() => this.onSubmitResponse()}>SUBMIT</RkButton>
