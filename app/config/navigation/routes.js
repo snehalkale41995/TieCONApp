@@ -7,6 +7,7 @@ import { HomePage } from '../../screens/index';
 import { Questions } from '../../screens/index';
 import _ from 'lodash';
 import {data} from '../../data';
+import {Service} from './../../services';
 
 export class HomePageMenuScreen extends React.Component {
   static navigationOptions = {
@@ -14,14 +15,53 @@ export class HomePageMenuScreen extends React.Component {
   };
   constructor(){
     super()
-   
+    this.state = {
+        showQuestions : false,
+        showHomepage : false,
+        userId : ""
+    }
   }
- 
+  componentWillMount(){
+    Service.getCurrentUser((userDetails)=>{
+      let Uid =  userDetails.uid;
+      this.setState({
+        userId : Uid
+      })
+      this.getQuestionsData(Uid);
+    });
+}
+getQuestionsData = (Uid) =>{
+  Service.getDocRef("QuestionsHome")
+  .where("ResponseBy", "==", Uid)
+  .get().then((snapshot) => {
+      if (snapshot.size == 0) {
+        this.setState({
+          showQuestions : true,
+          showHomepage : false
+        })
+      }
+      else{
+        this.setState({
+          showQuestions : false,
+          showHomepage : true
+        })
+      }
+  });
+}
   render() {
-    return (
-      <HomePage navigation={this.props.navigation} />
-     )
-
+    if (this.state.showQuestions == true && this.state.showHomepage == false) {
+      return (
+        <Questions navigation={this.props.navigation} userId={this.state.userId} />
+      );
+    }
+    else if (this.state.showQuestions == false && this.state.showHomepage == true) {
+      return (
+        <HomePage navigation={this.props.navigation} />
+      );
+    }
+    else {
+      return null;
+    }
   }
 }
 

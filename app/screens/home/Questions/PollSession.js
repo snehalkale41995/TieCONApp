@@ -11,8 +11,9 @@ var firestoreDB = firebase.firestore();
 export default class PollSession extends React.Component {
     constructor(props) {
         super(props);
+        this.sessionDetails = this.props.navigation.state.params.sessionDetails;
         this.state = {
-            sessionId: this.props.navigation.state.params.sessionId,
+            sessionId: this.sessionDetails.key,
             question: "Are you coming to Pune ?",
             pollResponseValue: ["Yes", "No"],
             response: "",

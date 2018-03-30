@@ -14,6 +14,7 @@ export class SessionDetails extends Component {
     super(props);
     this.sessionDetails = this.props.navigation.state.params.session,
       this.state = {
+        sessionDetails : this.props.navigation.state.params.session,
         speakerDetails: this.sessionDetails.speakersDetails,
         sessionId: this.props.navigation.state.params.session.key,
         user: "",
@@ -53,12 +54,12 @@ export class SessionDetails extends Component {
         <View style={{ alignItems: 'baseline', flexDirection: 'row', width: 380, marginBottom: 3 }}>
           <View style={{ width: 182 }} >
             <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 5, marginRight: 2 }}
-              onPress={() => this.props.navigation.navigate('Survey', { sessionId: this.state.sessionId })}
+              onPress={() => this.props.navigation.navigate('Survey', { sessionDetails: this.state.sessionDetails })}
             >Survey </RkButton>
           </View>
           <View style={{ width: 182 }} >
             <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 2, marginRight: 5 }}
-              onPress={() => this.props.navigation.navigate('QueTab', { sessionId: this.state.sessionId })}
+              onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
             >Ask Questions </RkButton>
           </View>
         </View>
@@ -68,7 +69,7 @@ export class SessionDetails extends Component {
       return (
         <View style={{ width: 360 }} >
           <RkButton rkType='outline' style={{ flexDirection: 'row', width: 340, marginLeft: 5, marginRight: 5 }}
-            onPress={() => this.props.navigation.navigate('QueTab', { sessionId: this.state.sessionId })}
+            onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
           >Ask Questions </RkButton>
         </View>
       );
