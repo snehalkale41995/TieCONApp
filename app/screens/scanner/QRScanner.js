@@ -190,7 +190,7 @@ export class QRScanner extends React.Component {
       this.setState({ isErrorDisplayed: true, isLoading: false });
       Alert.alert(
         'Invalid Data',
-        'This QR code is not valid TiECON QR Code.',
+        'This QR code is not valid TiE QR Code.',
         [
           {
             text: 'Ok', onPress: () => {

@@ -88,8 +88,8 @@ export class LoginV2 extends React.Component {
         onResponderRelease={ (e) => Keyboard.dismiss()}>
         <View style={styles.header}>
           {renderIcon()}
-          <RkText rkType='light h1'>Pune</RkText>
-          <RkText rkType='logo h0'>TiECON</RkText>
+          <RkText rkType='light h1'>Tie</RkText>
+          <RkText rkType='logo h0'>Pune</RkText>
         </View>
         <View style={styles.content}>
           <View>

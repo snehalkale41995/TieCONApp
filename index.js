@@ -4,4 +4,4 @@ import {
 
 import App from './app/app';
 
-AppRegistry.registerComponent('TiECON', () => App);
+AppRegistry.registerComponent('TiEPuneEvents', () => App);
