@@ -1,1 +1,1 @@
-# TiECON Pune
+# TiE Pune Events
