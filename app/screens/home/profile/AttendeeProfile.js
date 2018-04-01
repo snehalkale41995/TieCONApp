@@ -44,7 +44,7 @@ export class AttendeeProfile extends RkComponent {
             phone: this.speaker.contactNo,
             linkedInSummary: this.speaker.linkedInSummary ? this.speaker.linkedInSummary : "No details available..." ,
             isLoading: false,
-            pictureUrl: this.speaker.pictureUrl ? this.speaker.pictureUrl : 'https://randomuser.me/api/portraits/women/84.jpg',
+            pictureUrl: this.speaker.profileImageURL ? this.speaker.profileImageURL : 'https://randomuser.me/api/portraits/women/84.jpg',
         }
         this.onLinkedInError = this.onLinkedInError.bind(this);
         this.onLinkedInConnect = this.onLinkedInConnect.bind(this);
@@ -120,7 +120,7 @@ export class AttendeeProfile extends RkComponent {
               <View style={styles.header}>
                 <Avatar imagePath={this.state.pictureUrl} rkType='big'/>
               </View>
-              <View style={styles.section}>
+              <View style={styles.section} pointerEvents='none'>
                 <View style={[styles.row, styles.heading]}>
                   <RkText rkType='header6 primary'>INFO</RkText>
                 </View>
