@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator } from 'react-native';
+import { ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator ,Text} from 'react-native';
 import { RkText,RkComponent, RkTextInput, RkAvoidKeyboard, RkTheme, RkStyleSheet } from 'react-native-ui-kitten';
 import {data} from '../../../data';
 import {Avatar} from '../../../components';
@@ -9,7 +9,6 @@ import {FontAwesome} from '../../../assets/icons';
 import {GradientButton} from '../../../components';
 import LinkedInModal from 'react-native-linkedin';
 import firebase from '../../../config/firebase'
-
 var firestoreDB = firebase.firestore();
 
 function renderIf(condition, content) {
@@ -29,6 +28,7 @@ export class AttendeeProfile extends RkComponent {
         let {params} = this.props.navigation.state;
         this.speaker = params.speaker;
         this.state = {
+            speaker : this.speaker,
             isLoading: true,
             password: this.speaker.password,
             newPassword: this.speaker.newPassword,
@@ -44,7 +44,7 @@ export class AttendeeProfile extends RkComponent {
             phone: this.speaker.contactNo,
             linkedInSummary: this.speaker.linkedInSummary ? this.speaker.linkedInSummary : "No details available..." ,
             isLoading: false,
-            pictureUrl: this.speaker.pictureUrl ? this.speaker.pictureUrl : 'https://randomuser.me/api/portraits/women/84.jpg',
+            pictureUrl: this.speaker.profileImageURL,
         }
         this.onLinkedInError = this.onLinkedInError.bind(this);
         this.onLinkedInConnect = this.onLinkedInConnect.bind(this);
@@ -114,13 +114,22 @@ export class AttendeeProfile extends RkComponent {
       }
     
       render() {
+
+        let avatar;
+        if (this.state.speaker.profileImageURL) {
+            avatar = <Avatar  rkType='big'  imagePath={this.state.speaker.profileImageURL} />
+        } else {
+            let firstLetter = this.state.speaker.firstName ?  this.state.speaker.firstName[0]: '?';
+            avatar = <RkText rkType='big'  style={styles.avatar}>{firstLetter}</RkText>
+        }
         return (
           <ScrollView style={styles.root}>
             <RkAvoidKeyboard>
               <View style={styles.header}>
-                <Avatar imagePath={this.state.pictureUrl} rkType='big'/>
+                {avatar}
+                {/* <Avatar imagePath={this.state.pictureUrl} rkType='big'/> */}
               </View>
-              <View style={styles.section}>
+              <View style={styles.section} pointerEvents='none'>
                 <View style={[styles.row, styles.heading]}>
                   <RkText rkType='header6 primary'>INFO</RkText>
                 </View>
@@ -219,5 +228,16 @@ let styles = RkStyleSheet.create(theme => ({
     button: {
       marginHorizontal: 16,
       marginBottom: 32
-    }
+    },
+    avatar: {
+      backgroundColor: '#C0C0C0',
+      width: 100,
+      height: 100,
+      borderRadius: 60,
+      textAlign: 'center',
+      fontSize: 40,
+      textAlignVertical: 'center',
+      marginRight: 5,
+      alignSelf: 'center'
+  }
   }));
