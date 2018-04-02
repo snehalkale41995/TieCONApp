@@ -40,7 +40,7 @@ export default class ScheduleTile extends RkComponent {
                     if (snapshot.size > 0) {
                         snapshot.forEach((doc) => {
                             let regResponse = doc.data();
-                            let newSession = Object.assign(this.state.session, {regStatus: regResponse.status});
+                            let newSession = Object.assign(this.state.session, {regStatus: regResponse.status, regId: doc.id});
                             baseObj.setState((prevState) => ({
                                 ...prevState,
                                 session: newSession
@@ -72,7 +72,24 @@ export default class ScheduleTile extends RkComponent {
                 });
             });
     }
-    
+    /**
+    * On Cancel Request
+    */
+    onCancelRequest = (event)=>{
+        Service.getDocRef("RegistrationResponse").doc(this.state.regId).delete().then((req)=>{
+            let newSession = Object.assign({}, this.state.session);
+            delete newSession['regStatus'];
+            delete newSession['regId'];
+            this.setState((prevState) => ({
+                ...prevState,
+                session: newSession
+            }));
+        }).catch((error)=>{
+            console.warn(error);
+        });
+
+        console.log(this.state.session.regId);
+    }
     /**
     * Session Attend Request raised by Attendee
     *
@@ -88,7 +105,7 @@ export default class ScheduleTile extends RkComponent {
             attendeeId : attendeeId
         }
         Service.getDocRef("RegistrationResponse").add(attendRequest).then((req)=>{
-            let newSession = Object.assign(this.state.session, {regStatus: attendRequest.status});
+            let newSession = Object.assign(this.state.session, {regStatus: attendRequest.status, regId: req.id});
             this.setState((prevState) => ({
                 ...prevState,
                 session: newSession
@@ -122,19 +139,40 @@ export default class ScheduleTile extends RkComponent {
             });
 
     }
+    /**
+    * Duration Details
+    */
     getDuration = ()=>{
-        let _endTime =new Date(this.props.session.endTime).getTime();
-        let _startTime = new Date(this.props.session.startTime).getTime();
-        let difference = (_endTime - _startTime)/(60000);
-        let __minutes = (difference % 60);
-        let __hours = Math.floor(difference/60);  
-        return (<Text style={this.styles.duration}>{(__hours>0)? __hours +' Hrs': ''} {__minutes + 'Min'}</Text>);
+        return (
+            <View  style={{flexDirection: 'row', alignSelf: 'flex-start'}}>
+                <Icon name="md-time" style={this.styles.tileIcons}/>
+                <Text style={this.styles.duration}>{Moment(this.props.session.startTime).format("HH:mm")} - {Moment(this.props.session.endTime).format("HH:mm")}</Text>
+            </View>
+        );
     }
-    
+    /**
+    * Location Details
+    */
+    getLocation =()=>{
+        return (
+            <View style={{marginLeft:20, flexDirection: 'row', alignSelf: 'flex-end'}}>
+                <Icon name="md-pin" style={this.styles.tileIcons} />
+                <Text style={this.styles.roomName}>{this.props.session.room}</Text>
+            </View>
+        );
+    }
+    /**
+    * Attend request Status
+    */
     attendRequestStatus = ()=> {
         if (this.state.session.regStatus) {                
             return (
-                <Text style={getStatusStyle(this.state.session.regStatus)}>{this.state.session.regStatus}</Text>
+                <View style={{flexDirection:'row'}}>
+                    <Text style={getStatusStyle(this.state.session.regStatus)}>{this.state.session.regStatus}</Text>
+                    <TouchableOpacity onPress={this.onCancelRequest}>
+                        <Icon name="md-close" style={this.styles.tileIcons} /> 
+                    </TouchableOpacity>
+                </View>
             )
         }else{
             return (
@@ -156,7 +194,6 @@ export default class ScheduleTile extends RkComponent {
             return (
                 <RkCard rkType='shadowed' style={this.styles.card}>
                     <View style={this.styles.header}>
-                        <Text style={this.styles.roomName}>{this.props.session.room}</Text>
                         <View style={this.styles.mainHeader}>
                             <TouchableOpacity
                                 onPress={() => this.props.navigation.navigate('SessionDetails', {session: this.props.session})}
@@ -164,18 +201,20 @@ export default class ScheduleTile extends RkComponent {
                                 flexDirection: 'row',
                                 flex: 3,
                             }}>
-                                <Text style={this.styles.headerText}>{this.props.session.eventName}</Text>
+                            <Text style={this.styles.headerText}>{this.props.session.eventName}</Text>
                             </TouchableOpacity>
                             {this.attendRequestStatus()}
+                        </View>
+                        <View style={{flexDirection: 'row'}}>
+                            
                         </View>
                     </View >
                     <View style={this.styles.content}>
                         {speakers}
                         <View
-                            style={{
-                            flexDirection: 'row'
-                        }}>
+                            style={this.styles.tileFooter}>
                             {this.getDuration()}
+                            {this.getLocation()}
                         </View>
                     </View>
                 </RkCard>
