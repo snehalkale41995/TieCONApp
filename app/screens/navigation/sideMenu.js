@@ -102,7 +102,7 @@ export class SideMenu extends React.Component {
           showsVerticalScrollIndicator={false}>
           <View style={[styles.container, styles.content]}>
             {this._renderIcon()}
-            <RkText rkType='logo'>TiE Pune Events</RkText>
+            <RkText>TiE Pune Events</RkText>
           </View>
           {menu}
           
