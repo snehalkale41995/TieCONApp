@@ -36,7 +36,7 @@ export default class ScheduleTile extends RkComponent {
             Service.getDocRef(REGISTRATION_RESPONSE_TABLE)
                 .where("sessionId", "==", this.state.session.key)
                 .where("attendeeId", "==", attendeeId)
-                .get().then((snapshot) => {
+                .onSnapshot((snapshot)=>{
                     if (snapshot.size > 0) {
                         snapshot.forEach((doc) => {
                             let regResponse = doc.data();
@@ -76,7 +76,8 @@ export default class ScheduleTile extends RkComponent {
     * On Cancel Request
     */
     onCancelRequest = (event)=>{
-        Service.getDocRef("RegistrationResponse").doc(this.state.regId).delete().then((req)=>{
+        console.log("RegID", this.state.session.regId);
+        Service.getDocRef("RegistrationResponse").doc(this.state.session.regId).delete().then((req)=>{
             let newSession = Object.assign({}, this.state.session);
             delete newSession['regStatus'];
             delete newSession['regId'];
@@ -87,8 +88,6 @@ export default class ScheduleTile extends RkComponent {
         }).catch((error)=>{
             console.warn(error);
         });
-
-        console.log(this.state.session.regId);
     }
     /**
     * Session Attend Request raised by Attendee
