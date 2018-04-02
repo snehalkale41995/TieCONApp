@@ -158,7 +158,7 @@ export default class PollSession extends React.Component {
                             </View>
                         </TouchableOpacity>
                     </RkChoiceGroup>
-                    <RkButton rkType='success' style={{ alignSelf: 'center', width: 340 }} onPress={() => this.onSubmitResponse()}> Submit </RkButton>
+                    <RkButton rkType='outline' style={{ alignSelf: 'center', width: 340 }} onPress={() => this.onSubmitResponse()}> Submit </RkButton>
     
                 </View>
     

@@ -5,7 +5,8 @@ export default function styleConstructor() {
     return RkStyleSheet.create(theme =>({
         card: {
             margin: 1,
-            padding: 4
+            padding: 4,
+            height : 75
         },
         header: {
             flex: 1,
