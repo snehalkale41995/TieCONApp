@@ -19,7 +19,6 @@ export default function styleConstructor() {
         },
         roomName: {
             fontSize: 15,
-            color: '#C9C9C9',
             marginLeft: 5,
         },
         headerText: {
@@ -63,7 +62,6 @@ export default function styleConstructor() {
             fontSize: 14
         },
         duration: {
-            color: '#C9C9C9',
             fontSize: 15,
             marginLeft : 5,
             marginRight: 10
@@ -84,8 +82,7 @@ export default function styleConstructor() {
         tileIcons : {
             paddingLeft: 4,
             paddingTop: 4,
-            fontSize:16, 
-            color: '#C9C9C9'
+            fontSize:16
         },
         tileFooter : {
             flexDirection: 'row',
