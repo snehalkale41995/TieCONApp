@@ -26,7 +26,8 @@ export default class AskQuestion extends RkComponent {
             questionData : [],
             orderBy : 'timestamp',
             currentUid : "",
-            queAccess : ""
+            queAccess : "",
+            questionStatus : false
         }
     }
     componentWillMount() {
@@ -77,6 +78,9 @@ export default class AskQuestion extends RkComponent {
                     Data.push({questionSet :doc.data(), questionId : doc.id});
                 })
                 thisRef.setState({questionData : Data})              
+            }
+            else{
+                thisRef.setState({questionStatus : true})    
             }     
          })
          .catch(function (error){
@@ -227,7 +231,9 @@ export default class AskQuestion extends RkComponent {
                 onResponderRelease={(e) => Keyboard.dismiss()}>
                 <View style={{flexDirection :'row'}} pointerEvents={this.state.queAccess}>
                     <RkTextInput type="text"  style={{width: 300, marginRight: 10 }}placeholder="Enter your question here..." value={this.state.Question} name="Question" onChangeText={(text) => this.onChangeInputText(text)} />
-                    <RkText  style={{ fontSize: 35,width: 46,height : 46 , marginLeft : 8 }} onPress={() => this.onSubmit()}><Icon name="md-send"/> </RkText>
+                    <TouchableOpacity onPress={() => this.onSubmit()}>
+                    <RkText  style={{ fontSize: 35,width: 46,height : 46 , marginLeft : 8 }}><Icon name="md-send"/> </RkText>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={{ alignItems: 'center', flexDirection: 'row', width: 380, marginBottom: 3, marginLeft: 2, marginRight: 2 }}>
@@ -262,6 +268,11 @@ export default class AskQuestion extends RkComponent {
                             }
                         </View>
                     </View>
+                    <View style={[styles.row, styles.heading]}>
+                            {
+                                this.state.questionStatus ? <Text style={{ fontSize: 18 }}>No Questions Found...</Text> : null
+                            }
+                        </View>
                     {this.displayQuestions()}
                 </View>
                

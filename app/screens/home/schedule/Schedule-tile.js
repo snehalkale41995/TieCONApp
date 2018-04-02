@@ -191,7 +191,7 @@ export default class ScheduleTile extends RkComponent {
     */
     render() {
         if (this.props.session) {
-            const speakers = this.getSpeakers();
+            // const speakers = this.getSpeakers();
             return (
                 <RkCard rkType='shadowed' style={this.styles.card}>
                     <View style={this.styles.header}>
@@ -204,14 +204,14 @@ export default class ScheduleTile extends RkComponent {
                             }}>
                             <Text style={this.styles.headerText}>{this.props.session.eventName}</Text>
                             </TouchableOpacity>
-                            {this.attendRequestStatus()}
+                            {/* {this.attendRequestStatus()} */}
                         </View>
                         <View style={{flexDirection: 'row'}}>
                             
                         </View>
                     </View >
                     <View style={this.styles.content}>
-                        {speakers}
+                        {/* {speakers} */}
                         <View
                             style={this.styles.tileFooter}>
                             {this.getDuration()}

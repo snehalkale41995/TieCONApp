@@ -5,6 +5,10 @@ import { Icon, Container, Tabs, Tab, TabHeading } from 'native-base';
 import { NavigationActions, TabNavigator, TabView } from 'react-navigation';
 import { Service } from '../../../services';
 import Moment from 'moment';
+import {Avatar} from '../../../components';
+import styleConstructor, {getStatusStyle} from './styles';
+
+const REGISTRATION_RESPONSE_TABLE = "RegistrationResponse";
 
 export class SessionDetails extends Component {
   static navigationOptions = {
@@ -12,6 +16,7 @@ export class SessionDetails extends Component {
   };
   constructor(props) {
     super(props);
+    this.styles = styleConstructor();
     this.sessionDetails = this.props.navigation.state.params.session,
       this.state = {
         sessionDetails : this.props.navigation.state.params.session,
@@ -24,15 +29,20 @@ export class SessionDetails extends Component {
         sessionVenue: this.sessionDetails.room ? this.sessionDetails.room : "TBD" ,
         showSurveyButton: false,
         startTime: this.sessionDetails.startTime,
-        endTime: this.sessionDetails.endTime
+        endTime: this.sessionDetails.endTime,
+        userObj : {},
+        regStatus:  "",
+        regId : ""
       }
   }
   componentWillMount() {
     Service.getCurrentUser((userDetails) => {
       this.setState({
-        user: userDetails.firstName + " " + userDetails.lastName
+        user: userDetails.firstName + " " + userDetails.lastName,
+        userObj : userDetails
       });
       this.checkSurveyResponse();
+      this.fetchRegistrationStatus();
     });
   }
   checkSurveyResponse = () => {
@@ -53,15 +63,16 @@ export class SessionDetails extends Component {
       return (
         <View style={{ alignItems: 'baseline', flexDirection: 'row', width: 380, marginBottom: 3 }}>
           <View style={{ width: 182 }} >
-            <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 5, marginRight: 2 }}
-              onPress={() => this.props.navigation.navigate('Survey', { sessionDetails: this.state.sessionDetails })}
-            >Survey </RkButton>
-          </View>
-          <View style={{ width: 182 }} >
             <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 2, marginRight: 5 }}
               onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
             >Ask Questions </RkButton>
           </View>
+          <View style={{ width: 182 }} >
+            <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 5, marginRight: 2 }}
+              onPress={() => this.props.navigation.navigate('Survey', { sessionDetails: this.state.sessionDetails })}
+            >Feedback </RkButton>
+          </View>
+          
         </View>
       );
     }
@@ -84,20 +95,97 @@ export class SessionDetails extends Component {
   getSpeakers = () => {
     return this.state.speakerDetails
       .map((speaker, index) => {
+        let avatar;
+        if (speaker.profileImageURL) {
+            avatar = <Avatar  rkType='small'  imagePath={speaker.profileImageURL} />
+        } else {
+            let firstLetter = speaker.firstName ?  speaker.firstName[0]: '?';
+            avatar = <RkText rkType='small'  style={styles.avatar}>{firstLetter}</RkText>
+        }
         return (
-          <View style={[styles.row, styles.heading]}>
-            <RkText style={{ fontSize: 15 }}><Icon name="ios-people-outline" /></RkText>
-            <Text style={[styles.text]} rkType='header6'> {speaker.firstName + ' ' + speaker.lastName}</Text>
+          <View style={[styles.row, styles.heading,styles.speakerView]} >
+              {avatar}
+              <Text style={[styles.text ,styles.speaker]} rkType='header6'> {speaker.firstName + ' ' + speaker.lastName}</Text>
+              <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('AttendeeProfile', { speakerDetails: speaker })}
+            >
+              <RkText style={[styles.attendeeScreen]} ><Icon name="ios-arrow-forward" /></RkText>
+            </TouchableOpacity>
           </View>
         )
       });
   }
+
+  attendRequestStatus = ()=> {
+    if (this.state.regStatus) {                
+        return (
+            <View style={{flexDirection:'row', marginLeft : 250}}>
+                <RkButton   rkType='outline small'
+                contentStyle={getStatusStyle(this.state.regStatus)}>{this.state.regStatus}</RkButton>
+            </View>
+        )
+    }else{
+        return (
+          <View style={{flexDirection:'row', marginLeft : 250}}>
+            <RkButton
+                rkType='outline small'
+                onPress={this.onAttendRequest}>
+                Attend
+            </RkButton>
+            </View>
+        );
+    }
+}
+onAttendRequest = (event) => {
+  const attendeeId = this.state.userObj.uid;
+  let attendRequest = {
+      sessionId : this.state.sessionDetails.key,
+      session : this.state.sessionDetails,
+      registeredAt : new Date(),
+      status : this.state.sessionDetails.isRegrequired ? "Pending" : "Going",
+      attendee : {},
+      attendeeId : attendeeId
+  }
+  Service.getDocRef("RegistrationResponse").add(attendRequest).then((req)=>{
+      this.setState({
+          regId : req.id,
+          regStatus : attendRequest.status,
+          
+      });
+  }).catch((error)=>{
+      console.warn(error);
+  });
+}
+
+fetchRegistrationStatus = () => {
+  const baseObj = this;
+  if(this.state.userObj){
+      const attendeeId = this.state.userObj.uid;
+      Service.getDocRef(REGISTRATION_RESPONSE_TABLE)
+          .where("sessionId", "==", this.state.sessionDetails.key)
+          .where("attendeeId", "==", attendeeId)
+          .onSnapshot((snapshot)=>{
+              if (snapshot.size > 0) {
+                  snapshot.forEach((doc) => {
+                      let regResponse = doc.data();
+                      baseObj.setState({
+                        regStatus: regResponse.status,
+                        regId: doc.id
+                      })
+                  });
+              }
+          });
+  }else{
+      console.warn("User object is undefined");
+  }
+}
   render() {
     const speakers = this.getSpeakers();
     const surveyButton = this.getSurveyAccess();
     return (
       <ScrollView style={styles.root}>
-        <RkCard style={{ marginLeft: 5, marginRight: 5, height: 450 }}>
+        <RkCard style={{ marginLeft: 5, marginRight: 5}}>
+         
           <View style={styles.section}>
             <View style={[styles.row, styles.heading]}>
               <RkText style={{ fontSize: 20 }} rkType='header6 primary'>{this.state.sessionName}</RkText>
@@ -106,15 +194,15 @@ export class SessionDetails extends Component {
 
           <View style={styles.subSection}>
             <View style={[styles.row, styles.heading]}>
-              <RkText style={{ fontSize: 15 }}><Icon name="ios-calendar-outline" /> </RkText>
+              <RkText style={{ fontSize: 15 }}><Icon name="md-time" /> </RkText>
               <Text style={[styles.text]} rkType='header6' > {this.getDuration()} </Text>
             </View>
             <View style={[styles.row, styles.heading]}>
-              <RkText style={{ fontSize: 15 }}><Icon name="ios-locate-outline" /></RkText>
+              <RkText style={{ fontSize: 15 }}><Icon name="md-pin" /></RkText>
               <Text style={[styles.text]} rkType='header6'>{this.state.sessionVenue}</Text>
             </View>
-            <View >
-              {speakers}
+            <View>
+              {this.attendRequestStatus()}
             </View>
           </View>
 
@@ -126,7 +214,16 @@ export class SessionDetails extends Component {
               <Text style={[styles.text]}>{this.state.description}</Text>
             </View>
           </View>
-
+          <View style={styles.speakerSection}>
+            <View style={[ styles.heading]}>
+            <View style={[styles.row]}>
+              <RkText style={{ marginLeft:5  ,fontSize: 16 }} ><Icon name="md-people" /> </RkText>
+              <RkText style={{ marginLeft:5  ,fontSize: 16 }} rkType='header6 primary' >Speakers </RkText>
+              </View>
+              </View>
+              {speakers}
+            
+          </View>
         </RkCard>
 
         <View style={[styles.surveButton]}>
@@ -147,6 +244,11 @@ let styles = RkStyleSheet.create(theme => ({
     marginBottom : 10
   },
   descSection : {
+    marginVertical: 25,
+    marginBottom : 10,
+    marginTop : 5
+  },
+  speakerSection : {
     marginVertical: 25,
     marginBottom : 10,
     marginTop : 5
@@ -174,6 +276,41 @@ let styles = RkStyleSheet.create(theme => ({
     marginBottom: 3,
     marginLeft: 5,
     marginRight: 5 
-  }
+  },
+  speakerView : {
+    marginTop : 5,
+    marginBottom :5
+  },
+  speaker: {
+    flexDirection : 'column',
+    width : 250
+  },
+  attendeeScreen : {
+    flexDirection: 'column',
+    fontSize: 25,
+    marginRight: 5 
+  },
+  avatar: {
+    backgroundColor: '#C0C0C0',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    textAlign: 'center',
+    fontSize: 20,
+    textAlignVertical: 'center',
+    marginRight: 5
+},
+avatarImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 5
+},
+tileIcons : {
+  paddingLeft: 4,
+  paddingTop: 4,
+  fontSize:16, 
+  color: '#C9C9C9'
+},
 }));
 
