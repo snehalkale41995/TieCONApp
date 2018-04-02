@@ -18,10 +18,10 @@ export class SessionDetails extends Component {
         speakerDetails: this.sessionDetails.speakersDetails,
         sessionId: this.props.navigation.state.params.session.key,
         user: "",
-        description: this.sessionDetails.description,
+        description: this.sessionDetails.description ? this.sessionDetails.description : "No details found...",
         sessionName: this.sessionDetails.eventName,
         sesssionDuration: this.sessionDetails.duration,
-        sessionVenue: this.sessionDetails.room,
+        sessionVenue: this.sessionDetails.room ? this.sessionDetails.room : "TBD" ,
         showSurveyButton: false,
         startTime: this.sessionDetails.startTime,
         endTime: this.sessionDetails.endTime

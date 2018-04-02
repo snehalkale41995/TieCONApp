@@ -56,7 +56,8 @@ export default class ScheduleTile extends RkComponent {
      * Fetch Speaker Details
      */
     fetchSpeakers = () => {
-        this.props.session.speakers.forEach((speaker) => {
+        if(this.props.session.speakers){
+            this.props.session.speakers.forEach((speaker) => {
                 Service.getDocument("Attendee", speaker, (data) => {
                     const prevSpeakersDetails = this.state.session.speakersDetails;
                     let newSession = Object.assign(this.state.session, {
@@ -71,6 +72,7 @@ export default class ScheduleTile extends RkComponent {
                     }));
                 });
             });
+        }
     }
     /**
     * On Cancel Request
