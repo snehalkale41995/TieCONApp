@@ -1,10 +1,11 @@
 import {StyleSheet} from 'react-native';
+import {RkStyleSheet} from 'react-native-ui-kitten';
 
 export default function styleConstructor() {
-    return StyleSheet.create({
+    return RkStyleSheet.create(theme =>({
         card: {
-            margin: 2,
-            padding: 3
+            margin: 1,
+            padding: 4
         },
         header: {
             flex: 1,
@@ -16,8 +17,9 @@ export default function styleConstructor() {
             marginLeft: 5
         },
         roomName: {
-            fontSize: 14,
-            color: '#C9C9C9'
+            fontSize: 15,
+            color: '#C9C9C9',
+            marginLeft: 5,
         },
         headerText: {
             fontWeight: 'bold',
@@ -29,7 +31,7 @@ export default function styleConstructor() {
         },
         actionBtn: {
             flex: 1,
-            width: 85,
+            width: 65,
             height: 20,
             alignSelf: 'flex-end'
         },
@@ -60,8 +62,10 @@ export default function styleConstructor() {
             fontSize: 14
         },
         duration: {
-            fontSize: 11,
-            fontStyle: 'italic'
+            color: '#C9C9C9',
+            fontSize: 15,
+            marginLeft : 5,
+            marginRight: 10
         },
         item: {
             backgroundColor: 'white',
@@ -75,23 +79,33 @@ export default function styleConstructor() {
             height: 15,
             flex: 1,
             paddingTop: 30
+        },
+        tileIcons : {
+            paddingLeft: 4,
+            paddingTop: 4,
+            fontSize:16, 
+            color: '#C9C9C9'
+        },
+        tileFooter : {
+            flexDirection: 'row',
+            alignContent: 'space-between'
         }
-    });
+    }));
 }
 
 export function getStatusStyle(regStatus) {
     switch (regStatus) {
         case "Going":
             {
-                return {color: '#00FF00'}
+                return {color: '#336633'}
             }
         case "Pending":
             {
-                return {color: '#FFFF00'}
+                return {color: '#FFCC33'}
             }
         case "Denied":
             {
-                return {color: '#FF0000'}
+                return {color: '#CC6633'}
             }
     }
 }
