@@ -16,14 +16,14 @@ export class ProgramsTab extends React.Component {
       <Tabs style={{ elevation: 3 }} style={styles.tabContent}>
         <Tab
           heading={
-            <TabHeading><Icon name="calendar"/><Text>Schedule</Text></TabHeading>
+            <TabHeading  style={{backgroundColor : '#ed1b24' }} contentStyle ={{color : 'white'}}><Icon  style ={{color: 'white'}} name="calendar"/><Text style ={{color: 'white'}}>Schedule</Text></TabHeading>
           }
         >        
           <EventCal navigation={this.props.navigation}/>
         </Tab>
         <Tab
           heading={
-            <TabHeading><Icon name="ios-link"/><Text>My Agenda</Text></TabHeading>
+            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon name="ios-link"/><Text>My Agenda</Text></TabHeading>
           }
         >
           <MyAgenda navigation={this.props.navigation} />
