@@ -183,13 +183,7 @@ export default class EventCal extends Component {
                 textDisabledColor: '#F0F0F0',
                 dotColor: '#FFFFFF',
                 selectedDotColor: '#E7060E',
-                monthTextColor: '#E7060E',
-                textDayFontFamily: 'monospace',
-                textMonthFontFamily: 'monospace',
-                textDayHeaderFontFamily: 'monospace',
-                textDayFontSize: 16,
-                textMonthFontSize: 16,
-                textDayHeaderFontSize: 16
+                monthTextColor: '#E7060E'
             }}
             renderDay={this.renderDay}/>);
     }
