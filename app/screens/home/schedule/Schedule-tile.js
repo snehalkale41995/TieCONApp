@@ -204,24 +204,37 @@ export default class ScheduleTile extends RkComponent {
         }
 
     }
+    applyTouchOpacityArrow = (shouldApplyOpacity)=>
+    {
+        if (!shouldApplyOpacity)
+        {
+            return (
+            <View style={{ flexDirection: 'column', alignItems: 'flex-end', marginRight: 5 }}>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('SessionDetails', { session: this.props.session })}
+                >
+                    <RkText ><Icon name="ios-arrow-forward" /></RkText>
+                </TouchableOpacity>
+            </View>
+            );
+        }else {
+           return <Text style={this.styles.headerText}>   </Text>;
+        }
+
+    }
     /**
     * Render Schedule Tile
     */
     render() {
         if (this.props.session) {
-            // const speakers = this.getSpeakers();
             return (
                 <RkCard rkType='shadowed' style={this.styles.card}>
                     <View style={this.styles.header}>
                         <View style={this.styles.mainHeader}>
                             {this.applyTouchOpacity(this.props.session.isBreak)}
                         </View>
-                        <View style={{ flexDirection: 'column' , alignItems :'flex-end' ,marginRight :5}}>
-                        <TouchableOpacity
-                            onPress={() => this.props.navigation.navigate('SessionDetails', { session: this.props.session })}
-                        >
-                            <RkText ><Icon name="ios-arrow-forward" /></RkText>
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'column', alignItems: 'flex-end'  }}>
+                            {this.applyTouchOpacityArrow(this.props.session.isBreak)}
                         </View>
                     </View >
                     <View style={this.styles.content}>
@@ -231,9 +244,6 @@ export default class ScheduleTile extends RkComponent {
                             {this.getDuration()}
                             {this.getLocation()}
                         </View>
-                    </View>
-                    <View>
-                       
                     </View>
                 </RkCard>
             );

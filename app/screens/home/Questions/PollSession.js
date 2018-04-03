@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'native-base';
-import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage,ActivityIndicator } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage,ActivityIndicator ,Platform} from 'react-native';
 import { RkComponent, RkTheme, RkText, RkStyleSheet, RkChoiceGroup, RkChoice, RkAvoidKeyboard, RkButton, RkCard, RkTextInput } from 'react-native-ui-kitten';
 import { NavigationActions } from 'react-navigation';
 import { PieChart } from 'react-native-svg-charts';
@@ -167,7 +167,7 @@ export default class PollSession extends React.Component {
                         </TouchableOpacity>
                     </RkChoiceGroup>
                     <GradientButton colors={['#f20505', '#f55050']} text='Submit'
-                    style={{ alignSelf: 'center', width: 340 }} onPress={() => this.onSubmitResponse()} /> 
+                    style={{ alignSelf: 'center', width:  Platform.OS === 'ios' ? 280 : 340 }} onPress={() => this.onSubmitResponse()} /> 
     
                 </View>
     

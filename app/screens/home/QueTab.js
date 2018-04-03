@@ -1,7 +1,7 @@
 import React from 'react';
 import { RkAvoidKeyboard, RkStyleSheet } from 'react-native-ui-kitten';
 import { Tabs, Tab, Icon, Text, TabHeading } from "native-base";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage ,Platform} from "react-native";
 import AskQuestion from './Questions/AskQuestion';
 import PollSession from './Questions/PollSession';
 
@@ -21,14 +21,14 @@ export  class QueTab extends React.Component {
       <Tabs style={{ elevation: 3 }}>
         <Tab
           heading={
-            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon name="md-help"/><Text>Panel Q&A</Text></TabHeading>
+            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon style={[styles.textColor]} name="md-help"/><Text style={[styles.textColor]}>Panel Q&A</Text></TabHeading>
           }
         >
          <AskQuestion  navigation={this.props.navigation} sessionId = {this.state.sessionId}  />
         </Tab>
         <Tab
           heading={
-            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon name="ios-stats"/><Text>Poll Session </Text></TabHeading>
+            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon style={[styles.textColor]} name="ios-stats"/><Text style={[styles.textColor]}>Poll Session </Text></TabHeading>
           }
         >
           <PollSession navigation={this.props.navigation} sessionId = {this.state.sessionId}  UserName = {this.state.UserName}/>
@@ -43,4 +43,7 @@ let styles = RkStyleSheet.create(theme => ({
     flex: 1,
     backgroundColor: theme.colors.screen.base
   },
+  textColor : {
+    color: Platform.OS === 'ios' ? 'white' :  'white'
+  }
 }));
