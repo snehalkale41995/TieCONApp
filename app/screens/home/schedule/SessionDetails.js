@@ -115,7 +115,7 @@ export class SessionDetails extends Component {
           avatar = <RkText rkType='small' style={styles.avatar}>{firstLetter}</RkText>
         }
         return (
-          <View style={[styles.row, styles.heading, styles.speakerView]} >
+          <View key={index} style={[styles.row, styles.heading, styles.speakerView]} >
             {avatar}
             <Text style={[styles.text, styles.speaker]} rkType='header6'> {speaker.firstName + ' ' + speaker.lastName}</Text>
             <TouchableOpacity
