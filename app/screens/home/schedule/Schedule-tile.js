@@ -214,21 +214,9 @@ export default class ScheduleTile extends RkComponent {
                 <RkCard rkType='shadowed' style={this.styles.card}>
                     <View style={this.styles.header}>
                         <View style={this.styles.mainHeader}>
-<<<<<<< Updated upstream
                             {this.applyTouchOpacity(this.props.session.isBreak)}
-=======
-                            <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('SessionDetails', { session: this.props.session })}
-                                style={{
-                                    flexDirection: 'row',
-                                    flex: 3,
-                                }}>
-                                <Text style={this.styles.headerText}>{this.props.session.eventName}</Text>
-                            </TouchableOpacity>
-                            {/* {this.attendRequestStatus()} */}
->>>>>>> Stashed changes
                         </View>
-                        <View style={{ flexDirection: 'row' , marginLeft: 350 }}>
+                        <View style={{ flexDirection: 'row' , marginLeft: 300 }}>
                         <TouchableOpacity
                             onPress={() => this.props.navigation.navigate('SessionDetails', { session: this.props.session })}
                         >
