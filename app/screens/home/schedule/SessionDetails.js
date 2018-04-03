@@ -191,6 +191,19 @@ export class SessionDetails extends Component {
   }
   render() {
     const speakers = this.getSpeakers();
+    
+    const displaySpeakers = (this.state.speakerDetails.length>0)? (
+        <View style={styles.speakerSection}>
+              <View style={[styles.heading]}>
+                <View style={[styles.row]}>
+                  <RkText style={{ marginLeft: 5, fontSize: 16 }} ><Icon name="md-people" /> </RkText>
+                  <RkText style={{ marginLeft: 5, fontSize: 16 }} rkType='header6 primary' >Speakers </RkText>
+                </View>
+              </View>
+              {speakers}
+        </View>
+      ): (<View></View>);
+      
     const surveyButton = this.getSurveyAccess();
     return (
       <ScrollView style={styles.root}>
@@ -226,15 +239,7 @@ export class SessionDetails extends Component {
               <Text style={[styles.text]}>{this.state.description}</Text>
             </View>
           </View>
-          <View style={styles.speakerSection}>
-            <View style={[styles.heading]}>
-              <View style={[styles.row]}>
-                <RkText style={{ marginLeft: 5, fontSize: 16 }} ><Icon name="md-people" /> </RkText>
-                <RkText style={{ marginLeft: 5, fontSize: 16 }} rkType='header6 primary' >Speakers </RkText>
-              </View>
-            </View>
-            {speakers}
-          </View>
+          {displaySpeakers}
           <View style={[styles.surveButton]}>
           {surveyButton}
         </View>
