@@ -95,7 +95,7 @@ export class LoginV2 extends React.Component {
           <View>
             <RkTextInput rkType='rounded' onChangeText={(text) => this.setState({email: text})} placeholder='Username'/>
             <RkTextInput rkType='rounded' onChangeText={(text) => this.setState({password: text})} placeholder='Password' secureTextEntry={true}/>
-            <GradientButton colors={['#f20505', '#f55050']} style={styles.save} rkType='large' text='LOGIN' onPress={ this._onAuthenticate.bind(this) } />
+            <GradientButton colors={['#E7060E', '#f55050']} style={styles.save} rkType='large' text='LOGIN' onPress={ this._onAuthenticate.bind(this) } />
           </View>
           {/* <View style={styles.buttons}>
             <RkButton style={styles.button} rkType='social'>
