@@ -63,12 +63,12 @@ export class SessionDetails extends Component {
       return (
         <View style={{ alignItems: 'baseline', flexDirection: 'row', width: 380, marginBottom: 3 }}>
           <View style={{ width: 182 }} >
-            <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 2, marginRight: 5 }}
+            <RkButton style={styles.ButtonMain} rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 2, marginRight: 5 }}
               onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
             >Ask Questions </RkButton>
           </View>
           <View style={{ width: 182 }} >
-            <RkButton rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 5, marginRight: 2 }}
+            <RkButton style={styles.ButtonMain} rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 5, marginRight: 2 }}
               onPress={() => this.props.navigation.navigate('Survey', { sessionDetails: this.state.sessionDetails })}
             >Feedback </RkButton>
           </View>
@@ -79,7 +79,7 @@ export class SessionDetails extends Component {
     else {
       return (
         <View style={{ width: 360 }} >
-          <RkButton rkType='outline' style={{ flexDirection: 'row', width: 340, marginLeft: 5, marginRight: 5 }}
+          <RkButton style={styles.ButtonMain} rkType='outline' style={{ flexDirection: 'row', width: 340, marginLeft: 5, marginRight: 5 }}
             onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
           >Ask Questions </RkButton>
         </View>
@@ -119,7 +119,7 @@ export class SessionDetails extends Component {
   attendRequestStatus = ()=> {
     if (this.state.regStatus) {                
         return (
-            <View style={{flexDirection:'row', marginLeft : 250}}>
+            <View style={{flexDirection:'row', marginLeft : 0, width : '100%'}}>
                 <RkButton   rkType='outline small'
                 contentStyle={getStatusStyle(this.state.regStatus)}>{this.state.regStatus}</RkButton>
             </View>
@@ -127,7 +127,7 @@ export class SessionDetails extends Component {
     }else{
         return (
           <View style={{flexDirection:'row', marginLeft : 250}}>
-            <RkButton
+            <RkButton style={{flexDirection:'row', marginLeft : 0, width : '100%'}}
                 rkType='outline small'
                 onPress={this.onAttendRequest}>
                 Attend
@@ -312,5 +312,10 @@ tileIcons : {
   fontSize:16, 
   color: '#C9C9C9'
 },
+ButtonMain: {
+  fontSize:13,
+  backgroundColor: '#3E50B4',
+  color:'#fff',
+}
 }));
 

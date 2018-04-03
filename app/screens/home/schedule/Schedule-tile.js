@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, Icon} from 'native-base';
-import {AsyncStorage, FlatList, TouchableOpacity, Alert, Image} from 'react-native';
+import {AsyncStorage, FlatList, TouchableOpacity, Alert, Image, StyleSheet} from 'react-native';
 import {RkComponent, RkTheme, RkText, RkButton, RkCard} from 'react-native-ui-kitten';
 import {NavigationActions} from 'react-navigation';
 
@@ -146,8 +146,8 @@ export default class ScheduleTile extends RkComponent {
     getDuration = ()=>{
         return (
             <View  style={{flexDirection: 'row', alignSelf: 'flex-start'}}>
-                <Icon name="md-time" style={this.styles.tileIcons}/>
-                <Text style={this.styles.duration}>{Moment(this.props.session.startTime).format("HH:mm")} - {Moment(this.props.session.endTime).format("HH:mm")}</Text>
+                <Icon name="md-time" style={[this.styles.tileIcons, styles.eventIcon]}/>
+                <Text style={[this.styles.duration, , styles.eventSubText]}>{Moment(this.props.session.startTime).format("HH:mm")} - {Moment(this.props.session.endTime).format("HH:mm")}</Text>
             </View>
         );
     }
@@ -157,8 +157,8 @@ export default class ScheduleTile extends RkComponent {
     getLocation =()=>{
         return (
             <View style={{marginLeft:20, flexDirection: 'row', alignSelf: 'flex-end'}}>
-                <Icon name="md-pin" style={this.styles.tileIcons} />
-                <Text style={this.styles.roomName}>{this.props.session.room}</Text>
+                <Icon name="md-pin" style={[this.styles.tileIcons, styles.eventIcon]} />
+                <Text style={[this.styles.roomName, styles.eventSubText]}>{this.props.session.room}</Text>
             </View>
         );
     }
@@ -193,7 +193,7 @@ export default class ScheduleTile extends RkComponent {
         if (this.props.session) {
             // const speakers = this.getSpeakers();
             return (
-                <RkCard rkType='shadowed' style={this.styles.card}>
+                <RkCard rkType='shadowed' style={this.styles.card} style={styles.cardSchedule}>
                     <View style={this.styles.header}>
                         <View style={this.styles.mainHeader}>
                             <TouchableOpacity
@@ -202,7 +202,7 @@ export default class ScheduleTile extends RkComponent {
                                 flexDirection: 'row',
                                 flex: 3,
                             }}>
-                            <Text style={this.styles.headerText}>{this.props.session.eventName}</Text>
+                            <Text style={[this.styles.headerText, styles.eventName]}>{this.props.session.eventName}</Text>
                             </TouchableOpacity>
                             {/* {this.attendRequestStatus()} */}
                         </View>
@@ -229,3 +229,31 @@ export default class ScheduleTile extends RkComponent {
         }
     }
 }
+
+
+
+/** * Component Styling Details */
+const styles = StyleSheet.create({
+    listContainer :{
+        flex: 1,
+        flexDirection: 'column'
+    },
+    eventName: {
+        color: '#000',
+        fontSize:14,
+    },
+    eventSubText: {
+        color: '#7f7f7f',
+        fontSize:13,
+    },
+    eventIcon: {
+        color: '#7f7f7f',        
+    },
+    cardSchedule: {
+        marginLeft:10,
+        marginRight:10,
+        marginTop:5,
+        marginBottom:5,
+        padding:10,
+    }
+});
