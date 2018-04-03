@@ -196,7 +196,7 @@ export class SessionDetails extends Component {
     const surveyButton = this.getSurveyAccess();
     return (
       <ScrollView style={styles.root}>
-        <RkCard style={{ marginLeft: 5, marginRight: 5 }}>
+        <RkCard>
 
           <View style={styles.section}>
             <View style={[styles.row, styles.heading]}>
@@ -234,14 +234,11 @@ export class SessionDetails extends Component {
               </View>
             </View>
             {speakers}
-
           </View>
-        </RkCard>
-
-        <View style={[styles.surveButton]}>
+          <View style={[styles.surveButton]}>
           {surveyButton}
         </View>
-
+        </RkCard>
       </ScrollView>
     )
   }
