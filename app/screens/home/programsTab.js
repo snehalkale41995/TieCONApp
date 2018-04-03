@@ -14,16 +14,16 @@ export class ProgramsTab extends React.Component {
   render() {
     return (
       <Tabs style={{ elevation: 3 }}>
-        <Tab
+        <Tab 
           heading={
-            <TabHeading><Icon name="calendar"/><Text>Schedule</Text></TabHeading>
+            <TabHeading  style={{backgroundColor : '#ed1b24' }} contentStyle ={{color : 'white'}}><Icon  style ={{color: 'white'}} name="calendar"/><Text style ={{color: 'white'}}>Schedule</Text></TabHeading>
           }
         >        
           <EventCal navigation={this.props.navigation}/>
         </Tab>
         <Tab
           heading={
-            <TabHeading><Icon name="ios-link"/><Text>My Agenda</Text></TabHeading>
+            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon name="ios-link"/><Text>My Agenda</Text></TabHeading>
           }
         >
           <MyAgenda navigation={this.props.navigation} />
@@ -38,4 +38,5 @@ let styles = RkStyleSheet.create(theme => ({
     flex: 1,
     backgroundColor: theme.colors.screen.base
   },
+
 }));

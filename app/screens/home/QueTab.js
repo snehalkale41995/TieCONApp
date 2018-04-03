@@ -21,14 +21,14 @@ export  class QueTab extends React.Component {
       <Tabs style={{ elevation: 3 }}>
         <Tab
           heading={
-            <TabHeading><Icon name="md-help"/><Text>Panel Q&A</Text></TabHeading>
+            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon name="md-help"/><Text>Panel Q&A</Text></TabHeading>
           }
         >
          <AskQuestion  navigation={this.props.navigation} sessionId = {this.state.sessionId}  />
         </Tab>
         <Tab
           heading={
-            <TabHeading><Icon name="ios-stats"/><Text>Poll Session </Text></TabHeading>
+            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon name="ios-stats"/><Text>Poll Session </Text></TabHeading>
           }
         >
           <PollSession navigation={this.props.navigation} sessionId = {this.state.sessionId}  UserName = {this.state.UserName}/>
