@@ -186,6 +186,24 @@ export default class ScheduleTile extends RkComponent {
             );
         }
     }
+
+    applyTouchOpacity= (shouldApplyOpacity)=>
+    {
+        if (!shouldApplyOpacity)
+        {
+            return <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate('SessionDetails', {session: this.props.session})}
+                            style={{
+                            flexDirection: 'row',
+                            flex: 3,
+                            }}>
+                            <Text style={this.styles.headerText}>{this.props.session.eventName}</Text>
+                    </TouchableOpacity>;
+        }else {
+           return  <Text style={this.styles.headerText}>{this.props.session.eventName}</Text>;
+        }
+
+    }
     /**
     * Render Schedule Tile
     */
@@ -196,15 +214,7 @@ export default class ScheduleTile extends RkComponent {
                 <RkCard rkType='shadowed' style={this.styles.card}>
                     <View style={this.styles.header}>
                         <View style={this.styles.mainHeader}>
-                            <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('SessionDetails', {session: this.props.session})}
-                                style={{
-                                flexDirection: 'row',
-                                flex: 3,
-                            }}>
-                            <Text style={this.styles.headerText}>{this.props.session.eventName}</Text>
-                            </TouchableOpacity>
-                            {/* {this.attendRequestStatus()} */}
+                            {this.applyTouchOpacity(this.props.session.isBreak)}
                         </View>
                         <View style={{flexDirection: 'row'}}>
                             
