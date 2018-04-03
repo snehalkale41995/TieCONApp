@@ -8,11 +8,10 @@ import ReactMoment from 'react-moment';
 import Moment from 'moment';
 import { Avatar } from '../../../components';
 import firebase from '../../../config/firebase';
-
+import {GradientButton} from '../../../components/gradientButton';
 const questionTable = 'AskedQuestions';
 var firestoreDB = firebase.firestore();
 export default class AskQuestion extends RkComponent {
-
     constructor(props) {
         super(props);
         this.sessionDetails = this.props.navigation.state.params.sessionDetails;
@@ -46,19 +45,20 @@ export default class AskQuestion extends RkComponent {
         let today = Moment(new Date()).format("DD MMM,YYYY hh:mm A");
         let sessionStart = Moment(session.startTime).format("DD MMM,YYYY hh:mm A");
         let sessionEnd = Moment(session.endTime).format("DD MMM,YYYY hh:mm A");
-        let bufferedEnd = Moment(sessionEnd).add(2,'hours');
-            if(sessionStart <= today && bufferedEnd >= today){
+        let buffered = Moment(sessionEnd).add(2,'hours');
+        let bufferedEnd = Moment(buffered).format("DD MMM,YYYY hh:mm A");
+
+            if(sessionStart <= today && today <= bufferedEnd ){
                 this.setState({
-                    queAccess : "auto"
+                    queAccess : 'auto'
                 })
             }
             else{
                 this.setState({
-                    queAccess : "none"
+                    queAccess : 'none'
                 })
                 Alert.alert("Questions can be asked only when session is active")
             }
-        
     }
     getQuestions = (order) => {
         if (order == undefined) {
@@ -77,7 +77,7 @@ export default class AskQuestion extends RkComponent {
                 docRef.forEach(doc => {
                     Data.push({questionSet :doc.data(), questionId : doc.id});
                 })
-                thisRef.setState({questionData : Data})              
+                thisRef.setState({questionData : Data ,  questionStatus :false})              
             }
             else{
                 thisRef.setState({questionStatus : true})    
@@ -178,8 +178,7 @@ export default class AskQuestion extends RkComponent {
             return(
                 <Text  style={{ fontSize: 25,width: 36,height : 36}} onPress={() => this.onLikeQuestion(question)} ><Icon name="md-thumbs-up" style={{ color : '#8c8e91'}} /></Text> 
             )
-        }
-        
+        } 
     }
     onLikeQuestion = (question) => {
         let thisRef = this;
@@ -211,7 +210,6 @@ export default class AskQuestion extends RkComponent {
             this.getQuestions(order);
         }
     }
-
     onRecentQueSelect = () => {
         if(this.state.recentQueView == false){
             let order = 'timestamp';
@@ -238,21 +236,18 @@ export default class AskQuestion extends RkComponent {
 
                 <View style={{ alignItems: 'center', flexDirection: 'row', width: 380, marginBottom: 3, marginLeft: 2, marginRight: 2 }}>
                     <View style={{ width: 180 }} >
-                        <RkButton rkType='outline'
+                    <GradientButton colors={['#f20505', '#f55050']} text='Recent Questions'
                             contentStyle={{ fontSize: 18 }}
-                            name="Recent"
                             style={{ fontSize: 15, flexDirection: 'row', width: 170, marginLeft: 2, marginRight: 1 }}
                             onPress={this.onRecentQueSelect}
-                        >Recent Questions
-                             </RkButton>     
+                        />   
                     </View>
                     <View style={{ width: 180 }} >
-                        <RkButton rkType='outline'
+                    <GradientButton colors={['#f20505', '#f55050']} text='Top Questions'
                             contentStyle={{ fontSize: 18 }}
-                            name="Top"
                             style={{ fontSize: 15, flexDirection: 'row', width: 170, marginLeft: 1, marginRight: 2 }}
                             onPress={this.onTopQueSelect}
-                        >Top Questions </RkButton>
+                        />
                     </View>
                 </View>
                 <View>
