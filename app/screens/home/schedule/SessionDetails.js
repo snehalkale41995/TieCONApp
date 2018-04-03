@@ -71,14 +71,14 @@ export class SessionDetails extends Component {
   getSurveyAccess = () => {
     if (this.state.showPanelButton == true && this.state.showFeedbackButton == true) {
       return (
-        <View style={{ alignItems: 'baseline', flexDirection: 'row', width: 380, marginBottom: 3 }}>
+        <View style={{ alignItems: 'flex-end' ,flexDirection: 'row', width: 380, marginBottom: 3 }}>
           <View style={{ width: 182 }} >
-            <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{ flexDirection: 'row', width: 160, marginLeft: 2, marginRight: 5 }}
+            <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{  width: 160, marginLeft: 2, marginRight: 5 }}
               onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
             />
           </View>
           <View style={{ width: 182 }} >
-            <GradientButton colors={['#f20505', '#f55050']} text='Feedback' style={{ flexDirection: 'row', width: 160, marginLeft: 5, marginRight: 2 }}
+            <GradientButton colors={['#f20505', '#f55050']} text='Feedback' style={{  width: 160, marginLeft: 5, marginRight: 2 }}
               onPress={() => this.props.navigation.navigate('Survey', { sessionDetails: this.state.sessionDetails })}
             />
           </View>
@@ -281,8 +281,8 @@ let styles = RkStyleSheet.create(theme => ({
     marginLeft: 20
   },
   surveButton: {
-    alignItems: 'baseline',
-    flexDirection: 'row',
+    alignItems: 'flex-end',
+    flexDirection: 'column',
     width: 380,
     marginTop: 8,
     marginBottom: 3,
