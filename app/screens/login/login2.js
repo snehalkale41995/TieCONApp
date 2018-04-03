@@ -97,26 +97,22 @@ export class LoginV2 extends React.Component {
             <RkTextInput rkType='rounded' onChangeText={(text) => this.setState({password: text})} placeholder='Password' secureTextEntry={true} style={styles.loginInput}/>
             <GradientButton colors={['#E7060E', '#f55050']} style={styles.save} rkType='large' text='LOGIN' onPress={ this._onAuthenticate.bind(this) } />
           </View>
-          {/* <View style={styles.buttons}>
-            <RkButton style={styles.button} rkType='social'>
-              <RkText rkType='awesome hero'>{FontAwesome.twitter}</RkText>
-            </RkButton>
-            <RkButton style={styles.button} rkType='social'>
-              <RkText rkType='awesome hero'>{FontAwesome.google}</RkText>
-            </RkButton>
-            <RkButton style={styles.button} rkType='social'>
-              <RkText rkType='awesome hero'>{FontAwesome.facebook}</RkText>
-            </RkButton>
-          </View> */}
-
-          {/* <View style={styles.footer}>
+          <View style={styles.footer}>
             <View style={styles.textRow}>
-              <RkText rkType='primary3'>Don’t have an account?</RkText>
-              <RkButton rkType='clear' onPress={() => this.props.navigation.navigate('SignUp')}>
+              <RkText rkType='primary3'>Sponsored by:</RkText>
+              {/* <RkButton rkType='clear' onPress={() => this.props.navigation.navigate('SignUp')}>
                 <RkText rkType='header6'> Sign up now </RkText>
-              </RkButton>
+              </RkButton> */}
             </View>
-          </View> */}
+          </View>
+          <View style={styles.buttons}>
+            <RkButton style={styles.button} rkType='sponsors'>
+              <Image style={styles.image} source={require('../../assets/images/eternusLogo.png')}/>;
+            </RkButton>
+            <RkButton style={styles.button} rkType='sponsors'>
+              <Image style={styles.image} source={require('../../assets/images/bajajLogo.jpg')}/>;
+            </RkButton>
+          </View>
         </View>
         {renderIf(this.state.isLoading, 
             <View style={styles.loading}> 
