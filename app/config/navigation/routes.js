@@ -11,7 +11,7 @@ import {Service} from './../../services';
 
 export class HomePageMenuScreen extends React.Component {
   static navigationOptions = {
-    title: 'Home'.toUpperCase()
+    title: 'TiE Pune 2018'
   };
   constructor(){
     super()

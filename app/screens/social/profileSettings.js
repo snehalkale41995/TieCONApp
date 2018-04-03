@@ -186,7 +186,7 @@ export class ProfileSettings extends React.Component {
             <View style={styles.row}>
               <RkText rkType='header4'>{this.state.linkedInSummary}</RkText>
             </View>
-            <GradientButton rkType='large' style={styles.button} text='Update from Linkedin Profile' onPress={() => this.getLinkedinProfileDetails()} />
+            <GradientButton colors={['#f20505', '#f55050']} rkType='large' style={styles.button} text='Update from Linkedin Profile' onPress={() => this.getLinkedinProfileDetails()} />
           </View>
           {/* {renderIf(!this.state.isLinkedInConnected,
             <GradientButton rkType='large' style={styles.button} text='Connect to Linkedin' onPress={() => this.modal.open()} />
