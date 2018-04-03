@@ -33,7 +33,7 @@ export class QRScanner extends React.Component {
       hasCameraPermission: null,
       isErrorDisplayed: false,
       selectedItem: undefined,
-      selectedConf: "",
+      selectedSession: "",
       isLoading: true,
       sessions: [],
       scanHistory: [],
@@ -58,7 +58,7 @@ export class QRScanner extends React.Component {
         sessions.push(sessionData);
       });
       if (sessions.length > 0) {
-        thisRef.setState({ sessions, selectedConf: sessions[0].id });
+        thisRef.setState({ sessions, selectedSession: sessions[0].id });
         AsyncStorage.setItem("SESSIONS", JSON.stringify(sessions));
         thisRef._getCurrentSessionUsers(sessions[0].id);
       } else {
@@ -82,7 +82,7 @@ export class QRScanner extends React.Component {
     AsyncStorage.getItem("SESSIONS").then((sessions) => {
       if (sessions !== null){
         let sessionsObj = JSON.parse(sessions);
-        thisRef.setState({ sessions: sessionsObj, selectedConf: sessions[0].id });
+        thisRef.setState({ sessions: sessionsObj, selectedSession: sessions[0].id });
         thisRef._getCurrentSessionUsers(sessions[0].id);
       } else {
         thisRef._getSesssionsFromServer();
@@ -106,7 +106,7 @@ export class QRScanner extends React.Component {
   };
 
   _getSelectedSession = () => {
-    let session = _.find(this.state.sessions, { 'id': this.state.selectedConf });
+    let session = _.find(this.state.sessions, { 'id': this.state.selectedSession });
     return session;
   }
 
@@ -121,7 +121,7 @@ export class QRScanner extends React.Component {
 
         this.setState({ scanHistory: updatedScannedHistory });
         let selectedSession = this._getSelectedSession();
-        if (this.state.sessionUsers.indexOf(scannedData) == -1) {
+        if (selectedSession.isRegistrationRequired && this.state.sessionUsers.indexOf(scannedData) == -1) {
           Alert.alert(
             'Unregistered User',
             'This user is not registered for this session. Do you still want to continue?',
@@ -130,7 +130,7 @@ export class QRScanner extends React.Component {
                 text: 'Yes', onPress: () => {
                   firestoreDB.collection('Attendance').doc(scannedData).set({
                     userId: scannedData,
-                    sessionId: this.state.selectedConf,
+                    sessionId: this.state.selectedSession,
                     session: selectedSession,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                   }, { merge: true })
@@ -161,7 +161,7 @@ export class QRScanner extends React.Component {
         } else {
           firestoreDB.collection('Attendance').doc(scannedData).set({
             userId: scannedData,
-            sessionId: this.state.selectedConf,
+            sessionId: this.state.selectedSession,
             session: selectedSession,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           }, { merge: true })
@@ -235,7 +235,7 @@ export class QRScanner extends React.Component {
 
   onConfChange(selectedSessionId) {
     this.setState({
-      selectedConf: selectedSessionId,
+      selectedSession: selectedSessionId,
       isLoading: true,
       scanHistory: []
     });
@@ -263,7 +263,7 @@ export class QRScanner extends React.Component {
             <Picker
               note
               mode="dropdown"
-              selectedValue={this.state.selectedConf}
+              selectedValue={this.state.selectedSession}
               onValueChange={this.onConfChange.bind(this)}
             >
               {sessionItems}
