@@ -149,28 +149,28 @@ export class ProfileSettings extends React.Component {
                            value={this.state.firstName}
                            editable={false}
                            rkType='right clear'
-                           onChangeText={(text) => this.setState({firstName: text})}/>
+                           onChangeText={(text) => this.setState({firstName: text})} style={{fontSize: '13'}}/>
             </View>
             <View style={styles.row}>
               <RkTextInput label='Last Name'
                            value={this.state.lastName}
                            editable={false}
                            onChangeText={(text) => this.setState({lastName: text})}
-                           rkType='right clear'/>
+                           rkType='right clear' style={{fontSize: 13}}/>
             </View>
             <View style={styles.row}>
               <RkTextInput label='Email'
                            value={this.state.email}
                            editable={false}
                            onChangeText={(text) => this.setState({email: text})}
-                           rkType='right clear'/>
+                           rkType='right clear' style={{fontSize: 13}}/>
             </View>
             <View style={styles.row}>
               <RkTextInput label='Phone'
                            value={this.state.phone}
                            editable={false}
                            onChangeText={(text) => this.setState({phone: text})}
-                           rkType='right clear'/>
+                           rkType='right clear' style={{fontSize: 13}}/>
             </View>
           </View>
 
@@ -184,9 +184,9 @@ export class ProfileSettings extends React.Component {
                            rkType='right clear' />
             </View>
             <View style={styles.row}>
-              <RkText rkType='header4'>{this.state.linkedInSummary}</RkText>
+              <RkText rkType='header4' style={{fontSize: 16, marginBottom: 15}}>{this.state.linkedInSummary}</RkText>
             </View>
-            <GradientButton colors={['#E7060E', '#f55050']} rkType='large' style={styles.button} text='Update from Linkedin Profile' onPress={() => this.getLinkedinProfileDetails()} />
+            <GradientButton style={{fontSize: 16 }} colors={['#E7060E', '#f55050']} rkType='large' style={styles.button} text='Update from Linkedin Profile' onPress={() => this.getLinkedinProfileDetails()} />
           </View>
           {/* {renderIf(!this.state.isLinkedInConnected,
             <GradientButton rkType='large' style={styles.button} text='Connect to Linkedin' onPress={() => this.modal.open()} />
@@ -258,5 +258,8 @@ let styles = RkStyleSheet.create(theme => ({
   button: {
     marginHorizontal: 16,
     marginBottom: 32
+  },
+  profileText:{
+    fontSize:13,
   }
 }));

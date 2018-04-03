@@ -13,8 +13,8 @@ export class ProgramsTab extends React.Component {
 
   render() {
     return (
-      <Tabs style={{ elevation: 3 }}>
-        <Tab 
+      <Tabs style={{ elevation: 3 }} style={styles.tabContent}>
+        <Tab
           heading={
             <TabHeading  style={{backgroundColor : '#ed1b24' }} contentStyle ={{color : 'white'}}><Icon  style ={{color: 'white'}} name="calendar"/><Text style ={{color: 'white'}}>Schedule</Text></TabHeading>
           }
@@ -38,5 +38,7 @@ let styles = RkStyleSheet.create(theme => ({
     flex: 1,
     backgroundColor: theme.colors.screen.base
   },
-
+  tabContent: {
+    backgroundColor: 'red',
+  }
 }));

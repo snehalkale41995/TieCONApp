@@ -326,4 +326,3 @@ let styles = RkStyleSheet.create(theme => ({
     color: '#C9C9C9'
   },
 }));
-

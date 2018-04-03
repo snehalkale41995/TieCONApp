@@ -146,8 +146,8 @@ export default class ScheduleTile extends RkComponent {
     getDuration = () => {
         return (
             <View style={{ flexDirection: 'row', alignSelf: 'flex-start' }}>
-                <Icon name="md-time" style={this.styles.tileIcons} />
-                <Text style={this.styles.duration}>{Moment(this.props.session.startTime).format("HH:mm")} - {Moment(this.props.session.endTime).format("HH:mm")}</Text>
+                <Icon name="md-time" style={this.styles.tileIcons}  style={{color: '#5d5e5f', fontSize:16, marginTop:2,marginRight:5}}/>
+                <Text  style={this.styles.duration} style={{color: '#5d5e5f', fontSize:14}}>{Moment(this.props.session.startTime).format("HH:mm")} - {Moment(this.props.session.endTime).format("HH:mm")}</Text>
             </View>
         );
     }
@@ -157,8 +157,8 @@ export default class ScheduleTile extends RkComponent {
     getLocation = () => {
         return (
             <View style={{ marginLeft: 20, flexDirection: 'row', alignSelf: 'flex-end' }}>
-                <Icon name="md-pin" style={this.styles.tileIcons} />
-                <Text style={this.styles.roomName}>{this.props.session.room}</Text>
+                <Icon name="md-pin" style={this.styles.tileIcons} style={{color: '#5d5e5f', fontSize:16,  marginTop:2,marginRight:5}} />
+                <Text style={this.styles.roomName} style={{color: '#5d5e5f', fontSize:14}}>{this.props.session.room}</Text>
             </View>
         );
     }

@@ -86,11 +86,11 @@ export class SideMenu extends React.Component {
             onPress={() => this._navigateAction(route)}>
             <View style={styles.content}>
               <View style={styles.content}>
-                <RkText style={styles.icon}
+                <RkText style={[styles.icon, styles.sidebarIcon]}
                         rkType='moon primary xlarge'><Icon name={route.icon}/></RkText>
-                <RkText>{route.title}</RkText>
+                <RkText style={styles.sidebarMenuName}>{route.title}</RkText>
               </View>
-              <RkText rkType='awesome secondaryColor small'>{FontAwesome.chevronRight}</RkText>
+              <RkText rkType='awesome secondaryColor small' style={styles.rightIcon}>{FontAwesome.chevronRight}</RkText>
             </View>
           </TouchableHighlight>
       )
@@ -102,7 +102,7 @@ export class SideMenu extends React.Component {
           showsVerticalScrollIndicator={false}>
           <View style={[styles.container, styles.content]}>
             {this._renderIcon()}
-            <RkText>TiE Pune Events</RkText>
+            <RkText style={styles.tieName}>TiE Pune Events</RkText>
           </View>
           {menu}
           
@@ -115,11 +115,11 @@ export class SideMenu extends React.Component {
             onPress={ this._onLogout.bind(this) }>
             <View style={styles.content}>
               <View style={styles.content}>
-                <RkText style={styles.icon}
+                <RkText style={[styles.icon, styles.sidebarIcon]}
                         rkType='moon primary xlarge'><Icon name="ios-exit"/></RkText>
-                <RkText>Logout</RkText>
+                <RkText style={styles.sidebarMenuName}>Logout</RkText>
               </View>
-              <RkText rkType='awesome secondaryColor small'>{FontAwesome.chevronRight}</RkText>
+              <RkText rkType='awesome secondaryColor small' style={styles.rightIcon}>{FontAwesome.chevronRight}</RkText>
             </View>
           </TouchableHighlight>
 
@@ -148,5 +148,20 @@ let styles = RkStyleSheet.create(theme => ({
   },
   icon: {
     marginRight: 13,
+  },
+   tieName: {
+    fontSize: 16,    
+  },
+  sidebarIcon:{
+    fontSize: 13,
+    color: '#607B8C',
+    width:30,
+  },
+  sidebarMenuName: {
+    fontSize: 14,
+    color: '#607B8C',
+  },
+  rightIcon:{
+     color: '#607B8C',
   }
 }));

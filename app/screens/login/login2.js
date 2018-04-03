@@ -86,15 +86,15 @@ export class LoginV2 extends React.Component {
         style={styles.screen}
         onStartShouldSetResponder={ (e) => true}
         onResponderRelease={ (e) => Keyboard.dismiss()}>
-        <View style={styles.header}>
+        <View style={[styles.header, styles.loginHeader]}>
           {renderIcon()}
           <RkText rkType='light h1'>Tie</RkText>
           <RkText rkType='logo h0'>Pune</RkText>
         </View>
         <View style={styles.content}>
           <View>
-            <RkTextInput rkType='rounded' onChangeText={(text) => this.setState({email: text})} placeholder='Username'/>
-            <RkTextInput rkType='rounded' onChangeText={(text) => this.setState({password: text})} placeholder='Password' secureTextEntry={true}/>
+            <RkTextInput rkType='rounded' onChangeText={(text) => this.setState({email: text})} placeholder='Username' style={styles.loginInput}/>
+            <RkTextInput rkType='rounded' onChangeText={(text) => this.setState({password: text})} placeholder='Password' secureTextEntry={true} style={styles.loginInput}/>
             <GradientButton colors={['#E7060E', '#f55050']} style={styles.save} rkType='large' text='LOGIN' onPress={ this._onAuthenticate.bind(this) } />
           </View>
           {/* <View style={styles.buttons}>
@@ -149,7 +149,9 @@ let styles = RkStyleSheet.create(theme => ({
     justifyContent: 'space-between'
   },
   save: {
-    marginVertical: 20
+    marginVertical: 20,
+    borderRadius:0,
+    backgroundColor: '#ed1b24'
   },
   buttons: {
     flexDirection: 'row',
@@ -175,5 +177,14 @@ let styles = RkStyleSheet.create(theme => ({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  loginInput:{
+    borderRadius:0,
+    borderWidth: 1,
+    fontSize:13,
+    padding: 5,
+  },
+  loginHeader:{
+    marginBottom: 20,
   }
 }));

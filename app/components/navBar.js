@@ -9,6 +9,8 @@ import {RkText, RkButton, RkStyleSheet} from 'react-native-ui-kitten';
 import {FontAwesome} from '../assets/icons';
 import {UIConstants} from '../config/appConstants';
 import {scale, scaleModerate, scaleVertical} from '../utils/scale';
+import { AppRegistry, Text } from 'react-native';
+
 
 export class NavBar extends React.Component {
   constructor(props) {
@@ -49,7 +51,7 @@ export class NavBar extends React.Component {
           onPress={() => {
             this.props.navigation.goBack()
           }}>
-          <RkText rkType='awesome hero'>{FontAwesome.chevronLeft}</RkText>
+          <RkText style={{color: 'white'}} rkType='awesome hero'>{FontAwesome.chevronLeft}</RkText>
         </RkButton>
       }
       else {
@@ -59,7 +61,7 @@ export class NavBar extends React.Component {
           onPress={() => {
             this.props.navigation.navigate('DrawerOpen')
           }}>
-          <RkText rkType='awesome'>{FontAwesome.bars}</RkText>
+          <RkText rkType='awesome' style={{color: 'white'}}>{FontAwesome.bars}</RkText>
         </RkButton>
       }
     };
@@ -85,7 +87,7 @@ export class NavBar extends React.Component {
 
     return (
       <View style={styles.title} onLayout={onLayout}>
-        <RkText>{title}</RkText>
+        <RkText style={{color: 'white'}}>{title}</RkText>
       </View>
     )
   }
@@ -133,7 +135,7 @@ let styles = RkStyleSheet.create(theme => ({
   title: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center',    
   },
   menu: {
     width: 40
