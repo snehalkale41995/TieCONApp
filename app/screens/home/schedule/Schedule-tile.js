@@ -216,7 +216,7 @@ export default class ScheduleTile extends RkComponent {
                         <View style={this.styles.mainHeader}>
                             {this.applyTouchOpacity(this.props.session.isBreak)}
                         </View>
-                        <View style={{ flexDirection: 'row' , marginLeft: 300 }}>
+                        <View style={{ flexDirection: 'row' , marginLeft: 325 }}>
                         <TouchableOpacity
                             onPress={() => this.props.navigation.navigate('SessionDetails', { session: this.props.session })}
                         >
