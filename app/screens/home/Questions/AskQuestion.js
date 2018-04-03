@@ -1,6 +1,6 @@
 import React from 'react';
 import {  View,Icon,Tab,TabHeading,Tabs } from 'native-base';
-import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage,ScrollView,Text,Image } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Platform ,Alert, AsyncStorage,ScrollView,Text,Image } from 'react-native';
 import { RkComponent, RkTheme, RkText, RkAvoidKeyboard,RkStyleSheet, RkButton, RkCard, RkTextInput } from 'react-native-ui-kitten';
 import { NavigationActions } from 'react-navigation';
 import { Service } from '../../../services';
@@ -9,7 +9,6 @@ import Moment from 'moment';
 import { Avatar } from '../../../components';
 import firebase from '../../../config/firebase';
 import {GradientButton} from '../../../components/gradientButton';
-// import styleConstructor, {getStatusStyle} from '../'
 import styleConstructor,{getStatusStyle}  from '../schedule/styles.js'
 const questionTable = 'AskedQuestions';
 var firestoreDB = firebase.firestore();
@@ -265,18 +264,18 @@ export default class AskQuestion extends RkComponent {
                  </View>
                  } 
 
-                <View style={{ alignItems: 'center', flexDirection: 'row', width: 380, marginBottom: 3, marginLeft: 2, marginRight: 2 }}>
-                    <View style={{ width: 180 }} >
+                <View style={{ alignItems: 'center', flexDirection: 'row', width: Platform.OS === 'ios' ? 320 :  380, marginBottom: 3, marginLeft: 2, marginRight: 2 }}>
+                    <View style={{ width: Platform.OS === 'ios' ? 160 :  180 }} >
                     <GradientButton colors={['#f20505', '#f55050']} text='Recent Questions'
                             contentStyle={{ fontSize: 18 }}
-                            style={{ fontSize: 15, flexDirection: 'row', width: 170, marginLeft: 2, marginRight: 1 }}
+                            style={{ fontSize: 15, flexDirection: 'row', width:   Platform.OS === 'ios' ? 150 : 170, marginLeft: 2, marginRight: 1 }}
                             onPress={this.onRecentQueSelect}
                         />   
                     </View>
-                    <View style={{ width: 180 }} >
+                    <View style={{  width: Platform.OS === 'ios' ? 160 :  180}} >
                     <GradientButton colors={['#f20505', '#f55050']} text='Top Questions'
                             contentStyle={{ fontSize: 18 }}
-                            style={{ fontSize: 15, flexDirection: 'row', width: 170, marginLeft: 1, marginRight: 2 }}
+                            style={{ fontSize: 15, flexDirection: 'row', width:  Platform.OS === 'ios' ? 150 : 170, marginLeft: 1, marginRight: 2 }}
                             onPress={this.onTopQueSelect}
                         />
                     </View>
