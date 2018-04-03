@@ -295,12 +295,13 @@ let styles = RkStyleSheet.create(theme => ({
   },
   speaker: {
     flexDirection: 'column',
-    width: 250
+    width: 225
   },
   attendeeScreen: {
     flexDirection: 'column',
     fontSize: 25,
-    marginRight: 5
+    marginRight: 5,
+    alignItems : 'flex-end'
   },
   avatar: {
     backgroundColor: '#C0C0C0',
