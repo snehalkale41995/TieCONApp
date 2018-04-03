@@ -7,7 +7,7 @@ import PollSession from './Questions/PollSession';
 
 export  class QueTab extends React.Component {
   static navigationOptions = {
-    title: 'Ask Questions'.toUpperCase()
+    title: 'Panel Q&A'.toUpperCase()
   };
   constructor(props) {
     super(props);
@@ -21,7 +21,7 @@ export  class QueTab extends React.Component {
       <Tabs style={{ elevation: 3 }}>
         <Tab
           heading={
-            <TabHeading><Icon name="md-help"/><Text>Ask Questions</Text></TabHeading>
+            <TabHeading><Icon name="md-help"/><Text>Panel Q&A</Text></TabHeading>
           }
         >
          <AskQuestion  navigation={this.props.navigation} sessionId = {this.state.sessionId}  />

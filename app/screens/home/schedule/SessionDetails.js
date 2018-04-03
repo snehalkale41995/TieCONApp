@@ -5,11 +5,11 @@ import { Icon, Container, Tabs, Tab, TabHeading } from 'native-base';
 import { NavigationActions, TabNavigator, TabView } from 'react-navigation';
 import { Service } from '../../../services';
 import Moment from 'moment';
-import {Avatar} from '../../../components';
-import styleConstructor, {getStatusStyle} from './styles';
+import { Avatar } from '../../../components';
+import styleConstructor, { getStatusStyle } from './styles';
+import { GradientButton } from '../../../components/gradientButton';
 
 const REGISTRATION_RESPONSE_TABLE = "RegistrationResponse";
-
 export class SessionDetails extends Component {
   static navigationOptions = {
     title: 'Session Details'.toUpperCase()
@@ -19,27 +19,28 @@ export class SessionDetails extends Component {
     this.styles = styleConstructor();
     this.sessionDetails = this.props.navigation.state.params.session,
       this.state = {
-        sessionDetails : this.props.navigation.state.params.session,
+        sessionDetails: this.props.navigation.state.params.session,
         speakerDetails: this.sessionDetails.speakersDetails,
         sessionId: this.props.navigation.state.params.session.key,
         user: "",
         description: this.sessionDetails.description ? this.sessionDetails.description : "No details found...",
         sessionName: this.sessionDetails.eventName,
         sesssionDuration: this.sessionDetails.duration,
-        sessionVenue: this.sessionDetails.room ? this.sessionDetails.room : "TBD" ,
-        showSurveyButton: false,
+        sessionVenue: this.sessionDetails.room ? this.sessionDetails.room : "TBD",
+        showPanelButton: false,
+        showFeedbackButton: false,
         startTime: this.sessionDetails.startTime,
         endTime: this.sessionDetails.endTime,
-        userObj : {},
-        regStatus:  "",
-        regId : ""
+        userObj: {},
+        regStatus: "",
+        regId: ""
       }
   }
   componentWillMount() {
     Service.getCurrentUser((userDetails) => {
       this.setState({
         user: userDetails.firstName + " " + userDetails.lastName,
-        userObj : userDetails
+        userObj: userDetails
       });
       this.checkSurveyResponse();
       this.fetchRegistrationStatus();
@@ -48,42 +49,53 @@ export class SessionDetails extends Component {
   checkSurveyResponse = () => {
     Service.getDocRef("SessionSurvey")
       .where("SessionId", "==", this.state.sessionId)
-      .where("ResponseBy", "==", this.state.user)
+      .where("ResponseBy", "==", this.state.userObj.uid)
       .get().then((snapshot) => {
         if (snapshot.size == 0) {
           this.setState({
-            showSurveyButton: true
+            showPanelButton: true,
+            showFeedbackButton: true
+          })
+        }
+        else {
+          this.setState({
+            showPanelButton: true
           })
         }
         this.getSurveyAccess();
+      })
+      .catch(function (err) {
+        console.log("err", err);
       });
   }
   getSurveyAccess = () => {
-    if (this.state.showSurveyButton == true) {
+    if (this.state.showPanelButton == true && this.state.showFeedbackButton == true) {
       return (
-        <View style={{ alignItems: 'baseline', flexDirection: 'row', width: 380, marginBottom: 3 }}>
+        <View style={{ alignItems: 'flex-end' ,flexDirection: 'row', width: 380, marginBottom: 3 }}>
           <View style={{ width: 182 }} >
-            <RkButton style={styles.ButtonMain} rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 2, marginRight: 5 }}
+            <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{  width: 160, marginLeft: 2, marginRight: 5 }}
               onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
-            >Ask Questions </RkButton>
+            />
           </View>
           <View style={{ width: 182 }} >
-            <RkButton style={styles.ButtonMain} rkType='outline' style={{ flexDirection: 'row', width: 160, marginLeft: 5, marginRight: 2 }}
+            <GradientButton colors={['#f20505', '#f55050']} text='Feedback' style={{  width: 160, marginLeft: 5, marginRight: 2 }}
               onPress={() => this.props.navigation.navigate('Survey', { sessionDetails: this.state.sessionDetails })}
-            >Feedback </RkButton>
+            />
           </View>
-          
+        </View>
+      );
+    }
+    else if (this.state.showPanelButton == true) {
+      return (
+        <View style={{ width: 360 }} >
+          <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{ flexDirection: 'row', width: 340, marginLeft: 5, marginRight: 5 }}
+            onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
+          />
         </View>
       );
     }
     else {
-      return (
-        <View style={{ width: 360 }} >
-          <RkButton style={styles.ButtonMain} rkType='outline' style={{ flexDirection: 'row', width: 340, marginLeft: 5, marginRight: 5 }}
-            onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
-          >Ask Questions </RkButton>
-        </View>
-      );
+      return null;
     }
   }
   getDuration = () => {
@@ -97,16 +109,16 @@ export class SessionDetails extends Component {
       .map((speaker, index) => {
         let avatar;
         if (speaker.profileImageURL) {
-            avatar = <Avatar  rkType='small'  imagePath={speaker.profileImageURL} />
+          avatar = <Avatar rkType='small' imagePath={speaker.profileImageURL} />
         } else {
-            let firstLetter = speaker.firstName ?  speaker.firstName[0]: '?';
-            avatar = <RkText rkType='small'  style={styles.avatar}>{firstLetter}</RkText>
+          let firstLetter = speaker.firstName ? speaker.firstName[0] : '?';
+          avatar = <RkText rkType='small' style={styles.avatar}>{firstLetter}</RkText>
         }
         return (
-          <View style={[styles.row, styles.heading,styles.speakerView]} >
-              {avatar}
-              <Text style={[styles.text ,styles.speaker]} rkType='header6'> {speaker.firstName + ' ' + speaker.lastName}</Text>
-              <TouchableOpacity
+          <View style={[styles.row, styles.heading, styles.speakerView]} >
+            {avatar}
+            <Text style={[styles.text, styles.speaker]} rkType='header6'> {speaker.firstName + ' ' + speaker.lastName}</Text>
+            <TouchableOpacity
               onPress={() => this.props.navigation.navigate('AttendeeProfile', { speakerDetails: speaker })}
             >
               <RkText style={[styles.attendeeScreen]} ><Icon name="ios-arrow-forward" /></RkText>
@@ -116,76 +128,76 @@ export class SessionDetails extends Component {
       });
   }
 
-  attendRequestStatus = ()=> {
-    if (this.state.regStatus) {                
-        return (
-            <View style={{flexDirection:'row', marginLeft : 0, width : '100%'}}>
-                <RkButton   rkType='outline small'
-                contentStyle={getStatusStyle(this.state.regStatus)}>{this.state.regStatus}</RkButton>
-            </View>
-        )
-    }else{
-        return (
-          <View style={{flexDirection:'row', marginLeft : 250}}>
-            <RkButton style={{flexDirection:'row', marginLeft : 0, width : '100%'}}
-                rkType='outline small'
-                onPress={this.onAttendRequest}>
-                Attend
+  attendRequestStatus = () => {
+    if (this.state.regStatus) {
+      return (
+        <View style={{ flexDirection: 'row', marginLeft: 250 }}>
+          <RkButton rkType='outline small'
+            contentStyle={getStatusStyle(this.state.regStatus)}>{this.state.regStatus}</RkButton>
+        </View>
+      )
+    } else {
+      return (
+        <View style={{ flexDirection: 'row', marginLeft: 250 }}>
+          <RkButton
+            rkType='outline small'
+            onPress={this.onAttendRequest}>
+            Attend
             </RkButton>
-            </View>
-        );
+        </View>
+      );
     }
-}
-onAttendRequest = (event) => {
-  const attendeeId = this.state.userObj.uid;
-  let attendRequest = {
-      sessionId : this.state.sessionDetails.key,
-      session : this.state.sessionDetails,
-      registeredAt : new Date(),
-      status : this.state.sessionDetails.isRegrequired ? "Pending" : "Going",
-      attendee : {},
-      attendeeId : attendeeId
   }
-  Service.getDocRef("RegistrationResponse").add(attendRequest).then((req)=>{
+  onAttendRequest = (event) => {
+    const attendeeId = this.state.userObj.uid;
+    let attendRequest = {
+      sessionId: this.state.sessionDetails.key,
+      session: this.state.sessionDetails,
+      registeredAt: new Date(),
+      status: this.state.sessionDetails.isRegrequired ? "Pending" : "Going",
+      attendee: {},
+      attendeeId: attendeeId
+    }
+    Service.getDocRef("RegistrationResponse").add(attendRequest).then((req) => {
       this.setState({
-          regId : req.id,
-          regStatus : attendRequest.status,
-          
-      });
-  }).catch((error)=>{
-      console.warn(error);
-  });
-}
+        regId: req.id,
+        regStatus: attendRequest.status,
 
-fetchRegistrationStatus = () => {
-  const baseObj = this;
-  if(this.state.userObj){
+      });
+    }).catch((error) => {
+      console.warn(error);
+    });
+  }
+
+  fetchRegistrationStatus = () => {
+    const baseObj = this;
+    if (this.state.userObj) {
       const attendeeId = this.state.userObj.uid;
       Service.getDocRef(REGISTRATION_RESPONSE_TABLE)
-          .where("sessionId", "==", this.state.sessionDetails.key)
-          .where("attendeeId", "==", attendeeId)
-          .onSnapshot((snapshot)=>{
-              if (snapshot.size > 0) {
-                  snapshot.forEach((doc) => {
-                      let regResponse = doc.data();
-                      baseObj.setState({
-                        regStatus: regResponse.status,
-                        regId: doc.id
-                      })
-                  });
-              }
-          });
-  }else{
+        .where("sessionId", "==", this.state.sessionDetails.key)
+        .where("attendeeId", "==", attendeeId)
+        .onSnapshot((snapshot) => {
+          if (snapshot.size > 0) {
+            snapshot.forEach((doc) => {
+              let regResponse = doc.data();
+              baseObj.setState({
+                regStatus: regResponse.status,
+                regId: doc.id
+              })
+            });
+          }
+        });
+    } else {
       console.warn("User object is undefined");
+    }
   }
-}
   render() {
     const speakers = this.getSpeakers();
     const surveyButton = this.getSurveyAccess();
     return (
       <ScrollView style={styles.root}>
-        <RkCard style={{ marginLeft: 5, marginRight: 5}}>
-         
+        <RkCard style={{ marginLeft: 5, marginRight: 5 }}>
+
           <View style={styles.section}>
             <View style={[styles.row, styles.heading]}>
               <RkText style={{ fontSize: 20 }} rkType='header6 primary'>{this.state.sessionName}</RkText>
@@ -215,14 +227,14 @@ fetchRegistrationStatus = () => {
             </View>
           </View>
           <View style={styles.speakerSection}>
-            <View style={[ styles.heading]}>
-            <View style={[styles.row]}>
-              <RkText style={{ marginLeft:5  ,fontSize: 16 }} ><Icon name="md-people" /> </RkText>
-              <RkText style={{ marginLeft:5  ,fontSize: 16 }} rkType='header6 primary' >Speakers </RkText>
+            <View style={[styles.heading]}>
+              <View style={[styles.row]}>
+                <RkText style={{ marginLeft: 5, fontSize: 16 }} ><Icon name="md-people" /> </RkText>
+                <RkText style={{ marginLeft: 5, fontSize: 16 }} rkType='header6 primary' >Speakers </RkText>
               </View>
-              </View>
-              {speakers}
-            
+            </View>
+            {speakers}
+
           </View>
         </RkCard>
 
@@ -241,21 +253,21 @@ let styles = RkStyleSheet.create(theme => ({
   },
   section: {
     marginVertical: 25,
-    marginBottom : 10
+    marginBottom: 10
   },
-  descSection : {
+  descSection: {
     marginVertical: 25,
-    marginBottom : 10,
-    marginTop : 5
+    marginBottom: 10,
+    marginTop: 5
   },
-  speakerSection : {
+  speakerSection: {
     marginVertical: 25,
-    marginBottom : 10,
-    marginTop : 5
+    marginBottom: 10,
+    marginTop: 5
   },
   subSection: {
-    marginTop : 5,
-    marginBottom :10
+    marginTop: 5,
+    marginBottom: 10
   },
   row: {
     flexDirection: 'row',
@@ -263,32 +275,33 @@ let styles = RkStyleSheet.create(theme => ({
     borderColor: theme.colors.border.base,
     alignItems: 'center'
   },
-  text :{
-    marginBottom : 5,
-    fontSize : 15,
+  text: {
+    marginBottom: 5,
+    fontSize: 15,
     marginLeft: 20
   },
-  surveButton :{
-    alignItems: 'baseline',
-    flexDirection: 'row',
+  surveButton: {
+    alignItems: 'flex-end',
+    flexDirection: 'column',
     width: 380,
-    marginTop: 8, 
+    marginTop: 8,
     marginBottom: 3,
     marginLeft: 5,
-    marginRight: 5 
+    marginRight: 5
   },
-  speakerView : {
-    marginTop : 5,
-    marginBottom :5
+  speakerView: {
+    marginTop: 5,
+    marginBottom: 5
   },
   speaker: {
-    flexDirection : 'column',
-    width : 250
+    flexDirection: 'column',
+    width: 225
   },
-  attendeeScreen : {
+  attendeeScreen: {
     flexDirection: 'column',
     fontSize: 25,
-    marginRight: 5 
+    marginRight: 5,
+    alignItems : 'flex-end'
   },
   avatar: {
     backgroundColor: '#C0C0C0',
@@ -299,23 +312,17 @@ let styles = RkStyleSheet.create(theme => ({
     fontSize: 20,
     textAlignVertical: 'center',
     marginRight: 5
-},
-avatarImage: {
+  },
+  avatarImage: {
     width: 40,
     height: 40,
     borderRadius: 20,
     marginRight: 5
-},
-tileIcons : {
-  paddingLeft: 4,
-  paddingTop: 4,
-  fontSize:16, 
-  color: '#C9C9C9'
-},
-ButtonMain: {
-  fontSize:13,
-  backgroundColor: '#3E50B4',
-  color:'#fff',
-}
+  },
+  tileIcons: {
+    paddingLeft: 4,
+    paddingTop: 4,
+    fontSize: 16,
+    color: '#C9C9C9'
+  },
 }));
-

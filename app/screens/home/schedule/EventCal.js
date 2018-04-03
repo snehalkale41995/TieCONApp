@@ -36,8 +36,10 @@ export default class EventCal extends Component {
             startTime,
             speakers,
             endTime,
-            description
+            description,
+            isBreak
         } = sessionObj.data();
+        
         return {
             key: sessionObj.id,
             eventName,
@@ -48,7 +50,8 @@ export default class EventCal extends Component {
             speakersDetails: [],
             startTime,
             endTime,
-            description
+            description,
+            isBreak : !!isBreak
         }
     }
     
@@ -169,6 +172,19 @@ export default class EventCal extends Component {
             minDate={__startDate}
             maxDate={__endDate}
             monthFormat={'yyyy'}
+            theme={{
+                backgroundColor: '#ffffff',
+                calendarBackground: '#FFFFFF',
+                textSectionTitleColor: '#b6c1cd',
+                selectedDayBackgroundColor: '#E7060E',
+                selectedDayTextColor: '#FFFFFF',
+                todayTextColor: '#00adf5',
+                dayTextColor: '#2d4150',
+                textDisabledColor: '#F0F0F0',
+                dotColor: '#FFFFFF',
+                selectedDotColor: '#E7060E',
+                monthTextColor: '#E7060E'
+            }}
             renderDay={this.renderDay}/>);
     }
 }

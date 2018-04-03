@@ -1,6 +1,6 @@
 import React from 'react';
 import {  View,Icon,Tab,TabHeading,Tabs } from 'native-base';
-import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage,ScrollView,Text } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage,ScrollView,Text,Image } from 'react-native';
 import { RkComponent, RkTheme, RkText, RkAvoidKeyboard,RkStyleSheet, RkButton, RkCard, RkTextInput } from 'react-native-ui-kitten';
 import { NavigationActions } from 'react-navigation';
 import { Service } from '../../../services';
@@ -8,13 +8,15 @@ import ReactMoment from 'react-moment';
 import Moment from 'moment';
 import { Avatar } from '../../../components';
 import firebase from '../../../config/firebase';
-
+import {GradientButton} from '../../../components/gradientButton';
+// import styleConstructor, {getStatusStyle} from '../'
+import styleConstructor,{getStatusStyle}  from '../schedule/styles.js'
 const questionTable = 'AskedQuestions';
 var firestoreDB = firebase.firestore();
 export default class AskQuestion extends RkComponent {
-
     constructor(props) {
         super(props);
+          this.styles = styleConstructor();
         this.sessionDetails = this.props.navigation.state.params.sessionDetails;
         this.state = {
             Question: "",
@@ -27,7 +29,8 @@ export default class AskQuestion extends RkComponent {
             orderBy : 'timestamp',
             currentUid : "",
             queAccess : "",
-            questionStatus : false
+            questionStatus : false,
+            AskQFlag : true
         }
     }
     componentWillMount() {
@@ -41,24 +44,30 @@ export default class AskQuestion extends RkComponent {
           this.checkSessionTime();
           this.getQuestions();
     }
+    
     checkSessionTime = () => {
         let session = this.state.sessionDetails;
         let today = Moment(new Date()).format("DD MMM,YYYY hh:mm A");
         let sessionStart = Moment(session.startTime).format("DD MMM,YYYY hh:mm A");
         let sessionEnd = Moment(session.endTime).format("DD MMM,YYYY hh:mm A");
-        let bufferedEnd = Moment(sessionEnd).add(2,'hours');
-            if(sessionStart <= today && bufferedEnd >= today){
+        let buffered = Moment(sessionEnd).add(2,'hours');
+        let bufferedEnd = Moment(buffered).format("DD MMM,YYYY hh:mm A");
+
+            if(sessionStart <= today && today <= bufferedEnd ){
+                console.log("ifff")
                 this.setState({
-                    queAccess : "auto"
+                    queAccess : 'auto',
+                     AskQFlag: true
                 })
             }
             else{
+                console.log("else")
                 this.setState({
-                    queAccess : "none"
+                    queAccess : 'none',
+                    AskQFlag: false
                 })
                 Alert.alert("Questions can be asked only when session is active")
             }
-        
     }
     getQuestions = (order) => {
         if (order == undefined) {
@@ -77,7 +86,7 @@ export default class AskQuestion extends RkComponent {
                 docRef.forEach(doc => {
                     Data.push({questionSet :doc.data(), questionId : doc.id});
                 })
-                thisRef.setState({questionData : Data})              
+                thisRef.setState({questionData : Data ,  questionStatus :false})              
             }
             else{
                 thisRef.setState({questionStatus : true})    
@@ -125,17 +134,33 @@ export default class AskQuestion extends RkComponent {
     }
     displayQuestions = () =>{
         let questionList = this.state.questionData.map(question =>{
+         let pictureUrl  
+  
+         let avatar;
+        if (question.questionSet.askedBy.pictureUrl!=undefined) {
+           avatar = <Image style={this.styles.avatarImage} source={{uri:question.questionSet.askedBy.pictureUrl}}/>
+        } else {
+            let firstLetter = question.questionSet.askedBy.firstName ?  question.questionSet.askedBy.firstName[0]: '?';
+            avatar = <RkText rkType='big'  style={styles.avatar}>{firstLetter}</RkText>
+        }
             let askedBy = question.questionSet.askedBy;
             let fullName = askedBy.firstName + " " + askedBy.lastName;
             var votesCount = question.questionSet.voteCount.toString();
+            
             return(
                 <View >
                     <RkCard style={{ marginLeft: 5, marginRight: 5, height: 125 }}>
                         <View style={{ flexDirection: 'row', marginLeft: 3, marginTop :5 }}>
-                            <View style={{marginVertical :25}}>
+                        
+                             <View  style={{marginVertical :25,marginRight: 5}}>
+                               {avatar}
+                              </View>
+
+                            <View style={{marginVertical :25}}>  
                                 <Text style={{fontStyle: 'italic',fontSize: 12}}>{fullName}</Text>
                                 <View>{this.getDateTime(question.questionSet.timestamp)}</View>
                             </View>
+                           
                             <View style={{width : 150, flex: 1,flexDirection: 'column',justifyContent: 'center',marginLeft:5,marginRight:5}}>
                                 <Text style={{fontSize: 14 }} >{question.questionSet.Question}</Text>
                             </View>
@@ -178,8 +203,7 @@ export default class AskQuestion extends RkComponent {
             return(
                 <Text  style={{ fontSize: 25,width: 36,height : 36}} onPress={() => this.onLikeQuestion(question)} ><Icon name="md-thumbs-up" style={{ color : '#8c8e91'}} /></Text> 
             )
-        }
-        
+        } 
     }
     onLikeQuestion = (question) => {
         let thisRef = this;
@@ -211,7 +235,6 @@ export default class AskQuestion extends RkComponent {
             this.getQuestions(order);
         }
     }
-
     onRecentQueSelect = () => {
         if(this.state.recentQueView == false){
             let order = 'timestamp';
@@ -229,30 +252,33 @@ export default class AskQuestion extends RkComponent {
                 <RkAvoidKeyboard
                 onStartShouldSetResponder={(e) => true}
                 onResponderRelease={(e) => Keyboard.dismiss()}>
-                <View style={{flexDirection :'row'}} pointerEvents={this.state.queAccess}>
+                
+                  {this.state.AskQFlag &&
+                  <View style={{flexDirection :'row'}} pointerEvents={this.state.queAccess}>
                     <RkTextInput type="text"  style={{width: 300, marginRight: 10 }}placeholder="Enter your question here..." value={this.state.Question} name="Question" onChangeText={(text) => this.onChangeInputText(text)} />
-                    <TouchableOpacity onPress={() => this.onSubmit()}>
-                    <RkText  style={{ fontSize: 35,width: 46,height : 46 , marginLeft : 8 }}><Icon name="md-send"/> </RkText>
-                    </TouchableOpacity>
-                </View>
+                    <RkText  style={{ fontSize: 35,width: 46,height : 46 , marginLeft : 8 }} onPress={() => this.onSubmit()}><Icon name="md-send"/> </RkText>
+                  </View>
+                  }
+                  {!this.state.AskQFlag &&
+                 <View style={{flexDirection :'row'}}>
+                 <RkText style={{ fontSize:15,width:300,height: 46, marginRight: 10,marginLeft:4}}> Questions can be asked only when session is active... </RkText>
+                 </View>
+                 } 
 
                 <View style={{ alignItems: 'center', flexDirection: 'row', width: 380, marginBottom: 3, marginLeft: 2, marginRight: 2 }}>
                     <View style={{ width: 180 }} >
-                        <RkButton rkType='outline'
+                    <GradientButton colors={['#f20505', '#f55050']} text='Recent Questions'
                             contentStyle={{ fontSize: 18 }}
-                            name="Recent"
                             style={{ fontSize: 15, flexDirection: 'row', width: 170, marginLeft: 2, marginRight: 1 }}
                             onPress={this.onRecentQueSelect}
-                        >Recent Questions
-                             </RkButton>     
+                        />   
                     </View>
                     <View style={{ width: 180 }} >
-                        <RkButton rkType='outline'
+                    <GradientButton colors={['#f20505', '#f55050']} text='Top Questions'
                             contentStyle={{ fontSize: 18 }}
-                            name="Top"
                             style={{ fontSize: 15, flexDirection: 'row', width: 170, marginLeft: 1, marginRight: 2 }}
                             onPress={this.onTopQueSelect}
-                        >Top Questions </RkButton>
+                        />
                     </View>
                 </View>
                 <View>

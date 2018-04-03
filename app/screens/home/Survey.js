@@ -1,26 +1,28 @@
 import React from 'react';
 import {ScrollView} from 'react-native';
 import { Text, View, Icon, Container, Label } from 'native-base';
-import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage ,ActivityIndicator} from 'react-native';
 import { RkComponent, RkTheme,RkStyleSheet, RkText, RkAvoidKeyboard, RkButton, RkCard, RkChoice, RkTextInput, RkChoiceGroup } from 'react-native-ui-kitten';
 import { NavigationActions } from 'react-navigation';
 import ReactMoment from 'react-moment';
 import firebase from './../../config/firebase'
+import {GradientButton} from '../../components/gradientButton';
 
 var firestoreDB = firebase.firestore();
 
 export class Survey extends RkComponent {
     static navigationOptions = {
-        title: 'Survey'.toUpperCase()
+        title: 'Feedback'.toUpperCase()
       };
     constructor(props) {
         super(props);
+        this.navigation = this.props.navigation;
         this.state = {
             questionsForm: [],
-            user: "",
+            user: {},
             responses : [],
             queArray : [],
-           sessionId : this.props.navigation.state.params.sessionId,
+           sessionId : this.props.navigation.state.params.sessionDetails.key,
         }
         this.onFormSelectValue = this.onFormSelectValue.bind(this);
         this.onMultiChoiceChange = this.onMultiChoiceChange.bind(this);
@@ -31,14 +33,13 @@ export class Survey extends RkComponent {
         AsyncStorage.getItem("USER_DETAILS").then((userDetails) => {
             let user = JSON.parse(userDetails)
             thisRef.setState({
-                user: user.firstName + " " + user.lastName
+                user: user,
             })
         })
         .catch(err => {
             console.warn('Errors');
         });
     }
-
     getForm = () => {
         let thisRef = this;
         firestoreDB.collection("QuestionsForm").doc("oQwNtp86Zxlu1JFkFhwg").get().then(function (doc) {
@@ -61,7 +62,7 @@ export class Survey extends RkComponent {
         let thisRef = this;
         firestoreDB.collection('SessionSurvey').add({
             Responses: thisRef.state.queArray,
-            ResponseBy: thisRef.state.user,
+            ResponseBy: thisRef.state.user.uid,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             SessionId :  thisRef.state.sessionId
         })
@@ -84,7 +85,6 @@ export class Survey extends RkComponent {
         });
         return  renderQuestions;
     }
-
     renderAnswerField = (item) => {
         let answerInput = [];
         if (item.AnswerFeild == "Input Text") {
@@ -129,8 +129,6 @@ export class Survey extends RkComponent {
         })
         return MultiChoice;
     }
-
-
     onRenderCheckBox = (value, Qid) => {
         let CheckBox1 = value.map(fItem => {
             return (
@@ -162,7 +160,9 @@ export class Survey extends RkComponent {
     render() {
         if (this.state.questionsForm.length == 0 ){
             return (
-                <Text style={{fontSize : 20 ,alignSelf: 'center' ,marginTop : 200}} ><Icon name="ios-sync"/>  Loading... </Text>
+                <View style={[styles.loading]} >
+                    <ActivityIndicator size='large' />
+                </View>
             );
         }
         else{
@@ -170,17 +170,26 @@ export class Survey extends RkComponent {
                 <Container>
                     <ScrollView>
                     {this.onFormSelectValue(this.state.questionsForm)}
-                    <RkButton rkType='success'
-                        style={{ alignSelf: 'center', width: 340 ,marginTop: 3, marginBottom : 3 }}
-                        onPress={() => this.onSubmitResponse()}>SUBMIT</RkButton>
+                    <GradientButton colors={['#f20505', '#f55050']} text='Submit'
+                        style={{ alignSelf: 'center', width: 340, marginTop: 3, marginBottom: 3 }}
+                        onPress={() => this.onSubmitResponse()}
+                    />
                     </ScrollView>
                 </Container>
             );
-        }
-        
+        } 
     }
 }
 
 let styles = RkStyleSheet.create(theme => ({
-    
+    loading: {
+        marginTop: 250,
+        left: 0,
+        opacity: 0.5,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
     }));
