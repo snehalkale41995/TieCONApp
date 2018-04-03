@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text } from 'native-base';
-import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage,ActivityIndicator } from 'react-native';
 import { RkComponent, RkTheme, RkText, RkStyleSheet, RkChoiceGroup, RkChoice, RkAvoidKeyboard, RkButton, RkCard, RkTextInput } from 'react-native-ui-kitten';
 import { NavigationActions } from 'react-navigation';
-import { PieChart } from 'react-native-svg-charts'
-import firebase from '../../../config/firebase'
+import { PieChart } from 'react-native-svg-charts';
+import firebase from '../../../config/firebase';
+import {GradientButton} from '../../../components/gradientButton';
 
 var firestoreDB = firebase.firestore();
 
@@ -20,7 +21,8 @@ export default class PollSession extends React.Component {
             positiveResponse: "",
             negativeResponse: "",
             showGraph: false,
-            feedBackGiver: ""
+            feedBackGiver: "",
+            showPoll : false
         }
     }
     componentWillMount() {
@@ -28,7 +30,7 @@ export default class PollSession extends React.Component {
         AsyncStorage.getItem("USER_DETAILS").then((userDetails) => {
             let user = JSON.parse(userDetails)
             thisRef.setState({
-                feedBackGiver: user.firstName + " " + user.lastName    
+                feedBackGiver: user
             })  
             thisRef.checkPollResponse();
         })
@@ -40,7 +42,7 @@ export default class PollSession extends React.Component {
     checkPollResponse = () =>{
         let thisRef = this;
         let sessionId = this.state.sessionId;
-        let user  = this.state.feedBackGiver;
+        let user  = this.state.feedBackGiver.uid;
         var getPollResponse= firestoreDB.collection("feedbackResponses")
         getPollResponse = getPollResponse.where("FeedBackGiver", "==" , user)
         getPollResponse = getPollResponse.where("sessionId" ,"==" , sessionId)
@@ -50,6 +52,11 @@ export default class PollSession extends React.Component {
                 showGraph : true
             })
             thisRef.getSessionPollOverview();
+           }
+           else{
+            thisRef.setState({
+                showPoll : true
+            })
            }
         })
         .catch( function ( error){
@@ -103,14 +110,15 @@ export default class PollSession extends React.Component {
                     question: thisRef.state.question,
                     Response: thisRef.state.response,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    FeedBackGiver: thisRef.state.feedBackGiver,
+                    FeedBackGiver: thisRef.state.feedBackGiver.uid,
                     sessionId: thisRef.state.sessionId
                 })
                 .then(function (docRef) {
                     thisRef.getSessionPollOverview();
                     thisRef.setState({
                         response: "",
-                        showGraph : true
+                        showGraph : true,
+                        showPoll : false
                     }) 
                 })
                 .catch(function (error) {
@@ -133,7 +141,7 @@ export default class PollSession extends React.Component {
                 svg: { fill: 'red' }
             }
         ]
-        if(this.state.showGraph == false){
+        if(this.state.showGraph == false && this.state.showPoll == true){
             return (
                 <View style={{marginTop : 5 , marginLeft : 10}}>
                     <Text>{this.state.question}</Text>
@@ -158,13 +166,14 @@ export default class PollSession extends React.Component {
                             </View>
                         </TouchableOpacity>
                     </RkChoiceGroup>
-                    <RkButton rkType='outline' style={{ alignSelf: 'center', width: 340 }} onPress={() => this.onSubmitResponse()}> Submit </RkButton>
+                    <GradientButton colors={['#f20505', '#f55050']} text='Submit'
+                    style={{ alignSelf: 'center', width: 340 }} onPress={() => this.onSubmitResponse()} /> 
     
                 </View>
     
             );
         }
-        else{
+        else if(this.state.showGraph == true && this.state.showPoll == false){
             return(
                 <View style={{marginTop : 5 , marginLeft : 10}}>
                     <Text style={{fontSize : 15}}>FeedBack Overview</Text>
@@ -198,6 +207,14 @@ export default class PollSession extends React.Component {
             );
             
         }
+        else{
+            return(
+                <View style={[styles.loading]} > 
+                <ActivityIndicator size='large' /> 
+              </View>
+            );
+           
+        }
     }
 
     
@@ -208,4 +225,14 @@ let styles = RkStyleSheet.create(theme => ({
         flex: 1,
         backgroundColor: theme.colors.screen.base
     },
+    loading: {
+        marginTop: 250,
+        left: 0,
+        opacity: 0.5,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
 }));
