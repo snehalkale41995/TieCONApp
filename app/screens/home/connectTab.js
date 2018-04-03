@@ -16,14 +16,14 @@ export class ConnectTab extends React.Component {
       <Tabs style={{ elevation: 3 }}>
         <Tab
           heading={
-            <TabHeading><Icon name="calendar"/><Text>All Attendees</Text></TabHeading>
+            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon name="calendar"/><Text>All Attendees</Text></TabHeading>
           }
         >
           <Contacts navigation={this.props.navigation} />
         </Tab>
         <Tab
           heading={
-            <TabHeading><Icon name="ios-link"/><Text>My Chats</Text></TabHeading>
+            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon name="ios-link"/><Text>My Chats</Text></TabHeading>
           }
         >
           <ChatList navigation={this.props.navigation} />
