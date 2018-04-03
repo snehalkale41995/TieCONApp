@@ -44,7 +44,7 @@ export default class EventCal extends Component {
             key: sessionObj.id,
             eventName,
             extraServices,
-            isRegrequired,
+            isRegrequired:!!isRegrequired,
             room,
             speakers,
             speakersDetails: [],
