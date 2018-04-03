@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator} from 'react-native';
-import {RkText} from 'react-native-ui-kitten';
+import {RkText, RkStyleSheet} from 'react-native-ui-kitten';
 
 import {FontIcons} from '../../assets/icons';
 import * as Screens from '../../screens/index';
@@ -57,10 +57,9 @@ getQuestionsData = (Uid) =>{
     }
     else if (this.state.showQuestions == false && this.state.showHomepage == true) {
       return (
-        <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center',
-            alignItems: 'center',}}>
+        <View style={styles.mainView}>
           <HomePage navigation={this.props.navigation} />
-          <RkText rkType="small" style={{fontSize: 12}}>Powered by Eternus Solutions Pvt. Ltd. </RkText>
+          <RkText rkType="small" style={styles.footerText}>Powered by Eternus Solutions Pvt. Ltd. </RkText>
         </View>
       );
     }
@@ -167,3 +166,16 @@ menuRoutes.unshift({
 },);
 
 export const MenuRoutes = menuRoutes;
+
+const styles = RkStyleSheet.create(theme => ({
+  mainView : {
+    backgroundColor: theme.colors.screen.base,
+    flex: 1, 
+    flexDirection: 'column', 
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  footerText: {
+    fontSize: 12
+  }
+}));
