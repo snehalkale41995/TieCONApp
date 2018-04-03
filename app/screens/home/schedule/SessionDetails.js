@@ -115,15 +115,13 @@ export class SessionDetails extends Component {
           avatar = <RkText rkType='small' style={styles.avatar}>{firstLetter}</RkText>
         }
         return (
-          <View key={index} style={[styles.row, styles.heading, styles.speakerView]} >
-            {avatar}
-            <Text style={[styles.text, styles.speaker]} rkType='header6'> {speaker.firstName + ' ' + speaker.lastName}</Text>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('AttendeeProfile', { speakerDetails: speaker })}
-            >
-              <RkText style={[styles.attendeeScreen]} ><Icon name="ios-arrow-forward" /></RkText>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity key={index} onPress={() => this.props.navigation.navigate('AttendeeProfile', { speakerDetails: speaker })}>
+            <View style={[styles.row, styles.heading, styles.speakerView]} >
+              {avatar}
+              <Text style={[styles.text, styles.speaker]} rkType='header6'> {speaker.firstName + ' ' + speaker.lastName}</Text>
+              <RkText style={[styles.attendeeScreen]} ><Icon name="ios-arrow-forward" /></RkText>              
+            </View>
+          </TouchableOpacity>
         )
       });
   }
