@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, Button, View, TouchableOpacity, StyleSheet, AsyncStorage, ScrollView } from 'react-native';
+import { Platform,Text, Button, View, TouchableOpacity, StyleSheet, AsyncStorage, ScrollView } from 'react-native';
 import { RkButton, RkStyleSheet, RkText, RkCard } from 'react-native-ui-kitten';
 import { Icon, Container, Tabs, Tab, TabHeading } from 'native-base';
 import { NavigationActions, TabNavigator, TabView } from 'react-navigation';
@@ -71,14 +71,14 @@ export class SessionDetails extends Component {
   getSurveyAccess = () => {
     if (this.state.showPanelButton == true && this.state.showFeedbackButton == true) {
       return (
-        <View style={{ alignItems: 'flex-end' ,flexDirection: 'row', width: 380, marginBottom: 3 }}>
-          <View style={{ width: 182 }} >
-            <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{  width: 160, marginLeft: 2, marginRight: 5 }}
+        <View style={{ alignItems: 'flex-end' ,flexDirection: 'row', width:Platform.OS === 'ios' ? 320 : 380, marginBottom: 3 }}>
+          <View style={{ width: Platform.OS === 'ios' ? 162 : 182 }} >
+            <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{width: Platform.OS === 'ios' ? 142 :160, marginLeft: 2, marginRight: 5 }}
               onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
             />
           </View>
-          <View style={{ width: 182 }} >
-            <GradientButton colors={['#f20505', '#f55050']} text='Feedback' style={{  width: 160, marginLeft: 5, marginRight: 2 }}
+          <View style={{  width: Platform.OS === 'ios' ? 162 : 182 }} >
+            <GradientButton colors={['#f20505', '#f55050']} text='Feedback' style={{  width: Platform.OS === 'ios' ? 142 :160, marginLeft: 5, marginRight: 2 }}
               onPress={() => this.props.navigation.navigate('Survey', { sessionDetails: this.state.sessionDetails })}
             />
           </View>
@@ -131,14 +131,14 @@ export class SessionDetails extends Component {
   attendRequestStatus = () => {
     if (this.state.regStatus) {
       return (
-        <View style={{ flexDirection: 'row', marginLeft: 250 }}>
+        <View style = {[styles.attendBtn]}>
           <RkButton rkType='outline small'
             contentStyle={getStatusStyle(this.state.regStatus)}>{this.state.regStatus}</RkButton>
         </View>
       )
     } else {
       return (
-        <View style={{ flexDirection: 'row', marginLeft: 250 }}>
+        <View style = {[styles.attendBtn]} >
           <RkButton
             rkType='outline small'
             onPress={this.onAttendRequest}>
@@ -206,12 +206,14 @@ export class SessionDetails extends Component {
 
           <View style={styles.subSection}>
             <View style={[styles.row, styles.heading]}>
-              <RkText style={{ fontSize: 15 }}><Icon name="md-time" /> </RkText>
-              <Text style={[styles.text]} rkType='header6' > {this.getDuration()} </Text>
+              <Text style={{flexDirection : 'column',width: 25, fontSize: 12 }}><Icon name="md-time" /></Text>
+             <Text style={{flexDirection : 'column'}} rkType='header6' > {this.getDuration()} </Text>
             </View>
             <View style={[styles.row, styles.heading]}>
-              <RkText style={{ fontSize: 15 }}><Icon name="md-pin" /></RkText>
-              <Text style={[styles.text]} rkType='header6'>{this.state.sessionVenue}</Text>
+             
+              <RkText style={{flexDirection : 'column',width: 25, fontSize: 12 }}><Icon name="md-pin" /></RkText>
+              <Text style={{flexDirection : 'column'}} rkType='header6'>{this.state.sessionVenue}</Text>
+           
             </View>
             <View>
               {this.attendRequestStatus()}
@@ -275,12 +277,12 @@ let styles = RkStyleSheet.create(theme => ({
   text: {
     marginBottom: 5,
     fontSize: 15,
-    marginLeft: 20
+    marginLeft: 15
   },
   surveButton: {
-    alignItems: 'flex-end',
+    alignItems : 'center',
     flexDirection: 'column',
-    width: 380,
+    width:Platform.OS === 'ios' ? 320 : 380,
     marginTop: 8,
     marginBottom: 3,
     marginLeft: 5,
@@ -292,7 +294,7 @@ let styles = RkStyleSheet.create(theme => ({
   },
   speaker: {
     flexDirection: 'column',
-    width: 225
+    width: Platform.OS === 'ios' ? 200 : 225,
   },
   attendeeScreen: {
     flexDirection: 'column',
@@ -322,4 +324,10 @@ let styles = RkStyleSheet.create(theme => ({
     fontSize: 16,
     color: '#C9C9C9'
   },
+  attendBtn : {
+    flexDirection: 'column',
+    alignItems : 'flex-end',
+    marginRight : 5,
+    marginTop : -10
+  }
 }));
