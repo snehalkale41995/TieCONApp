@@ -228,7 +228,7 @@ export default class ScheduleTile extends RkComponent {
     render() {
         if (this.props.session) {
             return (
-                  <TouchableOpacity
+                  <TouchableOpacity disabled={this.props.session.isBreak}
                             onPress={() => this.props.navigation.navigate('SessionDetails', { session: this.props.session })}
                   >
                   <RkCard rkType='shadowed' style={this.styles.card}>
