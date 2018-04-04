@@ -52,7 +52,6 @@ export default class AskQuestion extends RkComponent {
         let sessionEnd = Moment(session.endTime).format();
         let buffered = Moment(sessionEnd).add(2, 'hours');
         let bufferedEnd = Moment(buffered).format();
-
         if (sessionStart <= today && today <= bufferedEnd) {
             this.setState({
                 queAccess: 'auto',
