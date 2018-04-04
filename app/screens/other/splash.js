@@ -90,23 +90,24 @@ export class SplashScreen extends React.Component {
       <View style={styles.container}>
         <View>
           <Image style={[styles.image, {width}]} source={require('../../assets/images/splashBack.png')}/>
-          <View style={styles.text}>
+          <View style={[styles.text, styles.tieTitle]}>
             <RkText rkType='light' style={styles.hero}>TiE</RkText>
             <RkText rkType='logo' style={styles.appName}>Pune</RkText>
           </View>
         </View>
         <View style={styles.footer}>
           <View style={styles.textRow}>
-            <RkText rkType='primary3'>Sponsored by:</RkText>
+            <RkText rkType='primary3'>Powered by:</RkText>
           </View>
         </View>
         <View style={styles.buttons}>
-          <RkButton style={styles.button} rkType='sponsorsSplashScreen'>
-            <Image style={styles.sponsorsImage} source={require('../../assets/images/eternusLogo.png')}/>;
+          <RkButton style={styles.button} rkType='sponsorsSplashScreen' style={{marginTop: 5}}>
+            <Image style={styles.sponsorsImage} source={require('../../assets/images/eternusLogoNew.png')}/>;
+            
           </RkButton>
-          <RkButton style={styles.button} rkType='sponsorsSplashScreen'>
-            <Image style={styles.sponsorsImage} source={require('../../assets/images/bajajLogo.jpg')}/>;
-          </RkButton>
+          {/* <RkButton style={styles.button} rkType='sponsorsSplashScreen' style={{marginTop: 5}}>
+            <Image style={styles.sponsorsImage} source={require('../../assets/images/bajajLogo.png')}/>;            
+          </RkButton> */}
         </View>
         <ProgressBar
           color={RkTheme.current.colors.accent}
@@ -133,8 +134,8 @@ let styles = RkStyleSheet.create(theme => ({
     borderColor: theme.colors.border.solid
   },
   sponsorsImage: {
-    resizeMode: 'cover',
-    height: scaleVertical(430),
+    /*resizeMode: 'cover',
+    height: scaleVertical(430),*/
   },
   textRow: {
     flexDirection: 'row',
@@ -157,5 +158,9 @@ let styles = RkStyleSheet.create(theme => ({
     alignSelf: 'center',
     marginBottom: 35,
     backgroundColor: '#e5e5e5'
+  },
+  tieTitle:{
+    marginTop: -80,
+    marginBottom:50,
   }
 }));
