@@ -51,7 +51,7 @@ export class SplashScreen extends React.Component {
         });;
         //navigation.navigate('App');
       } else {
-        navigation.navigate('Auth');
+        //navigation.navigate('Auth');
       }
     });
   };
@@ -101,11 +101,12 @@ export class SplashScreen extends React.Component {
           </View>
         </View>
         <View style={styles.buttons}>
-          <RkButton style={styles.button} rkType='sponsorsSplashScreen'>
-            <Image style={styles.sponsorsImage} source={require('../../assets/images/eternusLogo.png')}/>;
+          <RkButton style={styles.button} rkType='sponsorsSplashScreen' style={{marginTop: 5}}>
+            <Image style={styles.sponsorsImage} source={require('../../assets/images/eternusLogoNew.png')}/>;
+            
           </RkButton>
-          <RkButton style={styles.button} rkType='sponsorsSplashScreen'>
-            <Image style={styles.sponsorsImage} source={require('../../assets/images/bajajLogo.jpg')}/>;
+          <RkButton style={styles.button} rkType='sponsorsSplashScreen' style={{marginTop: 5}}>
+            <Image style={styles.sponsorsImage} source={require('../../assets/images/bajajLogo.png')}/>;            
           </RkButton>
         </View>
         <ProgressBar
@@ -133,8 +134,8 @@ let styles = RkStyleSheet.create(theme => ({
     borderColor: theme.colors.border.solid
   },
   sponsorsImage: {
-    resizeMode: 'cover',
-    height: scaleVertical(430),
+    /*resizeMode: 'cover',
+    height: scaleVertical(430),*/
   },
   textRow: {
     flexDirection: 'row',

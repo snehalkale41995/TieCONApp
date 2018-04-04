@@ -106,10 +106,10 @@ export class LoginV2 extends React.Component {
             </View>
           </View>
           <View style={styles.buttons}>
-            <RkButton style={styles.button} rkType='sponsors'>
-              <Image style={styles.image} source={require('../../assets/images/eternusLogo.png')}/>;
+            <RkButton style={styles.button} rkType='sponsors' style={{marginTop: 5}}>
+              <Image style={styles.image} source={require('../../assets/images/eternusLogoNew.png')}/>;
             </RkButton>
-            <RkButton style={styles.button} rkType='sponsors'>
+            <RkButton style={styles.button} rkType='sponsors' style={{marginTop: 5}}>
               <Image style={styles.image} source={require('../../assets/images/bajajLogo.jpg')}/>;
             </RkButton>
           </View>
