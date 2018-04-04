@@ -101,8 +101,8 @@ export class SessionDetails extends Component {
   getDuration = () => {
     let endTime = Moment(this.state.endTime).format("hh:mm A");
     let startTime = Moment(this.state.startTime).format("hh:mm A");
-    let sessionDate = Moment(this.state.startTime).format("DD MMM,YYYY");
-    return (<Text>{startTime} - {endTime}   {sessionDate} </Text>);
+    let sessionDate = Moment(this.state.startTime).format("ddd, MMM DD, YYYY");
+    return (<Text>{startTime} - {endTime} | {sessionDate} </Text>);
   }
   getSpeakers = () => {
     return this.state.speakerDetails
