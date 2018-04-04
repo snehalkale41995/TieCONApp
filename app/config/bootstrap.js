@@ -221,20 +221,20 @@ export let bootstrap = () => {
   });
 
   RkTheme.setType('RkButton', 'sponsors', {
-    height: scale(40),
-    width: scale(88),
+    height: scale(50),
+    width: scale(180),
     borderRadius: scale(0),
     borderColor: theme => theme.colors.border.accent,
-    borderWidth: 1,
+    borderWidth: 0,
     backgroundColor: theme => theme.colors.control.background
   });
 
   RkTheme.setType('RkButton', 'sponsorsSplashScreen', {
-    height: scale(40),
-    width: scale(88),
+    height: scale(50),
+    width: scale(180),
     borderRadius: scale(0),
     borderColor: theme => theme.colors.border.accent,
-    borderWidth: 1,
+    borderWidth: 0,
     backgroundColor: theme => theme.colors.control.background
   });
   /*
