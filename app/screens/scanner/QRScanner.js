@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutAnimation, StatusBar, StyleSheet, Alert, Linking, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Keyboard, ActivityIndicator, AsyncStorage } from 'react-native';
+import { LayoutAnimation, Alert, Text, View, TouchableOpacity, Image, Dimensions, Keyboard, ActivityIndicator, AsyncStorage, NetInfo } from 'react-native';
 import { RkButton, RkText, RkTextInput, RkStyleSheet, RkTheme, RkAvoidKeyboard } from 'react-native-ui-kitten';
 import { FontAwesome } from '../../assets/icons';
 import { GradientButton } from '../../components/gradientButton';
@@ -38,6 +38,7 @@ export class QRScanner extends React.Component {
       sessions: [],
       scanHistory: [],
       sessionUsers: [],
+      isOffline: false,
       results: {
         items: []
       }
@@ -95,7 +96,32 @@ export class QRScanner extends React.Component {
 
   componentDidMount() {
     this._requestCameraPermission();
-    this._getSessions();
+    let thisRef = this;
+    NetInfo.addEventListener(
+      'connectionChange',
+      this.handleFirstConnectivityChange
+    );
+  }
+
+  handleFirstConnectivityChange = (connectionInfo) => {
+    if(connectionInfo.type != 'none') {
+      if(!this.state.isLoading){
+        this.setState({
+          isLoading: true
+        });
+        this._getSessions();
+      }
+    }
+    this.setState({
+      isOffline: connectionInfo.type === 'none',
+    });
+  };
+
+  componentWillUnmount() {
+    NetInfo.removeEventListener(
+      'connectionChange',
+      this.handleFirstConnectivityChange
+    );  
   }
 
   _requestCameraPermission = async () => {
@@ -242,7 +268,45 @@ export class QRScanner extends React.Component {
     this._getCurrentSessionUsers(selectedSessionId);
   }
 
-  render() {
+  getView = () => {
+    if(this.state.hasCameraPermission === null){
+      return (
+        <RkText>Requesting for camera permission...</RkText>
+      );
+    } else {
+      if(this.state.hasCameraPermission === false) {
+        return (
+          <RkText>
+            Camera permission is not granted.
+          </RkText>
+        );
+      } else {
+        if(this.state.isOffline) {
+          return (
+            <RkText>
+              You are offline. Please connect to internet.
+            </RkText>
+          );
+        } else {
+          return (
+            <BarCodeScanner
+              style={styles.barCode}
+              onBarCodeRead={this._handleBarCodeRead}
+              style={{
+                height: (Dimensions.get('window').height - (Platform.OS === 'ios' ? 130 : 145)),
+                width: (Dimensions.get('window').width - 20),
+              }}
+            />
+          );
+        }
+      }
+    }
+  }
+
+  renderSessionDropdown = () => {
+    if(this.state.isOffline) {
+      return null;
+    }
 
     let sessionItems = this.state.sessions.map(function (session, index) {
       return (
@@ -251,11 +315,7 @@ export class QRScanner extends React.Component {
     });
 
     return (
-      <RkAvoidKeyboard
-        style={styles.screen}
-        onStartShouldSetResponder={(e) => true}
-        onResponderRelease={(e) => Keyboard.dismiss()}>
-        <ListItem icon>
+      <ListItem icon>
           <Left>
             <Text>Select Session</Text>
           </Left>
@@ -270,8 +330,18 @@ export class QRScanner extends React.Component {
             </Picker>
           </Body>
         </ListItem>
+    );
+  }
+
+  render() {
+    return (
+      <RkAvoidKeyboard
+        style={styles.screen}
+        onStartShouldSetResponder={(e) => true}
+        onResponderRelease={(e) => Keyboard.dismiss()}>
+        {this.renderSessionDropdown()}
         <View>
-          {this.state.hasCameraPermission === null
+          {/* {this.state.hasCameraPermission === null
             ? <RkText>Requesting for camera permission</RkText>
             : this.state.hasCameraPermission === false
               ? <RkText style={{ color: '#fff' }}>
@@ -284,7 +354,8 @@ export class QRScanner extends React.Component {
                   height: (Dimensions.get('window').height - (Platform.OS === 'ios' ? 130 : 145)),
                   width: (Dimensions.get('window').width - 20),
                 }}
-              />}
+              />} */}
+          {this.getView()}
         </View>
         {renderIf(this.state.isLoading,
           <View style={styles.loading}>
