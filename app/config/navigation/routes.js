@@ -8,12 +8,34 @@ import { HomePage } from '../../screens/index';
 import { Questions } from '../../screens/index';
 import _ from 'lodash';
 import {data} from '../../data';
+import {Avatar} from '../../components/avatar';
 import {Service} from './../../services';
 
 export class HomePageMenuScreen extends React.Component {
-  static navigationOptions = {
-    title: 'TiE Pune 2018'
+  static navigationOptions = ({navigation}) => {
+    let renderAvatar = () => {
+      return (
+          <Avatar style={styles.avatar} rkType='small' img={require('../../assets/images/eternusThumbWhite.png')}/>
+      );
+    };
+
+    let renderTitle = () => {
+      return (
+          <View style={styles.header}>
+            <RkText style={{color: 'white'}}>TiE Pune 2018</RkText>
+          </View>
+      )
+    };
+
+    let rightButton = renderAvatar();
+    let title = renderTitle();
+    return (
+      {
+        headerTitle: title,
+        headerRight: rightButton
+      });
   };
+
   constructor(){
     super()
     this.state = {
@@ -177,5 +199,11 @@ const styles = RkStyleSheet.create(theme => ({
   },
   footerText: {
     fontSize: 12
-  }
+  },
+  avatar: {
+    marginRight: 16,
+  },
+  header: {
+    alignItems: 'center'
+  },
 }));
