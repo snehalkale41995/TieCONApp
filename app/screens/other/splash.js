@@ -1,9 +1,6 @@
 import React from 'react';
 import { StyleSheet, Image, View, Dimensions, StatusBar, AsyncStorage, Alert } from 'react-native';
-import {
-  RkText,
-  RkTheme
-} from 'react-native-ui-kitten'
+import { RkText, RkStyleSheet, RkButton, RkTheme } from 'react-native-ui-kitten'
 import {ProgressBar} from '../../components';
 import {
   KittenTheme
@@ -98,6 +95,19 @@ export class SplashScreen extends React.Component {
             <RkText rkType='logo' style={styles.appName}>Pune</RkText>
           </View>
         </View>
+        <View style={styles.footer}>
+          <View style={styles.textRow}>
+            <RkText rkType='primary3'>Sponsored by:</RkText>
+          </View>
+        </View>
+        <View style={styles.buttons}>
+          <RkButton style={styles.button} rkType='sponsorsSplashScreen'>
+            <Image style={styles.sponsorsImage} source={require('../../assets/images/eternusLogo.png')}/>;
+          </RkButton>
+          <RkButton style={styles.button} rkType='sponsorsSplashScreen'>
+            <Image style={styles.sponsorsImage} source={require('../../assets/images/bajajLogo.jpg')}/>;
+          </RkButton>
+        </View>
         <ProgressBar
           color={RkTheme.current.colors.accent}
           style={styles.progress}
@@ -107,11 +117,28 @@ export class SplashScreen extends React.Component {
   }
 }
 
-let styles = StyleSheet.create({
+let styles = RkStyleSheet.create(theme => ({
   container: {
     backgroundColor: KittenTheme.colors.screen.base,
     justifyContent: 'space-between',
-    flex: 1
+    flex: 1,
+  },
+  buttons: {
+    flexDirection: 'row',
+    marginBottom: scaleVertical(24),
+    marginHorizontal: 24,
+    justifyContent: 'space-around',
+  },
+  button: {
+    borderColor: theme.colors.border.solid
+  },
+  sponsorsImage: {
+    resizeMode: 'cover',
+    height: scaleVertical(430),
+  },
+  textRow: {
+    flexDirection: 'row',
+    justifyContent: 'center'
   },
   image: {
     resizeMode: 'cover',
@@ -131,4 +158,4 @@ let styles = StyleSheet.create({
     marginBottom: 35,
     backgroundColor: '#e5e5e5'
   }
-});
+}));

@@ -221,6 +221,15 @@ export let bootstrap = () => {
   });
 
   RkTheme.setType('RkButton', 'sponsors', {
+    height: scale(0),
+    width: scale(88),
+    borderRadius: scale(0),
+    borderColor: theme => theme.colors.border.accent,
+    borderWidth: 1,
+    backgroundColor: theme => theme.colors.control.background
+  });
+
+  RkTheme.setType('RkButton', 'sponsorsSplashScreen', {
     height: scale(40),
     width: scale(88),
     borderRadius: scale(0),
