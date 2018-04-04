@@ -47,11 +47,11 @@ export default class AskQuestion extends RkComponent {
 
     checkSessionTime = () => {
         let session = this.state.sessionDetails;
-        let today = Moment(new Date()).format("DD MMM,YYYY hh:mm A");
-        let sessionStart = Moment(session.startTime).format("DD MMM,YYYY hh:mm A");
-        let sessionEnd = Moment(session.endTime).format("DD MMM,YYYY hh:mm A");
+        let today = Moment(new Date()).format();
+        let sessionStart = Moment(session.startTime).format();
+        let sessionEnd = Moment(session.endTime).format();
         let buffered = Moment(sessionEnd).add(2, 'hours');
-        let bufferedEnd = Moment(buffered).format("DD MMM,YYYY hh:mm A");
+        let bufferedEnd = Moment(buffered).format();
 
         if (sessionStart <= today && today <= bufferedEnd) {
             this.setState({
@@ -134,7 +134,7 @@ export default class AskQuestion extends RkComponent {
         let questionList = this.state.questionData.map(question => {
             let pictureUrl
             let avatar;
-            
+
             if (question.questionSet.askedBy.pictureUrl != undefined) {
                 avatar = <Image style={this.styles.avatarImage} source={{ uri: question.questionSet.askedBy.pictureUrl }} />
             } else {
@@ -151,7 +151,7 @@ export default class AskQuestion extends RkComponent {
                         <View style={{ flexDirection: 'row', marginLeft: 3, marginTop: 5 }}>
 
                             <View style={{ flex: 1, flexDirection: 'column' }}>
-                              {avatar}
+                                {avatar}
                             </View>
                             <View style={{ flex: 8, flexDirection: 'column', marginLeft: 8 }}>
                                 <Text style={{ fontStyle: 'italic', fontSize: 12 }}>{fullName}</Text>
@@ -197,15 +197,18 @@ export default class AskQuestion extends RkComponent {
         })
         if (voterStatus == true) {
             return (
-                <Text style={{ fontSize: 25, width: 36, height: 36 }}><Icon name="md-thumbs-up" style={{ color: '#3872d1' }} /></Text>
+                //bl
+                <Text style={{ fontSize: 25, width: 36, height: 36 }} onPress={() => this.onUnikeQuestion(question)}><Icon name="md-thumbs-up" style={{ color: '#3872d1' }} /></Text>
             );
         }
         else {
             return (
+                //gr
                 <Text style={{ fontSize: 25, width: 36, height: 36 }} onPress={() => this.onLikeQuestion(question)} ><Icon name="md-thumbs-up" style={{ color: '#8c8e91' }} /></Text>
             )
         }
     }
+
     onLikeQuestion = (question) => {
         let thisRef = this;
         let questionId = question.questionId;
@@ -225,6 +228,28 @@ export default class AskQuestion extends RkComponent {
                 console.log("err" + err);
             })
     }
+
+    onUnikeQuestion = (question) => {
+        let thisRef = this;
+        let questionId = question.questionId;
+        let likedBy = question.questionSet.voters;
+        likedBy.pop(this.state.currentUid);
+        let voteCount = likedBy.length;
+        Service.getDocRef(questionTable)
+            .doc(questionId)
+            .update({
+                "voters": likedBy,
+                "voteCount": voteCount
+            })
+            .then(function (dofRef) {
+                thisRef.getQuestions();
+            })
+            .catch(function (err) {
+                console.log("err" + err);
+            })
+    }
+
+
     onTopQueSelect = () => {
         let order = 'voteCount';
         if (this.state.topQueView == false) {
