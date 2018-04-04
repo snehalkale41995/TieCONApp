@@ -81,15 +81,16 @@ export class QRScanner extends React.Component {
   _getSessions() {
     let thisRef = this;
     AsyncStorage.getItem("SESSIONS").then((sessions) => {
-      if (sessions !== null){
+      if (sessions != null){
         let sessionsObj = JSON.parse(sessions);
-        thisRef.setState({ sessions: sessionsObj, selectedSession: sessions[0].id });
-        thisRef._getCurrentSessionUsers(sessions[0].id);
+        thisRef.setState({ sessions: sessionsObj, selectedSession: sessionsObj[0].id });
+        thisRef._getCurrentSessionUsers(sessionsObj[0].id);
       } else {
         thisRef._getSesssionsFromServer();
       }
     })
     .catch(err => {
+      console.warn('Error', err);
       thisRef._getSesssionsFromServer();
     });
   }
@@ -105,12 +106,10 @@ export class QRScanner extends React.Component {
 
   handleFirstConnectivityChange = (connectionInfo) => {
     if(connectionInfo.type != 'none') {
-      if(!this.state.isLoading){
         this.setState({
           isLoading: true
         });
         this._getSessions();
-      }
     }
     this.setState({
       isOffline: connectionInfo.type === 'none',
