@@ -221,8 +221,8 @@ export let bootstrap = () => {
   });
 
   RkTheme.setType('RkButton', 'sponsors', {
-    height: scale(30),
-    width: scale(100),
+    height: scale(50),
+    width: scale(180),
     borderRadius: scale(0),
     borderColor: theme => theme.colors.border.accent,
     borderWidth: 0,
@@ -230,8 +230,8 @@ export let bootstrap = () => {
   });
 
   RkTheme.setType('RkButton', 'sponsorsSplashScreen', {
-    height: scale(40),
-    width: scale(100),
+    height: scale(50),
+    width: scale(180),
     borderRadius: scale(0),
     borderColor: theme => theme.colors.border.accent,
     borderWidth: 0,

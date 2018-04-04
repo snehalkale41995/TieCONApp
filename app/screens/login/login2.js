@@ -99,7 +99,7 @@ export class LoginV2 extends React.Component {
           </View>
           <View style={styles.footer}>
             <View style={styles.textRow}>
-              <RkText rkType='primary3'>Sponsored by:</RkText>
+              <RkText rkType='primary3'>Powered by:</RkText>
               {/* <RkButton rkType='clear' onPress={() => this.props.navigation.navigate('SignUp')}>
                 <RkText rkType='header6'> Sign up now </RkText>
               </RkButton> */}
@@ -109,9 +109,9 @@ export class LoginV2 extends React.Component {
             <RkButton style={styles.button} rkType='sponsors' style={{marginTop: 5}}>
               <Image style={styles.image} source={require('../../assets/images/eternusLogoNew.png')}/>;
             </RkButton>
-            <RkButton style={styles.button} rkType='sponsors' style={{marginTop: 5}}>
+            {/* <RkButton style={styles.button} rkType='sponsors' style={{marginTop: 5}}>
               <Image style={styles.image} source={require('../../assets/images/bajajLogo.jpg')}/>;
-            </RkButton>
+            </RkButton> */}
           </View>
         </View>
         {renderIf(this.state.isLoading, 
