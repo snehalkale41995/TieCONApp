@@ -81,7 +81,7 @@ getQuestionsData = (Uid) =>{
       return (
         <View style={styles.mainView}>
           <HomePage navigation={this.props.navigation} />
-          <RkText rkType="small" style={styles.footerText}>Powered by Eternus Solutions Pvt. Ltd. </RkText>
+          <View style={styles.footer}><RkText rkType="small" style={styles.footerText}>Powered by</RkText><RkText rkType="small" style={styles.companyName}> Eternus Solutions Pvt. Ltd. </RkText></View>
         </View>
       );
     }
@@ -197,8 +197,21 @@ const styles = RkStyleSheet.create(theme => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch', 
+    backgroundColor : '#E7060E'
+  },
   footerText: {
-    fontSize: 12
+    color : '#f0f0f0',
+    fontSize: 11,
+  },
+  companyName:{
+    color : '#ffffff',
+    fontSize: 12,
+    fontWeight: 'bold'
   },
   avatar: {
     marginRight: 16,
