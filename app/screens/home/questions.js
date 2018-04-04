@@ -1,11 +1,12 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
+import {ScrollView ,Platform} from 'react-native';
 import { Text, View, Icon, Container, Label } from 'native-base';
 import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Alert, AsyncStorage,ActivityIndicator } from 'react-native';
 import { RkComponent, RkTheme,RkStyleSheet, RkText, RkAvoidKeyboard, RkButton, RkCard, RkChoice, RkTextInput, RkChoiceGroup } from 'react-native-ui-kitten';
 import { NavigationActions } from 'react-navigation';
 import ReactMoment from 'react-moment';
-import firebase from '../../config/firebase'
+import firebase from '../../config/firebase';
+import {GradientButton} from '../../components/gradientButton';
 
 var firestoreDB = firebase.firestore();
 
@@ -40,35 +41,41 @@ export class Questions extends React.Component {
         });
     }
     onSubmitResponse = () => {
+        let blackResponse = false;
         this.state.queArray.forEach(fItem => {
-            if (fItem.Answer.size >= 1)
+            if (fItem.Answer.size >= 1){
                 fItem.Answer = Array.from(fItem.Answer);
-        })
-        this.setState({
-            responses: this.state.queArray,
-        })
-        let thisRef = this;
-        firestoreDB.collection('QuestionsHome').add({
-            Responses: thisRef.state.queArray,
-            ResponseBy: thisRef.state.userId,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .then(function (docRef) {
-            Alert.alert("Thanks for your response");
-            // thisRef.navigation.navigate('GridV2');
-            thisRef.navigation.navigate('HomeMenu');
-            
-        })
-        .catch(function (error) {
-            console.error("Error adding document: ", error);
+            }
+            if(fItem.Answer == "" || fItem.Answer.size == 0){
+                blackResponse = true;
+            }
         });
+        if(blackResponse == true){
+            Alert.alert("Please fill all the fields");
+        }
+        else{
+            let thisRef = this;
+            firestoreDB.collection('QuestionsHome').add({
+                Responses: thisRef.state.queArray,
+                ResponseBy: thisRef.state.userId,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(function (docRef) {
+                Alert.alert("Thanks for your response");
+                thisRef.navigation.navigate('HomeMenu');
+                
+            })
+            .catch(function (error) {
+                console.error("Error adding document: ", error);
+            });
+        }
     }
     onFormSelectValue = (questionsForm) => {
         let renderQuestions = this.state.questionsForm.map(Fitem => {
             this.state.queArray.push({ Question: Fitem.QuestionTitle, Answer: new Set() });
             return (
                     <View style={{ marginLeft: 10 ,marginBottom :10}}>
-                        <Label style={{ flexDirection: 'row', fontFamily: RkTheme.current.fonts.family.regular, alignItems: 'center', marginTop: 3, marginBottom: 2, fontSize: 20 }}>Que.{Fitem.QueId} :{Fitem.QuestionTitle}</Label>
+                        <Label style={{ flexDirection: 'row', fontFamily: RkTheme.current.fonts.family.regular, alignItems: 'center', marginTop: 3, marginBottom: 2, fontSize: 14 }}>{Fitem.QuestionTitle}</Label>
                         {this.renderAnswerField(Fitem)}
                     </View>
             )
@@ -80,7 +87,7 @@ export class Questions extends React.Component {
         if (item.AnswerFeild == "Input Text") {
            answerInput :
             return (
-                <RkTextInput type="text" placeholder="Answer Title" name="Answer" onChangeText={(text) => this.onTextChange(text, item.QueId)} id={item.QueId} />
+                <RkTextInput type="text" placeholder="Answer" name="Answer" onChangeText={(text) => this.onTextChange(text, item.QueId)} id={item.QueId} />
             )
         } else if (item.AnswerFeild == "Mulitple Choice") {
             answerInput:
@@ -93,7 +100,7 @@ export class Questions extends React.Component {
         else if (item.AnswerFeild == "Check Box") {
             answerInput:
             return (
-                <RkChoiceGroup style={{ marginTop: 3, marginBottom: 3 }}>
+                <RkChoiceGroup style={{ marginTop: 0, marginBottom: 3 }}>
                     {this.onRenderCheckBox(item.value, item.QueId)}
                 </RkChoiceGroup >
             )
@@ -106,10 +113,10 @@ export class Questions extends React.Component {
                 <TouchableOpacity choiceTrigger >
                     <View style={{ flexDirection: 'row',marginBottom: 3,marginRight :15 ,alignItems: 'center' }}>
                         <RkChoice rkType='radio'
-                            style={{ backgroundColor: '#adafb2' }}
+                            style = {{ borderWidth : 2 , borderRadius : 70 ,borderColor : '#c2c4c6'}}
                             id={Qid} value={fItem.Value}
                             />
-                        <Text>{fItem.Value}</Text>
+                        <Text style={{fontSize: 13 ,marginLeft : 5}}>{fItem.Value}</Text>
                     </View>
                 </TouchableOpacity>
             )
@@ -120,10 +127,10 @@ export class Questions extends React.Component {
         let CheckBox1 = value.map(fItem => {
             return (
                 <View style={{ flexDirection: 'row', marginBottom: 3,marginRight :15 ,marginTop: 1, alignItems: 'center' }}>
-                    <RkChoice rkType='clear'
+                    <RkChoice rkType='clear' style = {{  borderWidth : 2 ,borderColor : '#c2c4c6' }}
                         id={Qid} value={fItem.Value} 
                         onChange={(id) => {this.onCheckBoxChange(id ,fItem.Value,Qid)}} />
-                    <Text>{fItem.Value}</Text>
+                    <Text style={{fontSize: 13 ,marginLeft : 5}}>{fItem.Value}</Text>
                 </View>
             )
         })
@@ -147,18 +154,20 @@ export class Questions extends React.Component {
     render() {
         if (this.state.questionsForm.length == 0 ){
             return (
-                <ActivityIndicator size="small" color="#00ff00" />
-                // <Text style={{fontSize : 20 ,alignSelf: 'center' ,marginTop : 200}} ><Icon name="ios-sync"/>  Loading... </Text>
+                <View style={[styles.loading]} >
+                <ActivityIndicator size='large' />
+            </View>
             );
         }
         else{
             return (
-                <Container>
+                <Container style={[styles.screen]}> 
                     <ScrollView>
-                    {this.onFormSelectValue(this.state.questionsForm)}
-                    <RkButton rkType='success'
-                        style={{ alignSelf: 'center', width: 340 ,marginTop: 3, marginBottom : 3 }}
-                        onPress={() => this.onSubmitResponse()}>SUBMIT</RkButton>
+                        {this.onFormSelectValue(this.state.questionsForm)}
+                        <GradientButton colors={['#f20505', '#f55050']} text='Submit'
+                            style={[styles.Gradbtn]}
+                            onPress={() => this.onSubmitResponse()}
+                        />
                     </ScrollView>
                 </Container>
             );
@@ -167,5 +176,29 @@ export class Questions extends React.Component {
 }
 
 let styles = RkStyleSheet.create(theme => ({
-
+    screen: {
+        padding: 10,
+        flex: 1,
+        backgroundColor: theme.colors.screen.base
+      },
+      Card: {
+        width : Platform.OS === 'ios' ? 320 : 350, 
+        alignSelf:'center'
+      },
+    loading: {
+        marginTop: 250,
+        left: 0,
+        opacity: 0.5,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
+      Gradbtn :{
+          alignSelf: 'center',
+          width: Platform.OS === 'ios' ? 280 : 340,
+          marginTop: 3,
+          marginBottom: 3
+      }
 }));

@@ -171,6 +171,7 @@ export default class EventCal extends Component {
             rowHasChanged={this.rowHasChanged}
             minDate={__startDate}
             maxDate={__endDate}
+            firstDay={3}
             monthFormat={'yyyy'}
             theme={{
                 backgroundColor: '#ffffff',

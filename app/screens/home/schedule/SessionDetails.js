@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform,Text, Button, View, TouchableOpacity, StyleSheet, AsyncStorage, ScrollView } from 'react-native';
+import { Platform,Text, Button, View, TouchableOpacity, StyleSheet, AsyncStorage, ScrollView,ActivityIndicator } from 'react-native';
 import { RkButton, RkStyleSheet, RkText, RkCard } from 'react-native-ui-kitten';
 import { Icon, Container, Tabs, Tab, TabHeading } from 'native-base';
 import { NavigationActions, TabNavigator, TabView } from 'react-navigation';
@@ -205,47 +205,53 @@ export class SessionDetails extends Component {
       ): (<View></View>);
       
     const surveyButton = this.getSurveyAccess();
-    return (
-      <ScrollView style={styles.root}>
-        <RkCard>
+    if(this.state.showPanelButton == true || this.state.showFeedbackButton == true){
+      return (
+        <ScrollView style={styles.root}>
+          <RkCard>
+            <View style={styles.section}>
+              <View style={[styles.row, styles.heading]}>
+                <RkText style={{ fontSize: 20 }} rkType='header6 primary'>{this.state.sessionName}</RkText>
+              </View>
+            </View>
 
-          <View style={styles.section}>
-            <View style={[styles.row, styles.heading]}>
-              <RkText style={{ fontSize: 20 }} rkType='header6 primary'>{this.state.sessionName}</RkText>
+            <View style={styles.subSection}>
+              <View style={[styles.row, styles.heading]}>
+                <Text style={{flexDirection : 'column',width: 25, fontSize: 12, marginTop:1, color: '#5d5e5f' }}><Icon name="md-time" style={{fontSize: 18, color: '#5d5e5f'}}/></Text>
+                <Text style={{flexDirection : 'column'}} rkType='header6' style={{color: '#5d5e5f'}}> {this.getDuration()} </Text> 
+              </View>
+              <View style={[styles.row, styles.heading]}>
+                <RkText style={{flexDirection : 'column',width: 25, fontSize: 12, marginTop:10 }}><Icon name="md-pin" style={{fontSize: 18, marginTop:5, color: '#5d5e5f'}}/></RkText>
+                <Text style={{flexDirection : 'column'}} rkType='header6' style={{marginTop:10, marginLeft:3, color: '#5d5e5f'}}>{this.state.sessionVenue}</Text>
+              </View>
+              <View>
+                {this.attendRequestStatus()}
+              </View>
             </View>
+            <View style={styles.descSection}>
+              <View style={[styles.row, styles.heading]}>
+                <RkText rkType='header6'>Summary: </RkText>
+            </View>
+              <View style={[styles.row]}>
+                <Text style={[styles.text]}>{this.state.description}</Text>
+              </View>
+            </View>
+            {displaySpeakers}
+            <View style={[styles.surveButton]}>
+            {surveyButton}
           </View>
-
-          <View style={styles.subSection}>
-            <View style={[styles.row, styles.heading]} >
-              <Text style={{flexDirection : 'column',width: 25, fontSize: 12, marginTop:1, color: '#5d5e5f' }}><Icon name="md-time" style={{fontSize: 18, color: '#5d5e5f'}}/></Text>
-             <Text style={{flexDirection : 'column'}} rkType='header6' style={{color: '#5d5e5f'}}> {this.getDuration()} </Text>
-            </View>
-            <View style={[styles.row, styles.heading]}>
-             
-              <RkText style={{flexDirection : 'column',width: 25, fontSize: 12, marginTop:10 }}><Icon name="md-pin" style={{fontSize: 18, marginTop:5, color: '#5d5e5f'}}/></RkText>
-              <Text style={{flexDirection : 'column'}} rkType='header6' style={{marginTop:10, marginLeft:3, color: '#5d5e5f'}}>{this.state.sessionVenue}</Text>
-           
-            </View>
-            <View>
-              {this.attendRequestStatus()}
-            </View>
-          </View>
-
-          <View style={styles.descSection}>
-            <View style={[styles.row, styles.heading]}>
-              <RkText rkType='header6'>Summary: </RkText>
-            </View>
-            <View style={[styles.row]}>
-              <Text style={[styles.text]}>{this.state.description}</Text>
-            </View>
-          </View>
-          {displaySpeakers}
-          <View style={[styles.surveButton]}>
-          {surveyButton}
+          </RkCard>
+        </ScrollView>
+      )
+    }
+    else{
+      return (
+        <View style={[styles.loading]} >
+            <ActivityIndicator size='large' />
         </View>
-        </RkCard>
-      </ScrollView>
-    )
+    );
+    }
+
   }
 }
 
@@ -321,16 +327,20 @@ let styles = RkStyleSheet.create(theme => ({
     borderRadius: 20,
     marginRight: 5
   },
-  tileIcons: {
-    paddingLeft: 4,
-    paddingTop: 4,
-    fontSize: 16,
-    color: '#C9C9C9'
-  },
   attendBtn : {
     flexDirection: 'column',
     alignItems : 'flex-end',
     marginRight : 5,
     marginTop : -10
-  }
+  },
+  loading: {
+    marginTop: 250,
+    left: 0,
+    opacity: 0.5,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
 }));
