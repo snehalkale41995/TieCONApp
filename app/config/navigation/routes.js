@@ -23,7 +23,8 @@ export class HomePageMenuScreen extends React.Component {
     let renderTitle = () => {
       return (
           <View style={styles.header}>
-            <RkText style={{color: 'white'}}>TiE Pune 2018</RkText>
+            {/* <RkText style={{color: 'white'}}>TiE Pune 2018</RkText> */}
+            <Image style={styles.TieLOGO} source={require('../../assets/images/TiECon-Pune-2018-logo.png')}/>
           </View>
       )
     };
@@ -224,4 +225,8 @@ const styles = RkStyleSheet.create(theme => ({
   header: {
     alignItems: 'center'
   },
+  TieLOGO: {
+    height:40,
+    width: 90,
+  }
 }));
