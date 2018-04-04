@@ -26,7 +26,8 @@ export class NavBar extends React.Component {
       : undefined;
 
     return headerRight && (
-        <View style={[{width}, styles.right]}>{headerRight}</View>
+        // <View style={[{width}, styles.right, styles.rightLogo]}>{headerRight}</View>
+        <View style={[styles.right, styles.rightLogo]}>{headerRight}</View>
       );
   }
 
@@ -131,7 +132,6 @@ let styles = RkStyleSheet.create(theme => ({
     top: 0,
     bottom: 0,
     justifyContent: 'center',
-    width:50,
   },
   title: {
     ...StyleSheet.absoluteFillObject,
@@ -140,5 +140,8 @@ let styles = RkStyleSheet.create(theme => ({
   },
   menu: {
     width: 40
+  },
+  rightLogo:{
+    borderRadius: 4,    
   }
 }));

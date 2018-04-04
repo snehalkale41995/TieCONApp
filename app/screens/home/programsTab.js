@@ -16,15 +16,15 @@ export class ProgramsTab extends React.Component {
       <Tabs style={{ elevation: 3 }} style={styles.tabContent}>
         <Tab
           heading={
-            <TabHeading  style={{backgroundColor : '#ed1b24' }} ><Icon style={[styles.textColor]} name="calendar"/><Text  style={[styles.textColor]} >Schedule</Text></TabHeading>
-          }
+            <TabHeading  style={{backgroundColor : '#fff'}} ><Icon style={[styles.textColor]} name="calendar"/><Text  style={[styles.textColor]} >Schedule</Text></TabHeading>
+          } style={styles.activeBorder}
         >        
           <EventCal navigation={this.props.navigation}/>
         </Tab>
         <Tab
           heading={
-            <TabHeading style={{backgroundColor : '#ed1b24' }}><Icon  style={[styles.textColor]}  name="ios-link"/><Text  style={[styles.textColor]} >My Agenda</Text></TabHeading>
-          }
+            <TabHeading style={{backgroundColor : '#fff'}}><Icon  style={[styles.textColor]}  name="ios-link"/><Text  style={[styles.textColor]} >My Agenda</Text></TabHeading>
+          } style={styles.activeBorder}
         >
           <MyAgenda navigation={this.props.navigation} />
         </Tab>
@@ -39,9 +39,13 @@ let styles = RkStyleSheet.create(theme => ({
     backgroundColor: theme.colors.screen.base
   },
   tabContent: {
-    backgroundColor: 'red',
+    backgroundColor: 'red',   
   },
   textColor : {
-    color: Platform.OS === 'ios' ? 'white' :  'white'
+    color: Platform.OS === 'ios' ? '#ed1b24' :  '#ed1b24',
+    color: '#ed1b24'
+  },
+  activeBorder:{
+    borderColor: '#ed1b24',
   }
 }));

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator} from 'react-native';
+import { Image, ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator} from 'react-native';
 import {RkText, RkStyleSheet} from 'react-native-ui-kitten';
 
 import {FontIcons} from '../../assets/icons';
@@ -15,7 +15,8 @@ export class HomePageMenuScreen extends React.Component {
   static navigationOptions = ({navigation}) => {
     let renderAvatar = () => {
       return (
-          <Avatar style={styles.avatar} rkType='small' img={require('../../assets/images/eternusThumbWhite.png')}/>
+          // <Avatar style={styles.avatar} rkType='small' img={require('../../assets/images/eternusThumbWhite.png')}/>
+          <Image style={styles.avatar} source={require('../../assets/images/eternusThumbWhite.png')}/>
       );
     };
 
@@ -214,7 +215,11 @@ const styles = RkStyleSheet.create(theme => ({
     fontWeight: 'bold'
   },
   avatar: {
-    marginRight: 16,
+    marginRight: 12,
+    height:30,
+    width:35,
+    borderRadius:4,
+
   },
   header: {
     alignItems: 'center'
