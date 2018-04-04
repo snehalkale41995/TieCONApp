@@ -515,12 +515,14 @@ export let bootstrap = () => {
   RkTheme.setType('RkTabView', 'dark', {
     backgroundColor:'#778f9b',
     color:'white',
-    borderColor:'#4a636d'
+    /*borderColor:'#4a636d'*/
+    borderColor:'#ed1b24'
   });
   
     RkTheme.setType('RkTabView', 'darkSelected', {
     backgroundColor:'#4a636d',
-    borderColor:'#4a636d'
+    /*borderColor:'#4a636d'*/
+    borderColor:'#ed1b24'
   });
 
   /*

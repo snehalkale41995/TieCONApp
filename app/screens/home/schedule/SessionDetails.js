@@ -205,7 +205,6 @@ export class SessionDetails extends Component {
       ): (<View></View>);
       
     const surveyButton = this.getSurveyAccess();
-
     if(this.state.showPanelButton == true || this.state.showFeedbackButton == true){
       return (
         <ScrollView style={styles.root}>
@@ -215,27 +214,24 @@ export class SessionDetails extends Component {
                 <RkText style={{ fontSize: 20 }} rkType='header6 primary'>{this.state.sessionName}</RkText>
               </View>
             </View>
-  
+
             <View style={styles.subSection}>
               <View style={[styles.row, styles.heading]}>
-                <Text style={{flexDirection : 'column',width: 25, fontSize: 12 }}><Icon name="md-time" /></Text>
-               <Text style={{flexDirection : 'column'}} rkType='header6' > {this.getDuration()} </Text>
+                <Text style={{flexDirection : 'column',width: 25, fontSize: 12, marginTop:1, color: '#5d5e5f' }}><Icon name="md-time" style={{fontSize: 18, color: '#5d5e5f'}}/></Text>
+                <Text style={{flexDirection : 'column'}} rkType='header6' style={{color: '#5d5e5f'}}> {this.getDuration()} </Text> 
               </View>
               <View style={[styles.row, styles.heading]}>
-               
-                <RkText style={{flexDirection : 'column',width: 25, fontSize: 12 }}><Icon name="md-pin" /></RkText>
-                <Text style={{flexDirection : 'column'}} rkType='header6'>{this.state.sessionVenue}</Text>
-             
+                <RkText style={{flexDirection : 'column',width: 25, fontSize: 12, marginTop:10 }}><Icon name="md-pin" style={{fontSize: 18, marginTop:5, color: '#5d5e5f'}}/></RkText>
+                <Text style={{flexDirection : 'column'}} rkType='header6' style={{marginTop:10, marginLeft:3, color: '#5d5e5f'}}>{this.state.sessionVenue}</Text>
               </View>
               <View>
                 {this.attendRequestStatus()}
               </View>
             </View>
-  
             <View style={styles.descSection}>
               <View style={[styles.row, styles.heading]}>
                 <RkText rkType='header6'>Summary: </RkText>
-              </View>
+            </View>
               <View style={[styles.row]}>
                 <Text style={[styles.text]}>{this.state.description}</Text>
               </View>

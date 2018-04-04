@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator} from 'react-native';
+import { Image, ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator} from 'react-native';
 import {RkText, RkStyleSheet} from 'react-native-ui-kitten';
 
 import {FontIcons} from '../../assets/icons';
@@ -15,14 +15,16 @@ export class HomePageMenuScreen extends React.Component {
   static navigationOptions = ({navigation}) => {
     let renderAvatar = () => {
       return (
-          <Avatar style={styles.avatar} rkType='small' img={require('../../assets/images/eternusThumbWhite.png')}/>
+          // <Avatar style={styles.avatar} rkType='small' img={require('../../assets/images/eternusThumbWhite.png')}/>
+          <Image style={styles.avatar} source={require('../../assets/images/eternusThumbWhite.png')}/>
       );
     };
 
     let renderTitle = () => {
       return (
           <View style={styles.header}>
-            <RkText style={{color: 'white'}}>TiE Pune 2018</RkText>
+            {/* <RkText style={{color: 'white'}}>TiE Pune 2018</RkText> */}
+            <Image style={styles.TieLOGO} source={require('../../assets/images/TiECon-Pune-2018-logo.png')}/>
           </View>
       )
     };
@@ -214,9 +216,17 @@ const styles = RkStyleSheet.create(theme => ({
     fontWeight: 'bold'
   },
   avatar: {
-    marginRight: 16,
+    marginRight: 12,
+    height:30,
+    width:35,
+    borderRadius:4,
+
   },
   header: {
     alignItems: 'center'
   },
+  TieLOGO: {
+    height:40,
+    width: 90,
+  }
 }));

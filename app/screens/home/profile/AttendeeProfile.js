@@ -42,10 +42,10 @@ export class AttendeeProfile extends RkComponent {
                   <RkText style={{fontSize : 15}} rkType='header6 primary'>{this.state.speaker.fullName}</RkText>
                 </View>
                 <View style={[styles.row]}>
-                  <RkText style={{fontSize : 15}} >About : </RkText>
+                  <RkText style={{fontSize : 18}} >About : </RkText>
                 </View>
                 <View style={[styles.row]}>
-                  <Text style={{fontSize : 13}}>
+                  <Text style={{fontSize : 15}}>
                     {this.state.speaker.briefInfo}
                   </Text>
                 </View>
