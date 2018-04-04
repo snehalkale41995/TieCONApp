@@ -221,7 +221,7 @@ export let bootstrap = () => {
   });
 
   RkTheme.setType('RkButton', 'sponsors', {
-    height: scale(0),
+    height: scale(40),
     width: scale(88),
     borderRadius: scale(0),
     borderColor: theme => theme.colors.border.accent,
