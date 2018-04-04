@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform,Text, Button, View, TouchableOpacity, StyleSheet, AsyncStorage, ScrollView,ActivityIndicator } from 'react-native';
+import { Platform,Text, Button, View, TouchableOpacity, StyleSheet, AsyncStorage, ScrollView,ActivityIndicator,Alert } from 'react-native';
 import { RkButton, RkStyleSheet, RkText, RkCard } from 'react-native-ui-kitten';
 import { Icon, Container, Tabs, Tab, TabHeading } from 'native-base';
 import { NavigationActions, TabNavigator, TabView } from 'react-navigation';
@@ -130,17 +130,25 @@ export class SessionDetails extends Component {
     if (this.state.regStatus) {
       return (
         <View style = {[styles.attendBtn]}>
-          <RkButton rkType='outline small'
-            contentStyle={getStatusStyle(this.state.regStatus)}>{this.state.regStatus}</RkButton>
+          <RkButton rkType='outline'
+            onPress={this.onCancelRequest}
+            style ={{borderRadius : 30 , width : 150 ,height :30}}
+            contentStyle={{ fontSize: 12  }}
+          >
+            {this.state.regStatus}
+            </RkButton>
         </View>
       )
-    } else {
+    }
+     else {
       return (
         <View style = {[styles.attendBtn]} >
           <RkButton
-            rkType='outline small'
+            rkType='outline'
+            style ={{borderRadius : 30 , width : 150 ,height :30}}
+            contentStyle={{ fontSize: 12  }}
             onPress={this.onAttendRequest}>
-            Attend
+            Add to My Agenda
             </RkButton>
         </View>
       );
@@ -152,7 +160,7 @@ export class SessionDetails extends Component {
       sessionId: this.state.sessionDetails.key,
       session: this.state.sessionDetails,
       registeredAt: new Date(),
-      status: this.state.sessionDetails.isRegrequired ? "Pending" : "Going",
+      status: this.state.sessionDetails.isRegrequired ? "Pending" : "Remove From Agenda",
       attendee: {},
       attendeeId: attendeeId
     }
@@ -160,12 +168,21 @@ export class SessionDetails extends Component {
       this.setState({
         regId: req.id,
         regStatus: attendRequest.status,
-
       });
     }).catch((error) => {
       console.warn(error);
     });
   }
+  onCancelRequest = (event) => {
+    Service.getDocRef("RegistrationResponse").doc(this.state.regId).delete().then((req) => {
+        this.setState({
+          regStatus: "",
+          regId: ""
+        })
+    }).catch((error) => {
+        console.warn(error);
+    });
+}
 
   fetchRegistrationStatus = () => {
     const baseObj = this;
@@ -183,6 +200,12 @@ export class SessionDetails extends Component {
                 regId: doc.id
               })
             });
+          }
+          else{
+            baseObj.setState({
+              regStatus: "",
+              regId: ""
+            })
           }
         });
     } else {
@@ -330,7 +353,7 @@ let styles = RkStyleSheet.create(theme => ({
   attendBtn : {
     flexDirection: 'column',
     alignItems : 'flex-end',
-    marginRight : 5,
+    marginRight : 10,
     marginTop : -10
   },
   loading: {
