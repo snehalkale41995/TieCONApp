@@ -227,6 +227,6 @@ const styles = RkStyleSheet.create(theme => ({
   },
   TieLOGO: {
     height:40,
-    width: 90,
+    width: 85,
   }
 }));
