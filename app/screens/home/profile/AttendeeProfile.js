@@ -43,8 +43,8 @@ export class AttendeeProfile extends RkComponent {
                   <RkText style={{fontSize : 15}} rkType="small">{this.state.speaker.briefInfo}</RkText>
                 </View>
                 <View style={[styles.row]}>
-                  <Text style={{fontSize : 15}}>
-                    {this.state.speaker.briefInfo}
+                  <Text style={{fontSize : 15, textAlign: 'justify'}}>
+                    {this.state.speaker.info}
                   </Text>
                 </View>
               </View>
