@@ -9,7 +9,7 @@
       "icon": "./icon_rounded.png"
     },
     "androidStatusBar": {
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ed1b24"
     },
     "ios": {
       "bundleIdentifier": "com.eternus.tieconpuneevents",
@@ -20,6 +20,11 @@
       "package": "com.eternus.tieconpuneevents",
       "versionCode": 16
     },
-    "version": "1.0.1"
+    "version": "1.0.1",
+    "primaryColor": "#ed1b24",
+    "notification": {
+      "icon": "./notificationIcon.png",
+      "color": "#ed1b24"
+    }
   }
 }
