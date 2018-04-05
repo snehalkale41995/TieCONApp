@@ -14,7 +14,7 @@ var firestoreDB = firebase.firestore();
 let speakerTile = [];
 export class Speakers extends RkComponent {
     static navigationOptions = {
-        title: 'Session Details'.toUpperCase()
+        title: 'Speakers'.toUpperCase()
       };
       constructor(props) {
         super(props);

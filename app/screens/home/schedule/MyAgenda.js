@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View} from 'native-base';
-import {FlatList, SectionList, StyleSheet} from 'react-native';
+import {FlatList, SectionList, StyleSheet,ActivityIndicator} from 'react-native';
 import ScheduleTile from './Schedule-tile';
 import Moment from 'moment';
 
@@ -18,7 +18,8 @@ export default class MyAgenda extends React.Component {
         super(props);
         this.state = Object.assign(props, {
             sessionList : [],
-            user: {}
+            user: {},
+            isLoaded : false
         });
     }
     /**
@@ -63,7 +64,8 @@ export default class MyAgenda extends React.Component {
                 newSessions = [...sessions];
                 this.setState((prevState) => ({
                     ...prevState,
-                    sessionList: newSessions
+                    sessionList: newSessions,
+                    isLoaded : true
                 }));
             });
         });
@@ -84,11 +86,20 @@ export default class MyAgenda extends React.Component {
         }else{
             sessionList = (<Text>No session added to agenda yet</Text>)
         }
-        return (
-            <View style={styles.listContainer}>
-                {sessionList}
-            </View >
-        );
+        if(!this.state.isLoaded){
+            return (
+                <View style={styles.loading} >
+                    <ActivityIndicator size='large' />
+                </View>
+            );   
+        }
+        else{
+            return (
+                <View style={styles.listContainer}>
+                    {sessionList}
+                </View >
+            );
+        } 
     }
 }
 
@@ -97,5 +108,15 @@ const styles = StyleSheet.create({
     listContainer :{
         flex: 1,
         flexDirection: 'column'
-    }
+    },
+    loading: {
+        marginTop: 200,
+        left: 0,
+        opacity: 0.5,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
 });
