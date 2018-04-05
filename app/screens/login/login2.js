@@ -5,7 +5,6 @@ import {FontAwesome} from '../../assets/icons';
 import {GradientButton} from '../../components/gradientButton';
 import {RkTheme} from 'react-native-ui-kitten';
 import {scale, scaleModerate, scaleVertical} from '../../utils/scale';
-import { onSignIn } from "../../auth";
 import firebase from '../../config/firebase';
 
 function renderIf(condition, content) {
@@ -78,7 +77,7 @@ export class LoginV2 extends React.Component {
     let renderIcon = () => {
       if (RkTheme.current.name === 'light')
         return <Image style={styles.image} source={require('../../assets/images/logo.png')}/>;
-      return <Image style={styles.image} source={require('../../assets/images/logoDark.png')}/>
+      return <Image style={styles.image} source={require('../../assets/images/logo.png')}/>
     };
 
     return (

@@ -18,7 +18,7 @@ export class Walkthrough1 extends React.Component {
   render() {
     let image = RkTheme.current.name === 'light'
       ? <Image source={require('../../assets/images/kittenImage.png')}/>
-      : <Image source={require('../../assets/images/kittenImageDark.png')}/>;
+      : <Image source={require('../../assets/images/kittenImage.png')}/>;
 
     return (
       <View style={styles.screen}>

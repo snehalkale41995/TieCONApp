@@ -41,7 +41,7 @@ export class Themes extends React.Component {
         </View>
         <View style={styles.container}>
           <RkText>Dark Theme</RkText>
-          <Image style={styles.image} source={require('../../assets/images/darkThemeImage.png')}/>
+          <Image style={styles.image} source={require('../../assets/images/lightThemeImage.png')}/>
           <GradientButton
             text='APPLY'
             onPress={() => {

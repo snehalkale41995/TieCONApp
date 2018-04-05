@@ -91,8 +91,8 @@ export class SplashScreen extends React.Component {
         <View>
           <Image style={[styles.image, {width}]} source={require('../../assets/images/splashBack.png')}/>
           <View style={[styles.text, styles.tieTitle]}>
-            <RkText rkType='light' style={styles.hero}>TiE</RkText>
-            <RkText rkType='logo' style={styles.appName}>Pune</RkText>
+            {/* <RkText rkType='light' style={styles.hero}>TiE</RkText> */}
+            <RkText rkType='logo' style={styles.appName}>Events</RkText>
           </View>
         </View>
         <View style={styles.footer}>
