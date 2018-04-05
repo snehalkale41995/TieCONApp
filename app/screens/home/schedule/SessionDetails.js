@@ -71,14 +71,14 @@ export class SessionDetails extends Component {
   getSurveyAccess = () => {
     if (this.state.showPanelButton == true && this.state.showFeedbackButton == true) {
       return (
-        <View style={{ alignItems: 'flex-end' ,flexDirection: 'row', width:Platform.OS === 'ios' ? 320 : 380, marginBottom: 3 }}>
-          <View style={{ width: Platform.OS === 'ios' ? 162 : 182 }} >
-            <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{width: Platform.OS === 'ios' ? 142 :160, marginLeft: 2, marginRight: 5 }}
+        <View style={{ width:Platform.OS === 'ios' ? 320 : 380 ,alignItems:'center' , flexDirection : 'row'}}>
+          <View style={{ width: Platform.OS === 'ios' ? 160 : 180 ,alignItems:'center'}} >
+            <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{width: Platform.OS === 'ios' ? 150 :170 , alignSelf : 'center'}}
               onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
             />
           </View>
-          <View style={{  width: Platform.OS === 'ios' ? 162 : 182 }} >
-            <GradientButton colors={['#f20505', '#f55050']} text='Feedback' style={{  width: Platform.OS === 'ios' ? 142 :160, marginLeft: 5, marginRight: 2 }}
+          <View style={{  width: Platform.OS === 'ios' ? 160 : 180 ,alignItems:'center'}} >
+            <GradientButton colors={['#f20505', '#f55050']} text='Feedback' style={{  width: Platform.OS === 'ios' ? 150 :170 ,alignSelf : 'center'}}
               onPress={() => this.props.navigation.navigate('Survey', { sessionDetails: this.state.sessionDetails })}
             />
           </View>
@@ -87,8 +87,8 @@ export class SessionDetails extends Component {
     }
     else if (this.state.showPanelButton == true) {
       return (
-        <View style={{ width: 360 }} >
-          <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{ flexDirection: 'row', width: 340, marginLeft: 5, marginRight: 5 }}
+        <View style={{width:Platform.OS === 'ios' ? 320 : 360, alignItems : 'center' }} >
+          <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{ width: Platform.OS === 'ios' ? 300 : 340 , alignSelf : 'center'}}
             onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
           />
         </View>
@@ -135,8 +135,8 @@ export class SessionDetails extends Component {
         <View style = {[styles.attendBtn]}>
           <RkButton rkType='outline'
             onPress={this.onCancelRequest}
-            style ={{borderRadius : 30 , width : 150 ,height :30}}
-            contentStyle={{ fontSize: 12  }}
+            style ={{borderColor : '#f20505',borderRadius : 30 , width : 150 ,height :30}}
+            contentStyle={{ fontSize: 12 , color: '#f20505' }}
           >
             {this.state.regStatus}
             </RkButton>
@@ -148,8 +148,8 @@ export class SessionDetails extends Component {
         <View style = {[styles.attendBtn]} >
           <RkButton
             rkType='outline'
-            style ={{borderRadius : 30 , width : 150 ,height :30}}
-            contentStyle={{ fontSize: 12  }}
+            style ={{borderColor : '#f20505', borderRadius : 30 , width : 150 ,height :30}}
+            contentStyle={{ fontSize: 12 , color :'#f20505' }}
             onPress={this.onAttendRequest}>
             Add to My Agenda
             </RkButton>
@@ -233,6 +233,7 @@ export class SessionDetails extends Component {
     const surveyButton = this.getSurveyAccess();
     if(this.state.showPanelButton == true || this.state.showFeedbackButton == true){
       return (
+        <Container style={styles.root}>
         <ScrollView style={styles.root}>
           <RkCard>
             <View style={styles.section}>
@@ -262,18 +263,21 @@ export class SessionDetails extends Component {
               </View>
             </View>
             {displaySpeakers}
-            <View style={[styles.surveButton]}>
-            {surveyButton}
-          </View>
           </RkCard>
         </ScrollView>
+        <View style={[styles.surveButton]}>
+        {surveyButton}
+      </View>
+      </Container>
       )
     }
     else{
       return (
+        <Container style={[ styles.root]}>
         <View style={[styles.loading]} >
             <ActivityIndicator size='large' />
         </View>
+        </Container>
     );
     }
 
@@ -320,13 +324,12 @@ let styles = RkStyleSheet.create(theme => ({
     fontSize: 15,
   },
   surveButton: {
-    alignItems : 'center',
+    alignItems: 'center',
     flexDirection: 'column',
-    width:Platform.OS === 'ios' ? 320 : 380,
-    marginTop: 8,
+    width: Platform.OS === 'ios' ? 320 : 380,
+    marginTop: 3,
     marginBottom: 3,
-    marginLeft: 5,
-    marginRight: 5
+    alignSelf : 'center'
   },
   speakerView: {
     marginTop: 5,
@@ -334,7 +337,7 @@ let styles = RkStyleSheet.create(theme => ({
   },
   speaker: {
     flexDirection: 'column',
-    width: Platform.OS === 'ios' ? 200 : 225,
+    width: Platform.OS === 'ios' ? 225 : 250,
   },
   attendeeScreen: {
     flexDirection: 'column',
