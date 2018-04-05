@@ -90,14 +90,29 @@ export class QRScanner extends React.Component {
       }
     })
     .catch(err => {
-      console.warn('Error', err);
       thisRef._getSesssionsFromServer();
     });
   }
 
   componentDidMount() {
     this._requestCameraPermission();
-    let thisRef = this;
+    if(Platform.OS !== 'ios'){
+      NetInfo.isConnected.fetch().then(isConnected => {
+        if(isConnected) {
+          this.setState({
+            isLoading: true
+          });
+          this._getSessions();  
+        } else {
+          this.setState({
+            isLoading: false
+          });
+        }
+        this.setState({
+          isOffline: !isConnected
+        });
+      });  
+    }
     NetInfo.addEventListener(
       'connectionChange',
       this.handleFirstConnectivityChange
@@ -110,6 +125,10 @@ export class QRScanner extends React.Component {
           isLoading: true
         });
         this._getSessions();
+    } else {
+      this.setState({
+        isLoading: false
+      });
     }
     this.setState({
       isOffline: connectionInfo.type === 'none',
