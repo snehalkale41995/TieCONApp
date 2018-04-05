@@ -125,9 +125,9 @@ export const MainRoutes = [
         children: []
       },
       {
-        id: 'AttendeeProfile',
-        title: 'Profile',
-        screen: Screens.AttendeeProfile,
+        id: 'SpeakerDetailsTabs',
+        title: 'Speaker DetailsTabs',
+        screen: Screens.SpeakerDetailsTabs,
         children: []
       },
       {
