@@ -302,7 +302,7 @@ export class QRScanner extends React.Component {
         if(this.state.isOffline) {
           return (
             <RkText>
-              The Iternet connection appears to be offline.
+              The Internet connection appears to be offline.
             </RkText>
           );
         } else {
