@@ -64,7 +64,6 @@ export default class AskQuestion extends RkComponent {
                 queAccess: 'none',
                 AskQFlag: false
             })
-           // Alert.alert("Questions can be asked only when session is active")
         }
     }
     getQuestions = (order) => {
