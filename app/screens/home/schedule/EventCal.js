@@ -175,13 +175,13 @@ export default class EventCal extends Component {
             monthFormat={'yyyy'}
             theme={{
                 backgroundColor: '#ffffff',
-                calendarBackground: '#FFFFFF',
+                calendarBackground: '#F0F0F0',
                 textSectionTitleColor: '#b6c1cd',
                 selectedDayBackgroundColor: '#E7060E',
                 selectedDayTextColor: '#FFFFFF',
                 todayTextColor: '#00adf5',
                 dayTextColor: '#2d4150',
-                textDisabledColor: '#F0F0F0',
+                textDisabledColor: '#CFCFCF',
                 dotColor: '#FFFFFF',
                 selectedDotColor: '#E7060E',
                 monthTextColor: '#E7060E'

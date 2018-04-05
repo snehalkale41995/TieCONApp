@@ -118,7 +118,10 @@ export class SessionDetails extends Component {
           <TouchableOpacity key={index} onPress={() => this.props.navigation.navigate('AttendeeProfile', { speakerDetails: speaker })}>
             <View style={[styles.row, styles.heading, styles.speakerView]} >
               {avatar}
-              <Text style={[styles.text, styles.speaker]} rkType='header6'> {speaker.firstName + ' ' + speaker.lastName}</Text>
+              <View style={styles.column}>
+                <RkText rkType='small'>{speaker.firstName + ' ' + speaker.lastName}</RkText>
+                <Text style={[styles.text, styles.speaker]} rkType='header6'>{speaker.briefInfo}</Text>
+              </View>
               <RkText style={[styles.attendeeScreen]} ><Icon name="ios-arrow-forward" /></RkText>              
             </View>
           </TouchableOpacity>
@@ -237,7 +240,6 @@ export class SessionDetails extends Component {
                 <RkText style={{ fontSize: 20 }} rkType='header6 primary'>{this.state.sessionName}</RkText>
               </View>
             </View>
-
             <View style={styles.subSection}>
               <View style={[styles.row, styles.heading]}>
                 <Text style={{flexDirection : 'column',width: 25, fontSize: 12, marginTop:1, color: '#5d5e5f' }}><Icon name="md-time" style={{fontSize: 18, color: '#5d5e5f'}}/></Text>
@@ -256,7 +258,7 @@ export class SessionDetails extends Component {
                 <RkText rkType='header6'>Summary: </RkText>
             </View>
               <View style={[styles.row]}>
-                <Text style={[styles.text]}>{this.state.description}</Text>
+                <Text style={[styles.text, styles.justify]}>{this.state.description}</Text>
               </View>
             </View>
             {displaySpeakers}
@@ -306,10 +308,16 @@ let styles = RkStyleSheet.create(theme => ({
     borderColor: theme.colors.border.base,
     alignItems: 'center'
   },
+  column:{
+    flexDirection : 'column',
+    marginLeft: 10
+  },
+  justify:{
+    textAlign: 'justify'
+  },
   text: {
     marginBottom: 5,
     fontSize: 15,
-    marginLeft: 15
   },
   surveButton: {
     alignItems : 'center',

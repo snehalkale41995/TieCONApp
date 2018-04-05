@@ -38,15 +38,13 @@ export class AttendeeProfile extends RkComponent {
                 {avatar}
               </View>
               <View style={styles.section} pointerEvents='none'>
-                <View style={[styles.row, styles.heading]}>
-                  <RkText style={{fontSize : 15}} rkType='header6 primary'>{this.state.speaker.fullName}</RkText>
+                <View style={[styles.column, styles.heading]}>
+                  <RkText rkType='header6 primary'>{this.state.speaker.fullName}</RkText>
+                  <RkText style={{fontSize : 15}} rkType="small">{this.state.speaker.briefInfo}</RkText>
                 </View>
                 <View style={[styles.row]}>
-                  <RkText style={{fontSize : 18}} >About : </RkText>
-                </View>
-                <View style={[styles.row]}>
-                  <Text style={{fontSize : 15}}>
-                    {this.state.speaker.briefInfo}
+                  <Text style={{fontSize : 15, textAlign: 'justify'}}>
+                    {this.state.speaker.info}
                   </Text>
                 </View>
               </View>
@@ -85,6 +83,11 @@ let styles = RkStyleSheet.create(theme => ({
     },
     heading: {
       paddingBottom: 12.5
+    },
+    column:{
+      flexDirection : 'column',
+      borderColor: theme.colors.border.base,
+      alignItems: 'center'
     },
     row: {
       flexDirection: 'row',
