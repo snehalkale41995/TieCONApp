@@ -14,7 +14,10 @@
     "ios": {
       "bundleIdentifier": "com.eternus.tieconpuneevents",
       "buildNumber": "1.0.10",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist":{
+        "NSCameraUsageDescription":  "We use your camera to scan QR code printed on ID cards."
+      }
     },
     "android": {
       "package": "com.eternus.tieconpuneevents",
