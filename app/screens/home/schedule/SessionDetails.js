@@ -21,6 +21,7 @@ export class SessionDetails extends Component {
       this.state = {
         sessionDetails: this.props.navigation.state.params.session,
         speakerDetails: this.sessionDetails.speakersDetails,
+        speakers: this.sessionDetails.speakers,
         sessionId: this.props.navigation.state.params.session.key,
         user: "",
         description: this.sessionDetails.description ? this.sessionDetails.description : "No details found...",
@@ -115,7 +116,7 @@ export class SessionDetails extends Component {
           avatar = <RkText rkType='small' style={styles.avatar}>{firstLetter}</RkText>
         }
         return (
-          <TouchableOpacity key={index} onPress={() => this.props.navigation.navigate('AttendeeProfile', { speakerDetails: speaker })}>
+          <TouchableOpacity key={index} onPress={() => this.props.navigation.navigate('SpeakerDetailsTabs', { speakerDetails: speaker,speakersId : this.state.speakers})}>
             <View style={[styles.row, styles.heading, styles.speakerView]} >
               {avatar}
               <View style={styles.column}>
