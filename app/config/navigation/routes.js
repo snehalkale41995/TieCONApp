@@ -125,9 +125,9 @@ export const MainRoutes = [
         children: []
       },
       {
-        id: 'AttendeeProfile',
-        title: 'Profile',
-        screen: Screens.AttendeeProfile,
+        id: 'SpeakerDetailsTabs',
+        title: 'Speaker DetailsTabs',
+        screen: Screens.SpeakerDetailsTabs,
         children: []
       },
       {
@@ -227,6 +227,6 @@ const styles = RkStyleSheet.create(theme => ({
   },
   TieLOGO: {
     height:40,
-    width: 90,
+    width: 85,
   }
 }));

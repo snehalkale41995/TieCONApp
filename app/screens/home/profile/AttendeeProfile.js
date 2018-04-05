@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator ,Text} from 'react-native';
 import { RkText,RkComponent, RkTextInput, RkAvoidKeyboard, RkTheme, RkStyleSheet } from 'react-native-ui-kitten';
@@ -12,17 +11,16 @@ import firebase from '../../../config/firebase'
 var firestoreDB = firebase.firestore();
 
 export class AttendeeProfile extends RkComponent {
-  static navigationOptions = {
-    title: "speaker".toUpperCase()
-  };
     constructor(props) {
         super(props);
         let {params} = this.props.navigation.state;
         this.speaker = params.speakerDetails;
+        
         this.state = {
             speaker : this.speaker,
             pictureUrl: this.speaker.profileImageURL
         }
+         
     }
       render() {
         let avatar;
@@ -33,8 +31,8 @@ export class AttendeeProfile extends RkComponent {
             avatar = <RkText rkType='big'  style={styles.avatar}>{firstLetter}</RkText>
         }
         return (
-          <ScrollView style={styles.root}>
-              <View style={styles.header}>
+            <ScrollView>
+               <View style={styles.header}>
                 {avatar}
               </View>
               <View style={styles.section} pointerEvents='none'>
@@ -47,7 +45,7 @@ export class AttendeeProfile extends RkComponent {
                     {this.state.speaker.info}
                   </Text>
                 </View>
-              </View>
+              </View>   
           </ScrollView>
         )
       }
