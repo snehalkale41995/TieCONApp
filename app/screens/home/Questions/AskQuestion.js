@@ -397,7 +397,7 @@ let styles = RkStyleSheet.create(theme => ({
         marginRight: 5
     },
     loading: {
-        marginTop: 250,
+        marginTop: 200,
         left: 0,
         opacity: 0.5,
         right: 0,
