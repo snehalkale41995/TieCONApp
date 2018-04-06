@@ -107,18 +107,6 @@ export const MainRoutes = [
         children: []
       },
       {
-        id: 'Chat',
-        title: 'Chat',
-        screen: Screens.Chat,
-        children: []
-      },
-      {
-        id: 'ChatList',
-        title: 'Chat List',
-        screen: Screens.ChatList,
-        children: []
-      },
-      {
         id: 'ProfileV1',
         title: 'User Profile V1',
         screen: Screens.ProfileV1,
@@ -172,13 +160,6 @@ export const MainRoutes = [
     screen: Screens.Speakers,
     children: []
   },
-  // {
-  //   id: 'Themes',
-  //   title: 'Themes',
-  //   icon: FontIcons.theme,
-  //   screen: Screens.Themes,
-  //   children: []
-  // },
 ];
 
 let menuRoutes = _.cloneDeep(MainRoutes);
