@@ -10,8 +10,9 @@ import {bootstrap} from './config/bootstrap';
 import track from './config/analytics';
 import {data} from './data'
 import {AppLoading, Font} from 'expo';
-import {View, Text, Alert} from "react-native";
+import {View, Text, Alert, AsyncStorage} from "react-native";
 import { Permissions, Notifications } from 'expo';
+import firebase, {firestoreDB} from './config/firebase';
 
 bootstrap();
 data.populateData();
@@ -73,6 +74,39 @@ async function registerForPushNotificationsAsync() {
   // Get the token that uniquely identifies this device
   let token = await Notifications.getExpoPushTokenAsync();
   // console.warn('Token', token);
+  if(token) {
+    AsyncStorage.getItem("USER_DETAILS").then((userDetails)=>{
+      if(userDetails) {
+        let userObject = JSON.parse(userDetails);
+        firestoreDB.collection('Tokens').doc(token).set({
+          userId: userObject.uid,
+          roleName: userObject.roleName,
+          isLoggedIn: true,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true })
+        .then((docRef) => {
+          // Store in local storage
+        })
+        .catch((error) => {
+        });
+      } else {
+        firestoreDB.collection('Tokens').doc(token).set({
+          userId: '',
+          roleName: '',
+          isLoggedIn: false,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true })
+        .then((docRef) => {
+          // Store in local storage
+        })
+        .catch((error) => {
+        });
+      }
+    }).catch(function(error) {
+      console.warn('Error reading local storage.');
+    });
+    
+  }
 }
 
 
