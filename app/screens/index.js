@@ -5,3 +5,4 @@ export * from './login';
 export * from './home';
 export * from './scanner';
 export * from './speakers';
+export * from './static';
