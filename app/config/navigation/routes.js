@@ -165,13 +165,13 @@ export const MainRoutes = [
     screen: Screens.ProfileSettings,
     children: [],
   },
-  // {
-  //   id: 'Dashboard',
-  //   title: 'Dashboard',
-  //   icon: 'ios-list',
-  //   screen: Screens.Dashboard,
-  //   children: []
-  // },
+  {
+    id: 'Speakers',
+    title: 'Speakers',
+    icon: 'ios-people',
+    screen: Screens.Speakers,
+    children: []
+  },
   // {
   //   id: 'Themes',
   //   title: 'Themes',

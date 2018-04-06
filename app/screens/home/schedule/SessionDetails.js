@@ -34,7 +34,10 @@ export class SessionDetails extends Component {
         endTime: this.sessionDetails.endTime,
         userObj: {},
         regStatus: "",
-        regId: ""
+        regId: "",
+        currentSessionStart : Moment(this.sessionDetails.startTime).format(),
+        currentSessionEnd  :  Moment(this.sessionDetails.endTime).format(),
+        sameTimeRegistration : false
       }
   }
   componentWillMount() {
@@ -159,23 +162,28 @@ export class SessionDetails extends Component {
     }
   }
   onAttendRequest = (event) => {
-    const attendeeId = this.state.userObj.uid;
-    let attendRequest = {
-      sessionId: this.state.sessionDetails.key,
-      session: this.state.sessionDetails,
-      registeredAt: new Date(),
-      status: this.state.sessionDetails.isRegrequired ? "Pending" : "Remove From Agenda",
-      attendee: {},
-      attendeeId: attendeeId
+    if(this.state.sameTimeRegistration == true){
+      Alert.alert("Already registered for same time in other session");
     }
-    Service.getDocRef("RegistrationResponse").add(attendRequest).then((req) => {
-      this.setState({
-        regId: req.id,
-        regStatus: attendRequest.status,
+    else{
+      const attendeeId = this.state.userObj.uid;
+      let attendRequest = {
+        sessionId: this.state.sessionDetails.key,
+        session: this.state.sessionDetails,
+        registeredAt: new Date(),
+        status: this.state.sessionDetails.isRegrequired ? "Pending" : "Remove From Agenda",
+        attendee: {},
+        attendeeId: attendeeId
+      }
+      Service.getDocRef("RegistrationResponse").add(attendRequest).then((req) => {
+        this.setState({
+          regId: req.id,
+          regStatus: attendRequest.status,
+        });
+      }).catch((error) => {
+        console.warn(error);
       });
-    }).catch((error) => {
-      console.warn(error);
-    });
+    }
   }
   onCancelRequest = (event) => {
     Service.getDocRef("RegistrationResponse").doc(this.state.regId).delete().then((req) => {
@@ -193,16 +201,31 @@ export class SessionDetails extends Component {
     if (this.state.userObj) {
       const attendeeId = this.state.userObj.uid;
       Service.getDocRef(REGISTRATION_RESPONSE_TABLE)
-        .where("sessionId", "==", this.state.sessionDetails.key)
+        //.where("sessionId", "==", this.state.sessionDetails.key)
         .where("attendeeId", "==", attendeeId)
         .onSnapshot((snapshot) => {
           if (snapshot.size > 0) {
             snapshot.forEach((doc) => {
               let regResponse = doc.data();
-              baseObj.setState({
-                regStatus: regResponse.status,
-                regId: doc.id
-              })
+              let start = Moment(regResponse.session.startTime).format();
+              let end = Moment(regResponse.session.endTime).format();
+              if(regResponse.sessionId == baseObj.state.sessionDetails.key){
+                baseObj.setState({
+                  regStatus: regResponse.status,
+                  regId: doc.id
+                })
+              }
+              else if(baseObj.state.currentSessionStart <= start   && end <= baseObj.state.currentSessionEnd && regResponse.sessionId != baseObj.state.sessionDetails.sessionId ) {
+                baseObj.setState({
+                  sameTimeRegistration : true
+                })
+              }
+              else{
+                baseObj.setState({
+                  regStatus: "",
+                  regId: ""
+                })
+              }   
             });
           }
           else{

@@ -10,3 +10,4 @@ export * from './walkthroughs';
 export * from './theme';
 export * from './home';
 export * from './scanner';
+export * from './speakers';
