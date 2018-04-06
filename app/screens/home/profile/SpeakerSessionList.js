@@ -4,7 +4,6 @@ import { Text, View } from 'native-base';
 import { RkText, RkComponent, RkTextInput, RkAvoidKeyboard, RkTheme, RkStyleSheet } from 'react-native-ui-kitten';
 import { data } from '../../../data';
 import { Avatar } from '../../../components';
-import { SocialSetting } from '../../../components';
 import { FontAwesome } from '../../../assets/icons';
 import { GradientButton } from '../../../components';
 import LinkedInModal from 'react-native-linkedin';
