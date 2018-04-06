@@ -41,8 +41,7 @@ let styles = RkStyleSheet.create(theme => ({
   tabContent: {
     backgroundColor: 'red',   
   },
-  textColor : {
-    color: Platform.OS === 'ios' ? '#ed1b24' :  '#ed1b24',
+  textColor : {    
     color: '#ed1b24'
   },
   activeBorder:{
