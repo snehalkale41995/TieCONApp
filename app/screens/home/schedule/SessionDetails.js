@@ -214,10 +214,10 @@ export class SessionDetails extends Component {
             });
           }
           else{
-            this.checkAlreadyRegistered();
+            baseObj.checkAlreadyRegistered();
           }
         },function (error){
-          console.log("error", error);
+          console.warn(error);
         });
     } else {
       console.warn("User object is undefined");
@@ -249,7 +249,7 @@ export class SessionDetails extends Component {
           })  
       })
       .catch((error) => {
-        console.log("error",error);
+        console.warn(error);
       })
   }
   render() {
@@ -272,7 +272,7 @@ export class SessionDetails extends Component {
       return (
         <Container style={styles.root}>
         <ScrollView style={styles.root}>
-          <RkCard>
+          {/* <RkCard> */}
             <View style={styles.section}>
               <View style={[styles.row, styles.heading]}>
                 <RkText style={{ fontSize: 20 }} rkType='header6 primary'>{this.state.sessionName}</RkText>
@@ -300,7 +300,7 @@ export class SessionDetails extends Component {
               </View>
             </View>
             {displaySpeakers}
-          </RkCard>
+          {/* </RkCard> */}
         </ScrollView>
         <View style={[styles.surveButton]}>
         {surveyButton}

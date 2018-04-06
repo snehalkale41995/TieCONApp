@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {  View,Icon,Tab,TabHeading,Tabs } from 'native-base';
 import { StyleSheet, FlatList, TouchableOpacity, Keyboard, Platform ,Alert, AsyncStorage,ScrollView,Text,Image ,ActivityIndicator} from 'react-native';
 import { RkComponent, RkTheme, RkText, RkAvoidKeyboard,RkStyleSheet, RkButton, RkCard, RkTextInput } from 'react-native-ui-kitten';
@@ -41,6 +40,8 @@ export default class AskQuestion extends RkComponent {
                 currentUser: userDetails,
                 currentUid: userDetails.uid
             });
+        },function(error){
+            console.warn(error);
         });
         this.checkSessionTime();
         this.getQuestions();

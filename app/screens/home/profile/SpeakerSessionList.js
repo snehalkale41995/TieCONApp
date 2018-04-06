@@ -59,6 +59,8 @@ export class SpeakerSessionList extends RkComponent {
           ...prevState,
           sessionList: newSessions
         }));
+      }, function(error){
+        console.warn(error);
       });
   }
 
