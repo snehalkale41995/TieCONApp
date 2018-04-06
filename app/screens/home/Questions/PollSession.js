@@ -122,6 +122,7 @@ export default class PollSession extends React.Component {
                     }) 
                 })
                 .catch(function (error) {
+                    console.warn(error);
                 });
         }
         else {
