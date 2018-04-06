@@ -7,7 +7,7 @@ import { scale, scaleModerate, scaleVertical } from '../../utils/scale';
 import { NavigationActions } from 'react-navigation';
 import { Container, Content, Footer, Header, Title, Button, Icon, Tabs, Tab, Text, Right, Left, Body, TabHeading } from "native-base";
 import * as Screens from '../index';
-import { Contacts, ProgramsTab, ConnectTab,QueTab} from  '../index';
+import { ProgramsTab, QueTab} from  '../index';
 import { TabNavigator, TabView } from 'react-navigation'
 import EventCal from './schedule/EventCal';
 
@@ -42,14 +42,12 @@ export class HomePage extends React.Component {
               <TabHeading style={{ flexDirection: 'column' }}><Icon name="ios-link"/><Text>Connect</Text></TabHeading>
             }
           >
-            <ConnectTab navigation={this.props.navigation}/>
           </Tab>
           <Tab
             heading={
               <TabHeading style={{ flexDirection: 'column' }}><Icon name="ios-people"/><Text>Speakers</Text></TabHeading>
             }
           >
-            <Contacts navigation={this.props.navigation}/>
           </Tab>
         </Tabs>*/}
       </Container>

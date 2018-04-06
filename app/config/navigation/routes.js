@@ -101,12 +101,6 @@ export const MainRoutes = [
     screen: HomePageMenuScreen,
     children: [
       {
-        id: 'Contacts',
-        title: 'Contacts',
-        screen: Screens.Contacts,
-        children: []
-      },
-      {
         id: 'ProfileV1',
         title: 'User Profile V1',
         screen: Screens.ProfileV1,
