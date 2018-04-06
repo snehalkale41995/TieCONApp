@@ -9,6 +9,7 @@
       "icon": "./icon_rounded.png"
     },
     "androidStatusBar": {
+      "barStyle": "light-content",
       "backgroundColor": "#ed1b24"
     },
     "ios": {
@@ -23,11 +24,18 @@
       "package": "com.eternus.tieconpuneevents",
       "versionCode": 16
     },
-    "version": "1.0.1",
+    "version": "1.0.2",
     "primaryColor": "#ed1b24",
     "notification": {
       "icon": "./notificationIcon.png",
       "color": "#ed1b24"
-    }
+    },
+    "assetBundlePatterns": [
+      "app/assets/fonts/*",
+      "app/assets/icons/*",
+      "app/assets/images/*",
+      "app/data/img/avatars/*",
+      "app/data/img/*"
+    ]
   }
 }

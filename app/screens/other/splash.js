@@ -48,7 +48,7 @@ export class SplashScreen extends React.Component {
           }
         }).catch(function(error) {
           console.warn('Error reading local storage.');
-        });;
+        });
         //navigation.navigate('App');
       } else {
         navigation.navigate('Auth');
