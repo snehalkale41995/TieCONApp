@@ -65,7 +65,10 @@ export default class EventCal extends Component {
             .where("startTime", "<=", currentDate.add(1, 'day').toDate())
             .orderBy("startTime")
             .get()
-            .then(successFn);
+            .then(successFn)
+            .catch(err =>{
+                console.warn(err);
+            });
     }
     
     /**

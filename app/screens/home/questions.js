@@ -154,9 +154,11 @@ export class Questions extends React.Component {
     render() {
         if (this.state.questionsForm.length == 0 ){
             return (
-                <View style={[styles.loading]} >
-                <ActivityIndicator size='large' />
-            </View>
+                <Container style={[styles.screen]}>
+                    <View style={[styles.loading]} >
+                        <ActivityIndicator size='large' />
+                    </View>
+                </Container> 
             );
         }
         else{

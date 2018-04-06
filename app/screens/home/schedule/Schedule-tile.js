@@ -47,6 +47,8 @@ export default class ScheduleTile extends RkComponent {
                             }));
                         });
                     }
+                }, function(error){
+                     console.warn(error);
                 });
         } else {
             console.warn("User object is undefined");
@@ -70,6 +72,8 @@ export default class ScheduleTile extends RkComponent {
                         ...prevState,
                         session: newSession
                     }));
+                },function(error){
+                    console.warn(error);
                 });
             });
         }
@@ -209,7 +213,7 @@ export default class ScheduleTile extends RkComponent {
         if (!shouldApplyOpacity)
         {
             return (
-            <View style={{ flexDirection: 'column', alignItems: 'flex-end', marginRight: 5 }}>
+            <View style={{ flexDirection: 'column', alignItems: 'flex-end' , flex:3  }}>
                 <TouchableOpacity
                     onPress={() => this.props.navigation.navigate('SessionDetails', { session: this.props.session })}
                 >
@@ -236,7 +240,7 @@ export default class ScheduleTile extends RkComponent {
                         <View style={this.styles.mainHeader}>
                             {this.applyTouchOpacity(this.props.session.isBreak)}
                         </View>
-                        <View style={{ flexDirection: 'column', alignItems: 'flex-end'  }}>
+                        <View style={{ flexDirection: 'column', alignItems: 'flex-end' , flex:3 }}>
                             {this.applyTouchOpacityArrow(this.props.session.isBreak)}
                         </View>
                     </View >

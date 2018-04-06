@@ -74,6 +74,10 @@ export class Survey extends RkComponent {
             })
                 .then(function (docRef) {
                     Alert.alert("Thanks for your response");
+                    thisRef.setState({
+                        responses : [],
+                        queArray : [],
+                    })
                 })
                 .catch(function (error) {
                     console.error("Error adding document: ", error);
@@ -168,9 +172,11 @@ export class Survey extends RkComponent {
     render() {
         if (this.state.questionsForm.length == 0 ){
             return (
+                <Container style={[styles.screen]}>
                 <View style={[styles.loading]} >
                     <ActivityIndicator size='large' />
                 </View>
+                </Container>
             );
         }
         else{

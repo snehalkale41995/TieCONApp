@@ -13,7 +13,8 @@ export default function styleConstructor() {
             flexDirection: 'column'
         },
         mainHeader: {
-            flexDirection: 'row',
+            flexDirection: 'column',
+            flex :3,
             justifyContent: 'space-between',
             marginLeft: 5
         },
