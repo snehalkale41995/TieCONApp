@@ -136,8 +136,11 @@ let styles = RkStyleSheet.create(theme => ({
   sponsorsImage: {
     /*resizeMode: 'cover',
     height: scaleVertical(430),*/
-    width: 210,
-    height:32
+    //width: 210,
+   // height:32
+
+   height: scaleVertical(25),
+    resizeMode: 'contain'
   },
   textRow: {
     flexDirection: 'row',

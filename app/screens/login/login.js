@@ -183,7 +183,10 @@ let styles = RkStyleSheet.create(theme => ({
     marginBottom: 20,
   },
   eternusLogo:{
-    width: 210,
-    height:32
+   // width: 150,
+    //height:25
+
+    height: scaleVertical(25),
+    resizeMode: 'contain'
   }
 }));
