@@ -66,7 +66,8 @@ export class Speakers extends RkComponent {
             return (
                 <Container style={[styles.root]}>
                     <View>
-                        {speakerTile}
+                        {/* {speakerTile} */}
+                        <Text style={{fontSize :20}}>Coming Soon</Text>
                     </View>
                 </Container>
             )
