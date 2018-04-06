@@ -102,7 +102,7 @@ export class SplashScreen extends React.Component {
         </View>
         <View style={styles.buttons}>
           <RkButton style={styles.button} rkType='sponsorsSplashScreen' style={{marginTop: 5}}>
-            <Image style={styles.sponsorsImage} source={require('../../assets/images/eternusLogoNew.png')}/>;
+            <Image style={styles.sponsorsImage} source={require('../../assets/images/eternusLogoMain.png')}/>;
             
           </RkButton>
           {/* <RkButton style={styles.button} rkType='sponsorsSplashScreen' style={{marginTop: 5}}>
@@ -136,6 +136,8 @@ let styles = RkStyleSheet.create(theme => ({
   sponsorsImage: {
     /*resizeMode: 'cover',
     height: scaleVertical(430),*/
+    width: 210,
+    height:32
   },
   textRow: {
     flexDirection: 'row',
