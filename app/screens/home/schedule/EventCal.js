@@ -109,7 +109,12 @@ export default class EventCal extends Component {
             let allSpeakers = [];
             let index = 0;
             snapshot.forEach((sessionObj) => {
-                sessions.push(this.extractSession(sessionObj));
+                let __sessionObj = this.extractSession(sessionObj);
+                if(__sessionObj.room == "Entrance"){
+                    // Do not add this session to Sessions List
+                }else{
+                    sessions.push(__sessionObj);
+                }
             });
             let newSessions = {};
             newSessions[day.dateString] = sessions;
