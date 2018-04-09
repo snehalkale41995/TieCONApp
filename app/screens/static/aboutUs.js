@@ -24,13 +24,11 @@ export class AboutUs extends React.Component {
 
   render() {
     return (
-      <ScrollView>
+      <ScrollView style={styles.root}>
         <View style={styles.header}>
           <Image style={{width: 159,height: 78, marginLeft:'auto', marginRight:'auto'}} source={require('../../assets/images/tie-pune-logo.jpg')}/>
         </View>
         <View style={styles.section} pointerEvents='none'>
-          <View style={[styles.column, styles.heading]}>
-          </View>
           <View style={[styles.row]}>
             <Text
               style={{
@@ -48,35 +46,16 @@ export class AboutUs extends React.Component {
 }
 
 let styles = RkStyleSheet.create(theme => ({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   root: {
     backgroundColor: theme.colors.screen.base
   },
   header: {
-    backgroundColor: theme.colors.screen.neutral,
+    backgroundColor: theme.colors.screen.base,
     paddingVertical: 25
   },
   section: {
+    backgroundColor: theme.colors.screen.base,
     marginTop: 1
-  },
-  loading: {
-    position: 'absolute',
-    left: 0,
-    backgroundColor: 'black',
-    opacity: 0.8,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  heading: {
-    paddingBottom: 12.5
   },
   column: {
     flexDirection: 'column',
@@ -90,19 +69,4 @@ let styles = RkStyleSheet.create(theme => ({
     borderColor: theme.colors.border.base,
     alignItems: 'center'
   },
-  button: {
-    marginHorizontal: 16,
-    marginBottom: 32
-  },
-  avatar: {
-    backgroundColor: '#C0C0C0',
-    width: 100,
-    height: 100,
-    borderRadius: 60,
-    textAlign: 'center',
-    fontSize: 40,
-    textAlignVertical: 'center',
-    marginRight: 5,
-    alignSelf: 'center'
-  }
 }));
