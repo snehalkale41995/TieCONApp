@@ -12,7 +12,7 @@ function renderIf(condition, content) {
 
 export class HelpDesk extends React.Component {
   static navigationOptions = {
-    title: 'About Tie'.toUpperCase()
+    title: 'Help Desk'.toUpperCase()
   };
 
   constructor(props) {
