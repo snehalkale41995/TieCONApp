@@ -37,9 +37,9 @@ export default class EventCal extends Component {
             speakers,
             endTime,
             description,
-            isBreak
+            isBreak,
+            sessionType,
         } = sessionObj.data();
-        
         return {
             key: sessionObj.id,
             eventName,
@@ -51,7 +51,8 @@ export default class EventCal extends Component {
             startTime,
             endTime,
             description,
-            isBreak : !!isBreak
+            isBreak : !!isBreak,
+            sessionType
         }
     }
     
