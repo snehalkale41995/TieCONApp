@@ -56,7 +56,10 @@ export class QRScanner extends React.Component {
       querySnapshot.forEach(function (doc) {
         let sessionData = doc.data();
         sessionData['id'] = doc.id;
-        sessions.push(sessionData);
+        if(!sessionData.isBreak) {
+          sessionData['eventName'] = sessionData.eventName + '(' + sessionData.room + ')';
+          sessions.push(sessionData);
+        }
       });
       if (sessions.length > 0) {
         thisRef.setState({ sessions, selectedSession: sessions[0].id });
