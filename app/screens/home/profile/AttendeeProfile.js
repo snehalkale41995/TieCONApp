@@ -29,7 +29,7 @@ export class AttendeeProfile extends RkComponent {
             //let firstLetter = this.state.speaker.firstName ?  this.state.speaker.firstName[0]: '?';
             //avatar = <RkText rkType='big'  style={styles.avatar}>{firstLetter}</RkText>
 
-            avatar = <Image style={{width: 100,height: 100,borderRadius: 60, marginLeft:'auto', marginRight:'auto', borderWidth:1,borderColor:'#ddd'}} source={require('../../../assets/images/defaultUserImg.png')}/>
+            avatar = <Image style={{width: 100,height: 100, marginLeft:'auto', marginRight:'auto'}} source={require('../../../assets/images/defaultUserImg.png')}/>
         }
         return (
             <ScrollView>
