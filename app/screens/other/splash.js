@@ -33,17 +33,37 @@ export class SplashScreen extends React.Component {
             var db = firebase.firestore();
             var docRef = db.collection("Attendee").doc(user.uid);
             docRef.get().then(function(doc) {
-                if (doc.exists) {
-                    let data = doc.data();
-                    data.uid = user.uid;
-                    let userInfo = JSON.stringify(data);
-                    AsyncStorage.setItem("USER_DETAILS", userInfo);
-                    navigation.navigate('App');
-                } else {
-                   console.warn('Unable to get document');
-                }
+              if (doc.exists) {
+                  let data = doc.data();
+                  data.uid = user.uid;
+                  let userInfo = JSON.stringify(data);
+                  AsyncStorage.setItem("USER_DETAILS", userInfo);
+                  navigation.navigate('App');
+              } else {
+                Alert.alert(
+                  'Error',
+                  'Unable to get user information. Please contact system administrator.',
+                  [
+                    { text: 'Ok', onPress: () => { } },
+                  ],
+                  { cancellable: false }
+                );
+                let keysToRemove = ['USER_DETAILS', 'USER_LINKEDIN_TOKEN', 'SESSIONS'];
+                AsyncStorage.multiRemove(keysToRemove, (err) => {});
+                navigation.navigate('Auth');
+              }
             }).catch(function(error) {
-                console.warn("Error getting warn:", error);
+              Alert.alert(
+                'Error',
+                error,
+                [
+                  { text: 'Ok', onPress: () => { } },
+                ],
+                { cancellable: false }
+              );
+              let keysToRemove = ['USER_DETAILS', 'USER_LINKEDIN_TOKEN', 'SESSIONS'];
+              AsyncStorage.multiRemove(keysToRemove, (err) => {});
+              navigation.navigate('Auth');
             });
           }
         }).catch(function(error) {
