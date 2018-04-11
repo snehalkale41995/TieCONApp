@@ -7,7 +7,7 @@ export default function styleConstructor() {
             margin: 1,
             padding: 4,
             height : 75,
-            borderLeftWidth: 2,
+            borderLeftWidth: 4,
         },
         header: {
             flex: 1,
