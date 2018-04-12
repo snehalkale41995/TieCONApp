@@ -279,8 +279,7 @@ export default class ScheduleTile extends RkComponent {
                         </View >
                         <View style={this.styles.content} >
                         {this.checkDeepDiveSession(this.props.session)}
-                            <View
-                                style={this.styles.tileFooter}>
+                            <View style={this.styles.tileFooter}>
                                 {this.getDuration()}
                                 {this.getLocation()}
                             </View>
