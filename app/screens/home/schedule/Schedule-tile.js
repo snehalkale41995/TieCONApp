@@ -226,10 +226,10 @@ export default class ScheduleTile extends RkComponent {
                             flexDirection: 'row',
                             flex: 3,
                             }}>
-                            <Text style={this.styles.headerText} style={{fontSize:16, height:30, fontWeight:'600', lineHeight:15}}>{this.props.session.eventName}</Text>
+                            <Text style={{fontSize:15, height:90, fontWeight:'600', lineHeight:15}}>{this.props.session.eventName}</Text>
                     </TouchableOpacity>;
         }else {
-           return  <Text style={this.styles.headerText} style={{fontSize:16, height:30, fontWeight:'600', lineHeight:15}}>{this.props.session.eventName}</Text>;
+           return  <Text  style={{fontSize:15, height:90, fontWeight:'600', lineHeight:15}}>{this.props.session.eventName}</Text>;
         }
 
     }
@@ -247,7 +247,7 @@ export default class ScheduleTile extends RkComponent {
             </View>
             );
         }else {
-           return <Text style={this.styles.headerText} style={{fontSize:16, height:30, fontWeight:'600', lineHeight:15}}>   </Text>;
+           return <Text style={{fontSize:15, height:90, fontWeight:'600', lineHeight:15}}>   </Text>;
         }
 
     }
@@ -279,8 +279,7 @@ export default class ScheduleTile extends RkComponent {
                         </View >
                         <View style={this.styles.content} >
                         {this.checkDeepDiveSession(this.props.session)}
-                            <View
-                                style={this.styles.tileFooter}>
+                            <View style={this.styles.tileFooter}>
                                 {this.getDuration()}
                                 {this.getLocation()}
                             </View>
@@ -299,10 +298,10 @@ export default class ScheduleTile extends RkComponent {
 }
 
 
-let styles = RkStyleSheet.create(theme => ({
+/*let styles = RkStyleSheet.create(theme => ({
     headerText:{
         fontSize:20,
         height:30
     }
 
-}));
+}));*/
