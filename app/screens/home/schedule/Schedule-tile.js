@@ -278,12 +278,13 @@ export default class ScheduleTile extends RkComponent {
                             </View>
                         </View >
                         <View style={this.styles.content} >
-                        {this.checkDeepDiveSession(this.props.session)}
+                        {/* {this.checkDeepDiveSession(this.props.session)} */}
                             <View style={this.styles.tileFooter}>
                                 {this.getDuration()}
                                 {this.getLocation()}
                             </View>
                         </View>
+                        {this.checkDeepDiveSession(this.props.session)}
                     </RkCard>
                 </TouchableOpacity>
             );
