@@ -24,21 +24,21 @@ export default class ScheduleTile extends RkComponent {
                 __props.session.displayColor = 'gray';
                 break;
             }
-            case 'keynote' : 
+            case 'keynote' :
                 __props.session.displayColor = 'green';
                 break;
-            case 'deepdive' : 
+            case 'deepdive' :
                 __props.session.displayColor = 'orange';
                 break;
             case 'panel' :
                 __props.session.displayColor = 'purple';
                 break;
-            case 'breakout' : 
+            case 'breakout' :
                 __props.session.displayColor = 'blue';
                 break;
         }
         this.state = __props;
-        
+
     }
     /**
      *  Get Speaker Details
@@ -108,7 +108,6 @@ export default class ScheduleTile extends RkComponent {
     * On Cancel Request
     */
     onCancelRequest = (event) => {
-        console.log("RegID", this.state.session.regId);
         Service.getDocRef("RegistrationResponse").doc(this.state.session.regId).delete().then((req) => {
             let newSession = Object.assign({}, this.state.session);
             delete newSession['regStatus'];
@@ -252,6 +251,14 @@ export default class ScheduleTile extends RkComponent {
         }
 
     }
+    checkDeepDiveSession = (session) =>{
+        if(session.sessionType == 'deepdive'){
+            return <Text style={this.styles.speaker} style={{ fontSize: 10 , color : 'red' }}>**Pre-registration required**</Text> ;
+        }
+        else{
+            return <View></View>;
+        }
+    }
     /**
     * Render Schedule Tile
     */
@@ -261,24 +268,23 @@ export default class ScheduleTile extends RkComponent {
                   <TouchableOpacity disabled={this.props.session.isBreak}
                             onPress={() => this.props.navigation.navigate('SessionDetails', { session: this.props.session })}
                   >
-                  <RkCard rkType='shadowed' style={[this.styles.card, {borderLeftColor : this.props.session.displayColor}]}>
-                    <View style={this.styles.header}>
-                        <View style={this.styles.mainHeader} style={{height:65, lineHeight:12}}>
-                            {this.applyTouchOpacity(this.props.session.isBreak)}
+                    <RkCard rkType='shadowed' style={[this.styles.card, { borderLeftColor: this.props.session.displayColor }]}>
+                        <View style={this.styles.header}>
+                            <View style={this.styles.mainHeader}>
+                                {this.applyTouchOpacity(this.props.session.isBreak)}
+                            </View>
+                            <View style={{ flexDirection: 'column', alignItems: 'flex-end', flex: 3 }}>
+                                {this.applyTouchOpacityArrow(this.props.session.isBreak)}
+                            </View>
+                        </View >
+                        <View style={this.styles.content} >
+                        {this.checkDeepDiveSession(this.props.session)}
+                            <View style={this.styles.tileFooter}>
+                                {this.getDuration()}
+                                {this.getLocation()}
+                            </View>
                         </View>
-                        <View style={{ flexDirection: 'column', alignItems: 'flex-end' , flex:3 }}>
-                            {this.applyTouchOpacityArrow(this.props.session.isBreak)}
-                        </View>
-                    </View >
-                    <View style={this.styles.content} >
-                        {/* {speakers} */}
-                        <View
-                            style={this.styles.tileFooter}>
-                            {this.getDuration()}
-                            {this.getLocation()}
-                        </View>
-                    </View>
-                </RkCard>
+                    </RkCard>
                 </TouchableOpacity>
             );
         } else {
