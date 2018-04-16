@@ -104,16 +104,6 @@ export default class MyAgenda extends React.Component {
     }
     render() {
         let sessionList = this.renderSessions();
-        //let sessionsList;
-        // if(this.state.sessionList && this.state.sessionList.length > 0 ){
-        //     sessionList = (<FlatList
-        //             data={this.state.sessionList}
-        //             keyExtractor={(item, index) => index}
-        //             renderItem={({item, index}) => <ScheduleTile user={this.state.user} navigation={this.props.navigation} session={item}/>}
-        //         />)
-        // }else{
-        //     sessionList = (<Text>No session added to agenda yet</Text>)
-        // }
         if (!this.state.isLoaded) {
             return (
                 <View style={styles.loading} >
