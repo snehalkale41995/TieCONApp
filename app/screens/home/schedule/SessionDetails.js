@@ -238,37 +238,49 @@ getCurrentUser() {
     this.setState({
       isAddingToAgenda : true
     });
-    if(this.state.sameTimeRegistration == true){
+    let today =new Date();
+    if(Moment(new Date()).isBefore( Moment(this.state.sessionDetails.endTime))){
+      if(this.state.sameTimeRegistration == true){
+        this.setState({
+          isAddingToAgenda : false
+        });
+        Alert.alert("Already registered for same time in other session");
+      }
+      else{
+        const attendeeId = this.state.userObj.uid;
+        if(this.state.sessionDetails.speakers == undefined ){
+          this.state.sessionDetails.speakers = [];
+        }
+        if(this.state.sessionDetails.description == undefined ){
+          this.state.sessionDetails.description = "";
+        }
+        if(this.state.sessionDetails.sessionType == undefined ){
+          this.state.sessionDetails.sessionType = "";
+        }
+        let attendRequest = {
+          sessionId: this.state.sessionDetails.key,
+          session: this.state.sessionDetails,
+          registeredAt: new Date(),
+          status: this.state.sessionDetails.isRegrequired ? "Pending" : "Remove From Agenda",
+          attendee: {},
+          attendeeId: attendeeId
+        }
+        Service.getDocRef("RegistrationResponse").add(attendRequest).then((req) => {
+          this.setState({
+            regId: req.id,
+            regStatus: attendRequest.status,
+            isAddingToAgenda : false
+          });
+        }).catch((error) => {
+          console.warn(error);
+        });
+      }
+    }
+    else{
       this.setState({
         isAddingToAgenda : false
       });
-      Alert.alert("Already registered for same time in other session");
-    }
-    else{
-      const attendeeId = this.state.userObj.uid;
-      if(this.state.sessionDetails.speakers == undefined ){
-        this.state.sessionDetails.speakers = [];
-      }
-      if(this.state.sessionDetails.description == undefined ){
-        this.state.sessionDetails.description = "";
-      }
-      let attendRequest = {
-        sessionId: this.state.sessionDetails.key,
-        session: this.state.sessionDetails,
-        registeredAt: new Date(),
-        status: this.state.sessionDetails.isRegrequired ? "Pending" : "Remove From Agenda",
-        attendee: {},
-        attendeeId: attendeeId
-      }
-      Service.getDocRef("RegistrationResponse").add(attendRequest).then((req) => {
-        this.setState({
-          regId: req.id,
-          regStatus: attendRequest.status,
-          isAddingToAgenda : false
-        });
-      }).catch((error) => {
-        console.warn(error);
-      });
+      Alert.alert("You cannot add past session to Agenda");
     }
   }
   onCancelRequest = (event) => {
