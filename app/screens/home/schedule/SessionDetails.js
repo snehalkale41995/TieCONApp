@@ -57,7 +57,6 @@ componentWillMount() {
           isOffline : true
         });
       }
-      
       this.setState({
         isOffline: !isConnected
       });
@@ -87,12 +86,12 @@ handleFirstConnectivityChange = (connectionInfo) => {
   });
 };
 
-componentWillUnmount() {
-  NetInfo.removeEventListener(
-    'connectionChange',
-    this.handleFirstConnectivityChange
-  );  
-}
+// componentWillUnmount() {
+//   NetInfo.removeEventListener(
+//     'connectionChange',
+//     this.handleFirstConnectivityChange
+//   );  
+// }
 getCurrentUser() {
     Service.getCurrentUser((userDetails) => {
       this.setState({
