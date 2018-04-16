@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, ScrollView, View, StyleSheet, Alert, AsyncStorage, ActivityIndicator, NetInfo,Platform} from 'react-native';
 import {RkText, RkStyleSheet} from 'react-native-ui-kitten';
-
+import { Container} from 'native-base';
 import {FontIcons} from '../../assets/icons';
 import * as Screens from '../../screens/index';
 import { HomePage } from '../../screens/index';
@@ -160,7 +160,15 @@ getQuestionsData = (Uid) =>{
       );
     }
     else {
-      return null;
+      return (
+        <Container style={styles.root}>
+          <ScrollView>
+            <View style={styles.loading} >
+              <ActivityIndicator size='large' />
+            </View>
+          </ScrollView>
+        </Container>
+      );
     }
   }
 }
@@ -304,5 +312,18 @@ const styles = RkStyleSheet.create(theme => ({
   TieLOGO: {
     height:40,
     width: 85,
-  }
+  },
+  root: {
+    backgroundColor: theme.colors.screen.base
+  },
+  loading: {
+    marginTop: 250,
+    left: 0,
+    opacity: 0.5,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
 }));

@@ -135,7 +135,7 @@ getCurrentUser() {
   getSurveyAccess = () => {
     if (this.state.showPanelButton == true && this.state.showFeedbackButton == true) {
       return (
-        <View style={{ width:Platform.OS === 'ios' ? 320 : 380 ,alignItems:'center' , flexDirection : 'row'}}>
+        <View style={{ width:Platform.OS === 'ios' ? 320 : 380 ,alignItems:'center' , flexDirection : 'row' , marginLeft :Platform.OS === 'android' ? 20 : 0  }}>
           <View style={{ width: Platform.OS === 'ios' ? 160 : 180 ,alignItems:'center'}} >
             <GradientButton colors={['#f20505', '#f55050']} text='Panel Q&A' style={{width: Platform.OS === 'ios' ? 150 :170 , alignSelf : 'center'}}
               onPress={() => this.props.navigation.navigate('QueTab', { sessionDetails: this.state.sessionDetails })}
@@ -175,10 +175,7 @@ getCurrentUser() {
         if (speaker.profileImageURL) {
           avatar = <Avatar rkType='small' style={{width: 44,height: 44,borderRadius: 20}} imagePath={speaker.profileImageURL} />
         } else {
-          //let firstLetter = speaker.firstName ? speaker.firstName[0] : '?';
-          //avatar = <RkText rkType='small' style={styles.avatar}>{firstLetter}</RkText>
-         // avatar = <Avatar rkType='small' style={{width: 44,height: 44,borderRadius: 20}} imagePath={require('../../../assets/images/defaultUserImg.png')} />
-          avatar = <Image style={{width: 44,height: 44,borderRadius: 20}} source={require('../../../assets/images/defaultUserImg.png')}/>
+           avatar = <Image style={{width: 44,height: 44,borderRadius: 20}} source={require('../../../assets/images/defaultUserImg.png')}/>
         }
         return (
           <TouchableOpacity key={index} onPress={() => this.props.navigation.navigate('SpeakerDetailsTabs', { speakerDetails: speaker,speakersId : this.state.speakers})}>
@@ -209,7 +206,20 @@ getCurrentUser() {
         </View>
       )
     }
-     else {
+     else if(!this.state.regStatus  &&  this.state.sessionDetails.sessionType == 'deepdive'){
+      return (
+        <View style = {[styles.attendBtn]} >
+          <RkButton
+            rkType='outline'
+            style ={{borderColor : '#f20505', borderRadius : 30 , width : 150 ,height :30}}
+            contentStyle={{ fontSize: 12 , color :'#f20505' }}
+            onPress={this.onAttendRequest}>
+            Pre-Register
+            </RkButton>
+        </View>
+      );
+    }
+    else{
       return (
         <View style = {[styles.attendBtn]} >
           <RkButton
@@ -229,6 +239,12 @@ getCurrentUser() {
     }
     else{
       const attendeeId = this.state.userObj.uid;
+      if(this.state.sessionDetails.speakers == undefined ){
+        this.state.sessionDetails.speakers = [];
+      }
+      if(this.state.sessionDetails.description == undefined ){
+        this.state.sessionDetails.description = "";
+      }
       let attendRequest = {
         sessionId: this.state.sessionDetails.key,
         session: this.state.sessionDetails,
