@@ -38,7 +38,8 @@ export class SessionDetails extends Component {
         currentSessionStart : Moment(this.sessionDetails.startTime).format(),
         currentSessionEnd  :  Moment(this.sessionDetails.endTime).format(),
         sameTimeRegistration : false,
-        isOffline : false
+        isOffline : false,
+        isAddingToAgenda :false
       }
   }
 /**check */
@@ -163,8 +164,8 @@ getCurrentUser() {
     }
   }
   getDuration = () => {
-    let endTime = Moment(this.state.endTime).format("hh:mm A");
-    let startTime = Moment(this.state.startTime).format("hh:mm A");
+    let endTime = Moment(this.state.endTime).format("HH:mm");
+    let startTime = Moment(this.state.startTime).format("HH:mm");
     let sessionDate = Moment(this.state.startTime).format("ddd, MMM DD, YYYY");
     return (<Text>{startTime} - {endTime} | {sessionDate} </Text>);
   }
@@ -234,7 +235,13 @@ getCurrentUser() {
     }
   }
   onAttendRequest = (event) => {
+    this.setState({
+      isAddingToAgenda : true
+    });
     if(this.state.sameTimeRegistration == true){
+      this.setState({
+        isAddingToAgenda : false
+      });
       Alert.alert("Already registered for same time in other session");
     }
     else{
@@ -257,6 +264,7 @@ getCurrentUser() {
         this.setState({
           regId: req.id,
           regStatus: attendRequest.status,
+          isAddingToAgenda : false
         });
       }).catch((error) => {
         console.warn(error);
@@ -264,10 +272,14 @@ getCurrentUser() {
     }
   }
   onCancelRequest = (event) => {
+    this.setState({
+      isAddingToAgenda : true
+    });
     Service.getDocRef("RegistrationResponse").doc(this.state.regId).delete().then((req) => {
         this.setState({
           regStatus: "",
-          regId: ""
+          regId: "",
+          isAddingToAgenda : false
         })
     }).catch((error) => {
         console.warn(error);
@@ -394,6 +406,26 @@ getCurrentUser() {
           </View>
       </Container>
       )
+    }
+    else if((this.state.showPanelButton == true || this.state.showFeedbackButton == true) && this.state.isAddingToAgenda == true){
+      return (
+        <Container style={[styles.root]}>
+          <ScrollView>
+            <View style={[styles.loading]} >
+              <ActivityIndicator size='large' />
+            </View>
+          </ScrollView>
+          <View style={styles.footerOffline}>
+            {
+              this.state.isOffline ? <RkText rkType="small" style={styles.footerText}>The Internet connection appears to be offline. </RkText> : null
+            }
+          </View>
+          <View style={styles.footer}>
+            <RkText rkType="small" style={styles.footerText}>Powered by</RkText>
+            <RkText rkType="small" style={styles.companyName}> Eternus Solutions Pvt. Ltd. </RkText>
+          </View>
+        </Container>
+    );
     }
     else{
       return (
