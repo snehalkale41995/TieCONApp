@@ -24,7 +24,7 @@ export class SessionDetails extends Component {
         speakers: this.sessionDetails.speakers,
         sessionId: this.props.navigation.state.params.session.key,
         user: "",
-        description: this.sessionDetails.description ? this.sessionDetails.description : "No details found...",
+        description: this.sessionDetails.description ? this.sessionDetails.description : this.sessionDetails.eventName,
         sessionName: this.sessionDetails.eventName,
         sesssionDuration: this.sessionDetails.duration,
         sessionVenue: this.sessionDetails.room ? this.sessionDetails.room : "TBD",
@@ -371,7 +371,6 @@ getCurrentUser() {
   }
   render() {
     const speakers = this.getSpeakers();
-    
     const displaySpeakers = (this.state.speakerDetails.length>0)? (
         <View style={styles.speakerSection}>
               <View style={[styles.heading]}>
