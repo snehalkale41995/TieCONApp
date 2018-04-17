@@ -85,17 +85,23 @@ export default class ScheduleTile extends RkComponent {
      * Fetch Speaker Details
      */
     fetchSpeakers = () => {
+        let speakerArray = [];
         if (this.props.session.speakers) {
-            this.props.session.speakers.forEach((speaker) => {
+            this.props.session.speakers.forEach((speaker, index) => {
                 Service.getDocument("Attendee", speaker, (data, id) => {
                     data.id = id;
-                    const prevSpeakersDetails = this.state.session.speakersDetails ? this.state.session.speakersDetails : {};
+                    //const prevSpeakersDetails = this.state.session.speakersDetails ? this.state.session.speakersDetails : {};
+                    speakerArray[index] = data;
+                    //const prevSpeakersDetails = this.state.session.speakersDetails;
                     let newSession = Object.assign(this.state.session, {
-                        speakersDetails: [
-                            ...prevSpeakersDetails,
-                            data
-                        ]
+                        speakersDetails: speakerArray
                     });
+                    // let newSession = Object.assign(this.state.session, {
+                    //     speakersDetails: [
+                    //         ...prevSpeakersDetails,
+                    //         data
+                    //     ]
+                    // });
                     this.setState((prevState) => ({
                         ...prevState,
                         session: newSession
