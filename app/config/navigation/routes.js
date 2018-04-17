@@ -252,7 +252,7 @@ export const MainRoutes = [
   },
   {
     id: 'VenueMap',
-    title: 'Venue Map',
+    title: 'Location Map',
     icon: 'md-navigate',
     screen: Screens.VenueMap,
     children: []
