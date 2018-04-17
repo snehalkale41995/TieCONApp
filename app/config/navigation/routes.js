@@ -229,6 +229,14 @@ export const MainRoutes = [
     roleNames: ['Admin', 'Volunteer']
   },
   {
+    id: 'RegisterUsers',
+    title: 'Register Users',
+    icon: 'md-qr-scanner',
+    screen: Screens.RegisterUserToSession,
+    children: [],
+    roleNames: ['Admin', 'Volunteer']
+  },
+  {
     id: 'MyProfile',
     title: 'My Profile',
     icon: 'ios-person',
