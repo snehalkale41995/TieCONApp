@@ -221,6 +221,13 @@ getCurrentUser() {
         )
       } 
     }
+    else if(this.state.sessionDetails.sessionType == 'invite'){
+      return (
+        <View style = {[styles.attendBtn]} >
+          <RkText style={{ fontSize: 12 , color :'#f20505' }}>**By invitation only**</RkText>
+        </View>
+      );
+    }
      else if(!this.state.regStatus  &&  this.state.sessionDetails.sessionType == 'deepdive'){
       return (
         <View style = {[styles.attendBtn]} >
@@ -275,7 +282,7 @@ getCurrentUser() {
           sessionId: this.state.sessionDetails.key,
           session: this.state.sessionDetails,
           registeredAt: new Date(),
-          status: this.state.sessionDetails.isRegrequired ? "Pending" : "Remove From Agenda",
+          status: this.state.sessionDetails.sessionType == 'deepdive' ? 'De-Register' : 'Remove From Agenda',
           attendee: {},
           attendeeId: attendeeId,
           sessionDate : this.state.sessionDetails.startTime
