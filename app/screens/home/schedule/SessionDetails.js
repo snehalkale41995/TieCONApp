@@ -309,6 +309,9 @@ getCurrentUser() {
       }
       else{
         const attendeeId = this.state.userObj.uid;
+        const attendee = this.state.userObj;
+        const firstName = this.state.userObj.firstName;
+        const lastName = this.state.userObj.lastName;
         if(this.state.sessionDetails.speakers == undefined ){
           this.state.sessionDetails.speakers = [];
         }
@@ -323,7 +326,7 @@ getCurrentUser() {
           session: this.state.sessionDetails,
           registeredAt: new Date(),
           status: this.state.sessionDetails.sessionType == 'deepdive' ? 'De-Register' : 'Remove From Agenda',
-          attendee: {},
+          attendee: {firstName , lastName},
           attendeeId: attendeeId,
           sessionDate : this.state.sessionDetails.startTime
         }
