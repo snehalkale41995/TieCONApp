@@ -198,7 +198,6 @@ export class RegisterUserToSession extends React.Component {
   }
 
   checkAlreadyRegistered = (attendeeObj, selectedSession ) => {
-   
     this.setState({
       isLoading : true
     })
