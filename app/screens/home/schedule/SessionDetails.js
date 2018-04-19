@@ -145,7 +145,7 @@ getCurrentUser() {
         });
     } 
     else {
-      Alert.alert("Its too early to give feedback for this session");
+      Alert.alert("Its too early ,wait till session ends");
     }
   }
   getSurveyAccess = () => {
